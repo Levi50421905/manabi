@@ -156,6 +156,81 @@ export function buildMixedQuestions(count = 12): Question[] {
   ]);
 }
 
+export type AnswerType = "meaning" | "romaji" | "kana";
+export type QuizSource = "kanji-recognize" | "kanji-recall" | "vocab";
+
+/** Ambil jawaban sesuai tipe yang dipilih peserta. */
+function answerOfKanji(item: Kanji, answerType: AnswerType): string {
+  if (answerType === "kana") return item.kunyomi[0] ?? item.onyomi[0] ?? "";
+  return item.meanings.join(", ");
+}
+
+function answerOfVocab(item: Vocab, answerType: AnswerType): string {
+  if (answerType === "romaji") return item.romaji;
+  if (answerType === "kana") return item.kana;
+  return item.meaning;
+}
+
+/**
+ * Builder untuk latihan yang bisa dikonfigurasi:
+ * - kanji-recognize : kanji → jawaban (arti / bacaan kana)
+ * - kanji-recall    : jawaban (arti / kana) → kanji
+ * - vocab           : kosakata → arti / romaji / kana
+ */
+export function buildTypedQuestions(
+  source: QuizSource,
+  answerType: AnswerType,
+  count = 10,
+): Question[] {
+  if (source === "vocab") {
+    const picks = take(vocab, count);
+    const pool = vocab.map((item) => answerOfVocab(item, answerType));
+
+    return picks.map((item, index) => {
+      const correct = answerOfVocab(item, answerType);
+      const { options, answer } = buildOptions(correct, pool);
+      return {
+        id: `typed:vocab:${item.id}:${index}`,
+        kind: "kosakata",
+        prompt: item.kanji || item.kana,
+        subPrompt:
+          answerType === "meaning"
+            ? "Apa arti kata ini?"
+            : answerType === "romaji"
+              ? "Bagaimana romaji kata ini?"
+              : "Bagaimana cara membacanya (kana)?",
+        options,
+        answer,
+        explanation: `${item.kanji || item.kana} (${item.kana}) = ${item.meaning}`,
+      };
+    });
+  }
+
+  const picks = take(kanji, count);
+  const recall = source === "kanji-recall";
+  const pool = kanji.map((item) => (recall ? item.character : answerOfKanji(item, answerType)));
+
+  return picks.map((item, index) => {
+    const prompt = recall ? answerOfKanji(item, answerType) : item.character;
+    const correct = recall ? item.character : answerOfKanji(item, answerType);
+    const { options, answer } = buildOptions(correct, pool);
+
+    return {
+      id: `typed:${source}:${item.id}:${index}`,
+      kind: "kanji",
+      prompt,
+      subPrompt: recall
+        ? "Kanji mana yang sesuai?"
+        : answerType === "kana"
+          ? "Bagaimana bacaan kanji ini?"
+          : "Apa arti kanji ini?",
+      options,
+      answer,
+      explanation: `${item.character} — ${item.meanings.join(", ")} · kana: ${item.onyomi[0] ?? ""}${item.kunyomi[0] ? ` / ${item.kunyomi[0]}` : ""}`,
+    };
+  });
+}
+
 export function scoreMessage(correct: number, total: number): string {
   const ratio = total === 0 ? 0 : correct / total;
   if (ratio === 1) return "完璧！ Sempurna, semua benar!";
