@@ -7,7 +7,7 @@ export function SakuraTree() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] overflow-hidden"
+      className="pointer-events-none absolute inset-x-0 top-0 -z-10 hidden h-[420px] overflow-hidden dark:block"
     >
       <svg
         viewBox="0 0 900 420"

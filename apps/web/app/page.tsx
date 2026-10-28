@@ -80,9 +80,16 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="relative space-y-14 pb-6">
-      <SakuraRain />
+    <div className="relative isolate space-y-14 pb-6">
+      {/* Foto pohon (mode terang) & ilustrasi SVG (mode gelap) — di belakang konten */}
+      <img
+        src="/sakura-branch.png"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute right-0 top-0 -z-10 w-[min(520px,72%)] opacity-50 mix-blend-multiply dark:hidden"
+      />
       <SakuraTree />
+      <SakuraRain />
       {/* ---------- Hero ---------- */}
       <section className="grid items-center gap-8 pt-6 lg:grid-cols-[1.15fr_0.85fr] lg:pt-10">
         <div className="animate-fade-up">
