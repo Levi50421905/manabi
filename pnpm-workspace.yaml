@@ -1,0 +1,9 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# Windows + Next.js: pnpm default (isolated) memakai junction untuk dependency,
+# dan Node di sebagian setup Windows tidak me-resolve modul lewat junction itu.
+# Akibatnya Next gagal dengan "Cannot find module 'styled-jsx/package.json'".
+# `hoisted` memakai struktur node_modules datar seperti npm -> paling stabil.
+nodeLinker: hoisted

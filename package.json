@@ -1,0 +1,16 @@
+{
+  "name": "manabi",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.28.5",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @manabi/web dev",
+    "build": "pnpm --filter @manabi/web build",
+    "start": "pnpm --filter @manabi/web start",
+    "typecheck": "pnpm -r exec tsc --noEmit",
+    "clean": "node -e \"require('node:fs').rmSync('apps/web/.next',{recursive:true,force:true});console.log('build cache dibersihkan')\""
+  }
+}

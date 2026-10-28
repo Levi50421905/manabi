@@ -1,0 +1,292 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import { vocab, type PartOfSpeech } from "@manabi/content";
+import { Badge, Button, Card, CardContent, ProgressBar, cn } from "@manabi/ui";
+import type { Rating } from "@manabi/srs";
+import { SpeakButton } from "@/components/speak-button";
+import { dueIds, rateCard, useProgress } from "@/lib/store";
+
+const POS_LABEL: Record<PartOfSpeech, string> = {
+  "kata-benda": "Kata benda",
+  "kata-kerja": "Kata kerja",
+  "kata-sifat-i": "Kata sifat い",
+  "kata-sifat-na": "Kata sifat な",
+  "kata-keterangan": "Keterangan",
+  lainnya: "Lainnya",
+};
+
+const RATINGS: Array<{ rating: Rating; label: string; hint: string; className: string }> = [
+  { rating: "again", label: "Lupa", hint: "< 10 menit", className: "bg-red-50 text-red-700 border-red-200 hover:bg-red-100" },
+  { rating: "hard", label: "Sulit", hint: "~1 hari", className: "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100" },
+  { rating: "good", label: "Biasa", hint: "terjadwal", className: "bg-matcha-50 text-matcha-600 border-matcha-200 hover:bg-matcha-100" },
+  { rating: "easy", label: "Mudah", hint: "lebih lama", className: "bg-sky-50 text-sky-700 border-sky-200 hover:bg-sky-100" },
+];
+
+const ALL = "semua" as const;
+
+export default function VocabPage() {
+  const progress = useProgress();
+  const [query, setQuery] = useState("");
+  const [pos, setPos] = useState<PartOfSpeech | typeof ALL>(ALL);
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  const [session, setSession] = useState<string[] | null>(null);
+  const [index, setIndex] = useState(0);
+  const [revealed, setRevealed] = useState(false);
+  const [finished, setFinished] = useState(false);
+  const [reviewed, setReviewed] = useState(0);
+
+  const allIds = useMemo(() => vocab.map((item) => item.id), []);
+  const dueCount = useMemo(
+    () => dueIds(allIds, new Date()).length,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [allIds, progress.cards],
+  );
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return vocab.filter((item) => {
+      const matchPos = pos === ALL || item.pos === pos;
+      if (!matchPos) return false;
+      if (!q) return true;
+      return `${item.kanji} ${item.kana} ${item.romaji} ${item.meaning}`.toLowerCase().includes(q);
+    });
+  }, [query, pos]);
+
+  const currentId = session?.[index];
+  const current = vocab.find((item) => item.id === currentId);
+
+  function startSession() {
+    const ids = dueIds(allIds, new Date()).slice(0, 15);
+    setSession(ids.length > 0 ? ids : allIds.slice(0, 10));
+    setIndex(0);
+    setRevealed(false);
+    setFinished(false);
+    setReviewed(0);
+  }
+
+  function handleRate(rating: Rating) {
+    if (!currentId) return;
+    rateCard(currentId, rating);
+    setReviewed((value) => value + 1);
+    setRevealed(false);
+    if (session && index + 1 >= session.length) {
+      setFinished(true);
+    } else {
+      setIndex((value) => value + 1);
+    }
+  }
+
+  /* ---------- layar review ---------- */
+  if (session && !finished && current) {
+    const card = progress.cards[current.id];
+    return (
+      <div className="mx-auto max-w-2xl space-y-4 pb-6">
+        <div className="flex items-center justify-between text-sm text-ink-500">
+          <span>
+            Kartu {index + 1} dari {session.length}
+          </span>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setSession(null);
+              setFinished(false);
+            }}
+          >
+            Keluar
+          </Button>
+        </div>
+        <ProgressBar value={index} max={session.length} />
+
+        <Card className="animate-fade-up">
+          <CardContent className="p-8 text-center">
+            <p className="text-xs uppercase tracking-wide text-ink-400">{POS_LABEL[current.pos]}</p>
+            <p className="jp mt-4 text-5xl font-semibold text-ink-900">{current.kanji}</p>
+            <div className="mt-2 flex items-center justify-center gap-2">
+              <p className="jp text-lg text-ink-500">{current.kana}</p>
+              <SpeakButton text={current.kana} />
+            </div>
+
+            {revealed ? (
+              <div className="mt-6 space-y-3 animate-pop">
+                <p className="text-xl font-semibold text-ink-900">{current.meaning}</p>
+                <div className="rounded-xl bg-ink-50 p-3 text-left">
+                  <p className="jp text-sm text-ink-800">{current.example.jp}</p>
+                  <p className="mt-1 text-xs text-ink-500">{current.example.id}</p>
+                </div>
+                {card && card.reviews > 0 && (
+                  <p className="text-[11px] text-ink-400">
+                    Diulas {card.reviews}× · interval {card.interval} hari · ease{" "}
+                    {card.ease.toFixed(2)}
+                  </p>
+                )}
+              </div>
+            ) : (
+              <p className="mt-6 text-sm text-ink-400">
+                Ingat artinya? Tekan tombol di bawah untuk melihat jawaban.
+              </p>
+            )}
+
+            {!revealed ? (
+              <Button className="mt-6 w-full" size="lg" onClick={() => setRevealed(true)}>
+                Tampilkan arti
+              </Button>
+            ) : (
+              <div className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {RATINGS.map((item) => (
+                  <button
+                    key={item.rating}
+                    type="button"
+                    onClick={() => handleRate(item.rating)}
+                    className={cn(
+                      "rounded-xl border px-3 py-2.5 text-sm font-medium transition-colors",
+                      item.className,
+                    )}
+                  >
+                    {item.label}
+                    <span className="mt-0.5 block text-[10px] font-normal opacity-70">
+                      {item.hint}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  /* ---------- layar selesai ---------- */
+  if (session && finished) {
+    return (
+      <div className="mx-auto max-w-2xl pb-6">
+        <Card className="animate-fade-up">
+          <CardContent className="space-y-4 p-8 text-center">
+            <p className="jp text-4xl">お疲れ様！</p>
+            <p className="text-lg font-semibold text-ink-900">Sesi review selesai</p>
+            <p className="text-sm text-ink-500">
+              {reviewed} kartu diulas. Jadwal berikutnya sudah dihitung otomatis.
+            </p>
+            <div className="flex flex-wrap justify-center gap-2">
+              <Button onClick={startSession}>Review lagi</Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setSession(null);
+                  setFinished(false);
+                }}
+              >
+                Kembali ke daftar
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  /* ---------- daftar kosakata ---------- */
+  return (
+    <div className="space-y-5 pb-6">
+      <header className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-ink-900">Kosakata N5</h1>
+          <p className="mt-1 text-sm text-ink-500">
+            {vocab.length} kata · {dueCount} siap diulang hari ini
+          </p>
+        </div>
+        <Button onClick={startSession}>
+          {dueCount > 0 ? `Review ${Math.min(dueCount, 15)} kartu` : "Mulai review"}
+        </Button>
+      </header>
+
+      <div className="flex flex-wrap items-center gap-2">
+        <input
+          type="search"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          placeholder="Cari kanji, kana, atau arti…"
+          className="h-9 min-w-[220px] flex-1 rounded-xl border border-ink-200 bg-white px-3 text-sm text-ink-800 placeholder:text-ink-400 focus:border-sakura-300 focus:outline-none focus:ring-2 focus:ring-sakura-100"
+        />
+        <div className="flex flex-wrap gap-1">
+          {([ALL, ...Object.keys(POS_LABEL)] as Array<PartOfSpeech | typeof ALL>).map((item) => (
+            <button
+              key={item}
+              type="button"
+              onClick={() => setPos(item)}
+              className={cn(
+                "rounded-full border px-2.5 py-1 text-xs transition-colors",
+                pos === item
+                  ? "border-sakura-300 bg-sakura-50 text-sakura-700"
+                  : "border-ink-200 bg-white text-ink-500 hover:text-ink-800",
+              )}
+            >
+              {item === ALL ? "Semua" : POS_LABEL[item]}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-1.5">
+        {filtered.map((item) => {
+          const card = progress.cards[item.id];
+          const isOpen = expanded === item.id;
+          return (
+            <Card key={item.id} className={cn(isOpen && "border-sakura-200")}>
+              <button
+                type="button"
+                onClick={() => setExpanded(isOpen ? null : item.id)}
+                className="flex w-full items-center gap-3 p-3 text-left"
+              >
+                <span className="jp grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-ink-50 text-sm font-semibold text-ink-700">
+                  {item.kanji.slice(0, 1) || item.kana.slice(0, 1)}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-baseline gap-2">
+                    <span className="jp text-sm font-semibold text-ink-900">{item.kanji}</span>
+                    <span className="jp text-xs text-ink-400">{item.kana}</span>
+                  </span>
+                  <span className="block truncate text-xs text-ink-500">{item.meaning}</span>
+                </span>
+                {card ? (
+                  <Badge tone={card.interval >= 21 ? "matcha" : "neutral"}>
+                    {card.interval >= 21 ? "matang" : `${card.interval}h`}
+                  </Badge>
+                ) : (
+                  <Badge tone="sakura">baru</Badge>
+                )}
+              </button>
+
+              {isOpen && (
+                <CardContent className="animate-pop border-t border-ink-100 pt-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-medium text-ink-900">{item.meaning}</p>
+                      <p className="text-xs text-ink-400">
+                        {item.romaji} · {POS_LABEL[item.pos]}
+                      </p>
+                    </div>
+                    <SpeakButton text={item.kana} />
+                  </div>
+                  <div className="mt-3 rounded-xl bg-ink-50 p-3">
+                    <p className="jp text-sm text-ink-800">{item.example.jp}</p>
+                    <p className="mt-1 text-xs text-ink-500">{item.example.id}</p>
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+          );
+        })}
+
+        {filtered.length === 0 && (
+          <p className="rounded-2xl border border-dashed border-ink-200 p-8 text-center text-sm text-ink-400">
+            Tidak ada kosakata yang cocok.
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}

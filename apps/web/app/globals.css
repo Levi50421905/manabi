@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-jp: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-image: radial-gradient(
+        circle at 12% -10%,
+        rgba(253, 229, 238, 0.7),
+        transparent 45%
+      ),
+      radial-gradient(circle at 88% 0%, rgba(230, 242, 211, 0.55), transparent 40%);
+    background-repeat: no-repeat;
+    background-size: 100% 520px;
+  }
+
+  ::selection {
+    background-color: #fbc9db;
+    color: #1b1b21;
+  }
+
+  ruby {
+    ruby-align: center;
+  }
+
+  ruby rt {
+    font-size: 0.5em;
+    color: #6b6b7d;
+    font-weight: 500;
+  }
+}
+
+@layer components {
+  .jp {
+    font-family: var(--font-jp);
+  }
+
+  /* Kartu latihan menulis: garis bantu seperti buku genkō yōshi */
+  .genko-grid {
+    background-image: linear-gradient(to right, #e9e9ee 1px, transparent 1px),
+      linear-gradient(to bottom, #e9e9ee 1px, transparent 1px);
+    background-size: 25% 25%;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #d5d5dd;
+  border-radius: 9999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #b4b4c1;
+}
