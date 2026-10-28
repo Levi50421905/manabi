@@ -39,6 +39,8 @@ export interface ProgressState {
   activity: Record<string, number>;
   /** penanda "sudah dapat XP hari ini" per modul, mis. "2026-10-28:reading" */
   studyMarks: string[];
+  /** id bacaan yang sudah diselesaikan (untuk urutan belum-dibaca) */
+  readPassages: string[];
 }
 
 const STORAGE_KEY = "manabi:v1:progress";
@@ -52,6 +54,7 @@ const INITIAL: ProgressState = {
   quizzes: [],
   activity: {},
   studyMarks: [],
+  readPassages: [],
 };
 
 let state: ProgressState = INITIAL;
@@ -78,6 +81,7 @@ function read(): ProgressState {
       quizzes: parsed.quizzes ?? [],
       activity: parsed.activity ?? {},
       studyMarks: parsed.studyMarks ?? [],
+      readPassages: parsed.readPassages ?? [],
       version: 1,
     };
   } catch {
@@ -204,6 +208,20 @@ export function recordStudy(module: "reading" | "listening"): void {
 
 export function resetProgress(): void {
   commit(INITIAL);
+}
+
+/** Tandai satu bacaan selesai (+5 XP, sekali saja). */
+export function markPassageRead(id: string): void {
+  ensureHydrated();
+  if (state.readPassages.includes(id)) return;
+
+  commit(
+    bumpStudy({
+      ...state,
+      xp: state.xp + 5,
+      readPassages: [...state.readPassages, id],
+    }),
+  );
 }
 
 /* ------------------------------------------------------------------ *

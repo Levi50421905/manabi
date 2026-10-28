@@ -4,11 +4,12 @@ import { useEffect, useMemo, useState } from "react";
 import { reading } from "@manabi/content";
 import { Badge, Button, Card, CardContent, cn } from "@manabi/ui";
 import { SpeakButton } from "@/components/speak-button";
-import { recordStudy } from "@/lib/store";
+import { markPassageRead, recordStudy, useProgress } from "@/lib/store";
 import { usePrefs } from "@/lib/prefs";
 
 export default function ReadingPage() {
   const [prefs] = usePrefs();
+  const progress = useProgress();
   const [activeId, setActiveId] = useState(reading[0]?.id ?? "");
   const [showFurigana, setShowFurigana] = useState(true);
 
@@ -20,7 +21,15 @@ export default function ReadingPage() {
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [checked, setChecked] = useState<Record<string, boolean>>({});
 
-  const passage = reading.find((item) => item.id === activeId) ?? reading[0];
+  const ordered = useMemo(() => {
+    const read = new Set(progress.readPassages);
+    return [
+      ...reading.filter((item) => !read.has(item.id)),
+      ...reading.filter((item) => read.has(item.id)),
+    ];
+  }, [progress.readPassages]);
+
+  const passage = ordered.find((item) => item.id === activeId) ?? ordered[0];
 
   const plainText = useMemo(
     () => passage?.segments.map((segment) => segment.text).join("") ?? "",
@@ -41,8 +50,9 @@ export default function ReadingPage() {
     <div className="space-y-5 pb-6">
       <header>
         <h1 className="text-2xl font-bold tracking-tight text-ink-900">Membaca</h1>
-        <p className="mt-1 text-sm text-ink-500">
-          Bacaan pendek level N5 dengan furigana, terjemahan, dan pertanyaan pemahaman.
+        <p className="mt-1 text-sm text-fg-muted">
+          {progress.readPassages.length}/{reading.length} bacaan selesai — yang belum pernah
+          dibaca ditampilkan lebih dulu.
         </p>
       </header>
 
@@ -208,8 +218,20 @@ export default function ReadingPage() {
                 </div>
               )}
               <div className="mt-4 border-t border-ink-100 pt-3">
-                <Button variant="ghost" size="sm" onClick={() => recordStudy("reading")}>
-                  Tandai sudah dibaca (+3 XP, sekali per hari)
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    markPassageRead(passage.id);
+                    recordStudy("reading");
+                    const next = ordered.find(
+                      (item) =>
+                        !progress.readPassages.includes(item.id) && item.id !== passage.id,
+                    );
+                    if (next) selectPassage(next.id);
+                  }}
+                >
+                  Tandai selesai &amp; lanjut (+5 XP)
                 </Button>
               </div>
             </CardContent>
