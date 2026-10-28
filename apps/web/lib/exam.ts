@@ -54,7 +54,13 @@ function buildListening(): Question[] {
 
   for (const [trackId, items] of Object.entries(listeningQuestions)) {
     const track = tracks.get(trackId);
-    const audioText = track?.lines.map((line) => line.jp).join(" ") ?? undefined;
+    const lines = track?.lines ?? [];
+    const speakerNames = Array.from(new Set(lines.map((line) => line.speaker)));
+    const audioLines = lines.map((line) => ({
+      jp: line.jp,
+      speakerIndex: Math.max(0, speakerNames.indexOf(line.speaker)),
+    }));
+    const audioText = lines.map((line) => line.jp).join(" ");
 
     for (const item of items) {
       questions.push({
@@ -66,6 +72,7 @@ function buildListening(): Question[] {
         answer: item.answer,
         explanation: item.explanation,
         audioText,
+        audioLines,
       });
     }
   }

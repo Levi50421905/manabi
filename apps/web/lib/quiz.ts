@@ -13,6 +13,8 @@ export interface Question {
   explanation: string;
   /** Teks yang bisa diputar (khusus soal mendengar/ujian). */
   audioText?: string;
+  /** Dialog per baris + indeks pembicara, agar tiap orang bersuara berbeda. */
+  audioLines?: Array<{ jp: string; speakerIndex: number }>;
 }
 
 export const QUESTION_KIND_LABEL: Record<QuestionKind, string> = {

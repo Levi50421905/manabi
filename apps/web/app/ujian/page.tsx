@@ -14,7 +14,7 @@ import {
 } from "@/lib/exam";
 import { QUESTION_KIND_LABEL } from "@/lib/quiz";
 import { recordQuiz } from "@/lib/store";
-import { speak } from "@/lib/tts";
+import { createUtterance, speak } from "@/lib/tts";
 
 const MODES: Array<{ kind: ExamKind; title: string; detail: string }> = [
   {
@@ -72,6 +72,32 @@ export default function ExamPage() {
       finish(answers, spec);
     }
   }, [remaining, spec, result, answers]);
+
+  /** Putar dialog berurutan dengan suara berbeda per pembicara. */
+  function playDialogue() {
+    const lines = current?.audioLines;
+    if (!lines || lines.length === 0) {
+      if (current?.audioText) speak(current.audioText);
+      return;
+    }
+
+    const synth = window.speechSynthesis;
+    synth.cancel();
+
+    let cursor = 0;
+    const next = () => {
+      if (cursor >= lines.length) return;
+      const line = lines[cursor];
+      cursor += 1;
+      if (!line) return;
+      const utterance = createUtterance(line.jp, undefined, line.speakerIndex);
+      if (!utterance) return;
+      utterance.onend = next;
+      synth.speak(utterance);
+    };
+
+    next();
+  }
 
   /* ---------- layar hasil ---------- */
   if (spec && result) {
@@ -275,13 +301,8 @@ export default function ExamPage() {
 
           <p lang="ja" className="jp mt-3 text-xl font-semibold text-fg">{current.prompt}</p>
 
-          {current.audioText && (
-            <Button
-              className="mt-3"
-              size="sm"
-              variant="outline"
-              onClick={() => speak(current.audioText as string)}
-            >
+          {(current.audioLines || current.audioText) && (
+            <Button className="mt-3" size="sm" variant="outline" onClick={playDialogue}>
               ▶ Putar dialog
             </Button>
           )}
