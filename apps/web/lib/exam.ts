@@ -100,7 +100,7 @@ function buildReading(): Question[] {
 export function buildExam(kind: ExamKind): ExamSpec {
   if (kind === "jlpt-n5") {
     const language = shuffle([
-      ...buildVocabQuestions(vocab, 10),
+      ...buildVocabQuestions(vocab, 10, { withKana: false }),
       ...buildKanjiQuestions(kanji, 6),
       ...buildGrammarQuestions(grammar, 4),
     ]);
@@ -132,7 +132,10 @@ export function buildExam(kind: ExamKind): ExamSpec {
         key: "moji-goi",
         label: "文字・語彙 (Huruf & Kosakata)",
         maxPoints: 63,
-        questions: shuffle([...buildVocabQuestions(vocab, 8), ...buildKanjiQuestions(kanji, 4)]),
+        questions: shuffle([
+          ...buildVocabQuestions(vocab, 8, { withKana: false }),
+          ...buildKanjiQuestions(kanji, 4),
+        ]),
       },
       {
         key: "kaiwa-hyougen",

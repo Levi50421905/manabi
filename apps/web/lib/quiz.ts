@@ -84,18 +84,24 @@ export function buildKanaQuestions(pool: Kana[], count = 10): Question[] {
   });
 }
 
-export function buildVocabQuestions(pool: Vocab[], count = 10): Question[] {
+export function buildVocabQuestions(
+  pool: Vocab[],
+  count = 10,
+  options: { withKana?: boolean } = {},
+): Question[] {
+  const withKana = options.withKana ?? true;
   const picks = take(pool, count);
   const meaningPool = pool.map((item) => item.meaning);
 
   return picks.map((item, index) => {
-    const { options, answer } = buildOptions(item.meaning, meaningPool);
+    const { options: built, answer } = buildOptions(item.meaning, meaningPool);
     return {
       id: `vocab:${item.id}:${index}`,
       kind: "kosakata",
       prompt: item.kanji || item.kana,
-      subPrompt: item.kana,
-      options,
+      // Di ujian bacaan kana disembunyikan — itu contekan untuk level yang sama.
+      subPrompt: withKana ? item.kana : `Kosakata ${item.level}`,
+      options: built,
       answer,
       explanation: `${item.kanji || item.kana} (${item.kana}) berarti "${item.meaning}". Contoh: ${item.example.jp}`,
     };
