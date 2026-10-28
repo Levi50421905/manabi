@@ -49,12 +49,12 @@ export default function GrammarPage() {
                   aria-expanded={open}
                   className="flex w-full items-center gap-3 p-4 text-left hover:bg-ink-50/60"
                 >
-                  <span className="jp grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-sakura-50 text-xs font-semibold text-sakura-700">
+                  <span lang="ja" className="jp grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-sakura-50 text-xs font-semibold text-sakura-700">
                     文
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block text-sm font-semibold text-ink-900">{item.title}</span>
-                    <span className="jp block truncate text-xs text-ink-400">{item.pattern}</span>
+                    <span lang="ja" className="jp block truncate text-xs text-ink-400">{item.pattern}</span>
                   </span>
                   <Badge tone="neutral">{item.level}</Badge>
                   <span
@@ -82,7 +82,7 @@ export default function GrammarPage() {
                           className="flex items-start justify-between gap-3 rounded-xl border border-ink-100 p-3"
                         >
                           <div className="min-w-0">
-                            <p className="jp text-sm font-medium text-ink-900">{example.jp}</p>
+                            <p lang="ja" className="jp text-sm font-medium text-ink-900">{example.jp}</p>
                             <p className="mt-0.5 text-xs text-ink-500">{example.id}</p>
                           </div>
                           <SpeakButton text={example.jp} />

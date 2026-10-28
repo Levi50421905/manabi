@@ -121,7 +121,7 @@ export default function QuizPage() {
           <Card key={mode.key} className="flex flex-col">
             <CardContent className="flex flex-1 flex-col p-5">
               <div className="flex items-start justify-between">
-                <span className="jp grid h-10 w-10 place-items-center rounded-xl bg-sakura-50 text-lg font-semibold text-sakura-700">
+                <span lang="ja" className="jp grid h-10 w-10 place-items-center rounded-xl bg-sakura-50 text-lg font-semibold text-sakura-700">
                   {mode.glyph}
                 </span>
                 <Badge tone="neutral">{mode.key}</Badge>

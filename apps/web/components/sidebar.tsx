@@ -48,7 +48,7 @@ export function Sidebar() {
       {/* ---------- Mobile: header tipis + bottom nav ---------- */}
       <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-paper/95 px-4 py-2.5 backdrop-blur md:hidden">
         <Link href="/" className="flex items-center gap-2">
-          <span className="jp grid h-8 w-8 place-items-center rounded-lg bg-accent text-sm font-bold text-accent-contrast">
+          <span lang="ja" className="jp grid h-8 w-8 place-items-center rounded-lg bg-accent text-sm font-bold text-accent-contrast">
             学
           </span>
           <span className="text-sm font-semibold tracking-tight text-fg">Manabi</span>
@@ -85,7 +85,7 @@ export function Sidebar() {
                       : "border-border text-fg-muted hover:bg-surface-muted",
                   )}
                 >
-                  <span className="jp text-base leading-none">{item.glyph}</span>
+                  <span lang="ja" className="jp text-base leading-none">{item.glyph}</span>
                   {item.label}
                 </Link>
               ))}
@@ -112,7 +112,7 @@ export function Sidebar() {
                   active ? "text-accent" : "text-fg-muted",
                 )}
               >
-                <span className="jp text-lg leading-none">{item.glyph}</span>
+                <span lang="ja" className="jp text-lg leading-none">{item.glyph}</span>
                 {item.label}
               </Link>
             );

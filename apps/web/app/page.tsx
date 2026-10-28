@@ -119,8 +119,8 @@ export default function HomePage() {
             <Badge tone="matcha">N5</Badge>
           </div>
           <CardContent className="p-5">
-            <div className="flex items-center justify-center rounded-2xl bg-white py-8">
-              <span className="jp text-7xl font-semibold text-ink-900">学</span>
+            <div className="flex items-center justify-center rounded-2xl bg-surface py-8">
+              <span lang="ja" className="jp text-7xl font-semibold text-ink-900">学</span>
             </div>
             <div className="mt-4 flex items-baseline justify-between">
               <div>
@@ -141,7 +141,7 @@ export default function HomePage() {
         {stats.map((item) => (
           <div
             key={item.label}
-            className="rounded-2xl border border-ink-100 bg-white px-4 py-4 text-center"
+            className="rounded-2xl border border-ink-100 bg-surface px-4 py-4 text-center"
           >
             <p className="text-2xl font-bold text-ink-900">{item.value}</p>
             <p className="mt-0.5 text-xs text-ink-500">{item.label}</p>
@@ -162,7 +162,7 @@ export default function HomePage() {
             <Link key={feature.href} href={feature.href} className="group">
               <Card className="h-full transition-all group-hover:-translate-y-0.5 group-hover:border-sakura-200 group-hover:shadow-lg">
                 <CardContent className="p-5">
-                  <span className="jp grid h-10 w-10 place-items-center rounded-xl bg-sakura-50 text-lg font-semibold text-sakura-700">
+                  <span lang="ja" className="jp grid h-10 w-10 place-items-center rounded-xl bg-sakura-50 text-lg font-semibold text-sakura-700">
                     {feature.glyph}
                   </span>
                   <h3 className="mt-3 text-sm font-semibold text-ink-900">{feature.title}</h3>
@@ -177,7 +177,7 @@ export default function HomePage() {
       </section>
 
       {/* ---------- Steps ---------- */}
-      <section className="rounded-3xl border border-ink-100 bg-white p-6 sm:p-8">
+      <section className="rounded-3xl border border-ink-100 bg-surface p-6 sm:p-8">
         <h2 className="text-2xl font-bold tracking-tight text-ink-900">Cara belajar</h2>
         <div className="mt-6 grid gap-6 sm:grid-cols-3">
           {STEPS.map((step) => (

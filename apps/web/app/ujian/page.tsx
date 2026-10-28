@@ -152,7 +152,7 @@ export default function ExamPage() {
                       const picked = answers[question.id];
                       return (
                         <li key={question.id} className="rounded-lg border border-border p-2.5">
-                          <p className="jp text-sm font-medium text-fg">{question.prompt}</p>
+                          <p lang="ja" className="jp text-sm font-medium text-fg">{question.prompt}</p>
                           <p className="mt-1 text-xs text-danger">
                             Jawabanmu:{" "}
                             {picked === undefined ? "(kosong)" : question.options[picked]}
@@ -273,7 +273,7 @@ export default function ExamPage() {
             <Badge tone="neutral">{QUESTION_KIND_LABEL[current.kind]}</Badge>
           </div>
 
-          <p className="jp mt-3 text-xl font-semibold text-fg">{current.prompt}</p>
+          <p lang="ja" className="jp mt-3 text-xl font-semibold text-fg">{current.prompt}</p>
 
           {current.audioText && (
             <Button

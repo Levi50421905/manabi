@@ -122,11 +122,11 @@ export function QuizRunner({
                 return (
                   <div
                     key={question.id}
-                    className="rounded-xl border border-ink-100 bg-white p-3 text-sm"
+                    className="rounded-xl border border-ink-100 bg-surface p-3 text-sm"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="jp truncate font-medium text-ink-800">{question.prompt}</p>
+                        <p lang="ja" className="jp truncate font-medium text-ink-800">{question.prompt}</p>
                         <p className="mt-0.5 truncate text-xs text-ink-400">
                           Jawaban: {question.options[question.answer]}
                         </p>
@@ -170,7 +170,7 @@ export function QuizRunner({
           <p className="text-xs font-medium uppercase tracking-wide text-ink-400">
             {current.subPrompt ?? "Pilih jawaban yang benar"}
           </p>
-          <p className="jp mt-3 text-3xl font-semibold text-ink-900">{current.prompt}</p>
+          <p lang="ja" className="jp mt-3 text-3xl font-semibold text-ink-900">{current.prompt}</p>
 
           <div className="mt-6 grid gap-2 sm:grid-cols-2">
             {current.options.map((option, optionIndex) => {

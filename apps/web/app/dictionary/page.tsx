@@ -43,7 +43,7 @@ export default function DictionaryPage() {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Ketik kanji, kana, romaji, atau arti Indonesia…"
-          className="h-12 w-full rounded-2xl border border-ink-200 bg-white px-4 text-sm text-ink-800 shadow-sm placeholder:text-ink-400 focus:border-sakura-300 focus:outline-none focus:ring-2 focus:ring-sakura-100"
+          className="h-12 w-full rounded-2xl border border-ink-200 bg-surface px-4 text-sm text-ink-800 shadow-sm placeholder:text-ink-400 focus:border-sakura-300 focus:outline-none focus:ring-2 focus:ring-sakura-100"
         />
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
           <span className="text-[11px] text-ink-400">Coba:</span>
@@ -66,10 +66,10 @@ export default function DictionaryPage() {
       {query.trim().length === 0 ? (
         <Card>
           <CardContent className="p-8 text-center">
-            <p className="jp text-3xl text-ink-300">辞</p>
+            <p lang="ja" className="jp book-open text-3xl text-ink-300">辞</p>
             <p className="mt-2 text-sm font-medium text-ink-700">Mulai mengetik untuk mencari</p>
             <p className="mt-1 text-xs text-ink-400">
-              Contoh: <span className="jp">学生</span> (gakusei), &quot;makan&quot;, atau
+              Contoh: <span lang="ja" className="jp">学生</span> (gakusei), &quot;makan&quot;, atau
               &quot;partikel&quot;.
             </p>
           </CardContent>
@@ -88,7 +88,7 @@ export default function DictionaryPage() {
                   <CardContent className="flex items-center gap-3 p-3">
                     <Badge tone={KIND_TONE[hit.kind]}>{hit.kind}</Badge>
                     <div className="min-w-0 flex-1">
-                      <p className="jp truncate text-sm font-medium text-ink-900">{hit.title}</p>
+                      <p lang="ja" className="jp truncate text-sm font-medium text-ink-900">{hit.title}</p>
                       <p className="truncate text-xs text-ink-500">{hit.subtitle}</p>
                     </div>
                     <span className="text-xs text-ink-300">{hit.level}</span>

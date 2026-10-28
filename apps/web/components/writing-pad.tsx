@@ -159,7 +159,7 @@ export function WritingPad({
         {showGuide && (
           <span
             aria-hidden="true"
-            className="jp pointer-events-none absolute inset-0 flex select-none items-center justify-center text-[210px] leading-none text-ink-900 opacity-[0.09]"
+            lang="ja" className="jp pointer-events-none absolute inset-0 flex select-none items-center justify-center text-[210px] leading-none text-ink-900 opacity-[0.09]"
           >
             {character}
           </span>
@@ -178,7 +178,7 @@ export function WritingPad({
       </div>
 
       <div className="text-center">
-        <p className="jp text-xl font-semibold text-ink-900">{character}</p>
+        <p lang="ja" className="jp text-xl font-semibold text-ink-900">{character}</p>
         {(romaji || meaning) && (
           <p className="text-xs text-ink-500">
             {romaji}

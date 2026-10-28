@@ -58,10 +58,10 @@ export default function KanjiPage() {
                           "relative flex aspect-square items-center justify-center rounded-xl border transition-colors",
                           active
                             ? "border-sakura-500 bg-sakura-50 text-sakura-700"
-                            : "border-ink-100 bg-white text-ink-800 hover:border-sakura-200 hover:bg-sakura-50/60",
+                            : "border-ink-100 bg-surface text-ink-800 hover:border-sakura-200 hover:bg-sakura-50/60",
                         )}
                       >
-                        <span className="jp text-2xl font-semibold">{item.character}</span>
+                        <span lang="ja" className="jp text-2xl font-semibold">{item.character}</span>
                         {card && card.interval >= 21 && (
                           <span
                             className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-matcha-500"
@@ -82,8 +82,8 @@ export default function KanjiPage() {
             {/* ---------- detail kanji ---------- */}
             <Card className="h-fit lg:sticky lg:top-6">
               <CardContent className="p-5">
-                <div className="genko-grid flex items-center justify-center rounded-2xl border border-ink-100 bg-white py-8">
-                  <span className="jp text-6xl font-semibold text-ink-900">
+                <div className="genko-grid flex items-center justify-center rounded-2xl border border-ink-100 bg-surface py-8">
+                  <span lang="ja" className="jp text-6xl font-semibold text-ink-900">
                     {selected?.character}
                   </span>
                 </div>
@@ -105,7 +105,7 @@ export default function KanjiPage() {
                     <dt className="text-[11px] font-medium uppercase tracking-wide text-ink-400">
                       On&apos;yomi
                     </dt>
-                    <dd className="jp mt-0.5 text-ink-800">
+                    <dd lang="ja" className="jp mt-0.5 text-ink-800">
                       {selected?.onyomi.join("、") || "—"}
                     </dd>
                   </div>
@@ -113,7 +113,7 @@ export default function KanjiPage() {
                     <dt className="text-[11px] font-medium uppercase tracking-wide text-ink-400">
                       Kun&apos;yomi
                     </dt>
-                    <dd className="jp mt-0.5 text-ink-800">
+                    <dd lang="ja" className="jp mt-0.5 text-ink-800">
                       {selected?.kunyomi.join("、") || "—"}
                     </dd>
                   </div>
@@ -131,7 +131,7 @@ export default function KanjiPage() {
                       {selected?.words.map((word) => (
                         <span
                           key={word}
-                          className="jp rounded-lg bg-ink-50 px-2 py-1 text-xs text-ink-700"
+                          lang="ja" className="jp rounded-lg bg-ink-50 px-2 py-1 text-xs text-ink-700"
                         >
                           {word}
                         </span>

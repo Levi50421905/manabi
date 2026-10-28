@@ -125,7 +125,7 @@ export default function KanaPage() {
                         title={`${item.char} - ${item.romaji} (klik untuk mendengar)`}
                         className="group flex flex-col items-center justify-center rounded-xl border border-border bg-surface py-3 transition-colors hover:border-sakura-200 hover:bg-accent-soft"
                       >
-                        <span className="jp text-2xl font-semibold text-ink-900">{item.char}</span>
+                        <span lang="ja" className="jp text-2xl font-semibold text-ink-900">{item.char}</span>
                         <span
                           className={cn(
                             "mt-0.5 text-[11px] text-ink-400 transition-opacity",
@@ -164,7 +164,7 @@ export default function KanaPage() {
       ) : (
         <Card>
           <CardContent className="space-y-4 p-8 text-center">
-            <p className="jp text-4xl">ã‚</p>
+            <p lang="ja" className="jp text-4xl">ã‚</p>
             <div>
               <p className="text-sm font-medium text-ink-800">
                 10 soal acak dari {pool.length} huruf {type}

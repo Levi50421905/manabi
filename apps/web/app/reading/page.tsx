@@ -66,7 +66,7 @@ export default function ReadingPage() {
               "jp rounded-full border px-3 py-1.5 text-xs transition-colors",
               item.id === activeId
                 ? "border-sakura-300 bg-sakura-50 text-sakura-700"
-                : "border-ink-200 bg-white text-ink-500 hover:text-ink-800",
+                : "border-ink-200 bg-surface text-ink-500 hover:text-ink-800",
             )}
           >
             {item.title}
@@ -79,7 +79,7 @@ export default function ReadingPage() {
           <CardContent className="p-6">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <h2 className="jp text-xl font-semibold text-ink-900">{passage.title}</h2>
+                <h2 lang="ja" className="jp text-xl font-semibold text-ink-900">{passage.title}</h2>
                 <p className="mt-0.5 text-xs text-ink-400">{passage.level} · bacaan pendek</p>
               </div>
               <Badge tone="sakura">{passage.level}</Badge>
@@ -112,7 +112,7 @@ export default function ReadingPage() {
               </div>
             </div>
 
-            <p className="jp mt-5 text-lg leading-loose text-ink-900">
+            <p lang="ja" className="jp mt-5 text-lg leading-loose text-ink-900">
               {passage.segments.map((segment, index) =>
                 segment.reading ? (
                   <ruby key={`${segment.text}-${index}`}>
@@ -161,7 +161,7 @@ export default function ReadingPage() {
 
                     return (
                       <div key={key}>
-                        <p className="jp text-sm font-medium text-ink-800">{question.question}</p>
+                        <p lang="ja" className="jp text-sm font-medium text-ink-800">{question.question}</p>
                         <div className="mt-2 space-y-1.5">
                           {question.options.map((option, optionIndex) => {
                             const picked = selected === optionIndex;
@@ -176,7 +176,7 @@ export default function ReadingPage() {
                                 onClick={() => setAnswers((prev) => ({ ...prev, [key]: optionIndex }))}
                                 className={cn(
                                   "jp flex w-full items-center justify-between rounded-lg border px-3 py-2 text-left text-sm transition-colors",
-                                  "border-ink-200 bg-white text-ink-700 hover:border-sakura-300",
+                                  "border-ink-200 bg-surface text-ink-700 hover:border-sakura-300",
                                   picked && !isChecked && "border-sakura-400 bg-sakura-50",
                                   correctOption && "border-matcha-400 bg-matcha-50 text-matcha-600",
                                   wrongPicked && "border-red-300 bg-red-50 text-red-700",

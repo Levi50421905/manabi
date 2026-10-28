@@ -148,11 +148,11 @@ export default function VocabPage() {
         <Card className="animate-fade-up">
           <CardContent className="p-8 text-center">
             <p className="text-xs uppercase tracking-wide text-ink-400">{POS_LABEL[current.pos]}</p>
-            <p className="jp mt-4 text-5xl font-semibold text-ink-900">
+            <p lang="ja" className="jp mt-4 text-5xl font-semibold text-ink-900">
               {current.kanji || current.kana}
             </p>
             <div className="mt-2 flex items-center justify-center gap-2">
-              <p className="jp text-lg text-ink-500">{current.kana}</p>
+              <p lang="ja" className="jp text-lg text-ink-500">{current.kana}</p>
               <SpeakButton text={current.kana} />
             </div>
 
@@ -160,7 +160,7 @@ export default function VocabPage() {
               <div className="mt-6 space-y-3 animate-pop">
                 <p className="text-xl font-semibold text-ink-900">{current.meaning}</p>
                 <div className="rounded-xl bg-ink-50 p-3 text-left">
-                  <p className="jp text-sm text-ink-800">{current.example.jp}</p>
+                  <p lang="ja" className="jp text-sm text-ink-800">{current.example.jp}</p>
                   <p className="mt-1 text-xs text-ink-500">{current.example.id}</p>
                 </div>
                 {card && card.reviews > 0 && (
@@ -212,7 +212,7 @@ export default function VocabPage() {
       <div className="mx-auto max-w-2xl pb-6">
         <Card className="animate-fade-up">
           <CardContent className="space-y-4 p-8 text-center">
-            <p className="jp text-4xl">お疲れ様！</p>
+            <p lang="ja" className="jp text-4xl">お疲れ様！</p>
             <p className="text-lg font-semibold text-ink-900">Sesi review selesai</p>
             <p className="text-sm text-ink-500">
               {reviewed} kartu diulas. Jadwal berikutnya sudah dihitung otomatis.
@@ -259,7 +259,7 @@ export default function VocabPage() {
             setPage(1);
           }}
           placeholder="Cari kanji, kana, atau arti…"
-          className="h-9 min-w-[220px] flex-1 rounded-xl border border-ink-200 bg-white px-3 text-sm text-ink-800 placeholder:text-ink-400 focus:border-sakura-300 focus:outline-none focus:ring-2 focus:ring-sakura-100"
+          className="h-9 min-w-[220px] flex-1 rounded-xl border border-ink-200 bg-surface px-3 text-sm text-ink-800 placeholder:text-ink-400 focus:border-sakura-300 focus:outline-none focus:ring-2 focus:ring-sakura-100"
         />
         <div className="flex flex-wrap gap-1">
           {([ALL, ...Object.keys(POS_LABEL)] as Array<PartOfSpeech | typeof ALL>).map((item) => (
@@ -274,7 +274,7 @@ export default function VocabPage() {
                 "rounded-full border px-2.5 py-1 text-xs transition-colors",
                 pos === item
                   ? "border-sakura-300 bg-sakura-50 text-sakura-700"
-                  : "border-ink-200 bg-white text-ink-500 hover:text-ink-800",
+                  : "border-ink-200 bg-surface text-ink-500 hover:text-ink-800",
               )}
             >
               {item === ALL ? "Semua" : POS_LABEL[item]}
@@ -298,13 +298,13 @@ export default function VocabPage() {
                 onClick={() => setExpanded(isOpen ? null : item.id)}
                 className="flex w-full items-center gap-3 p-3 text-left"
               >
-                <span className="jp grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-ink-50 text-sm font-semibold text-ink-700">
+                <span lang="ja" className="jp grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-ink-50 text-sm font-semibold text-ink-700">
                   {item.kanji.slice(0, 1) || item.kana.slice(0, 1)}
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="flex items-baseline gap-2">
-                    <span className="jp text-sm font-semibold text-ink-900">{item.kanji}</span>
-                    <span className="jp text-xs text-ink-400">{item.kana}</span>
+                    <span lang="ja" className="jp text-sm font-semibold text-ink-900">{item.kanji}</span>
+                    <span lang="ja" className="jp text-xs text-ink-400">{item.kana}</span>
                   </span>
                   <span className="block truncate text-xs text-ink-500">{item.meaning}</span>
                 </span>
@@ -329,7 +329,7 @@ export default function VocabPage() {
                     <SpeakButton text={item.kana} />
                   </div>
                   <div className="mt-3 rounded-xl bg-ink-50 p-3">
-                    <p className="jp text-sm text-ink-800">{item.example.jp}</p>
+                    <p lang="ja" className="jp text-sm text-ink-800">{item.example.jp}</p>
                     <p className="mt-1 text-xs text-ink-500">{item.example.id}</p>
                   </div>
                 </CardContent>

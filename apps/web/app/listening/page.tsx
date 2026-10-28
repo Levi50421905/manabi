@@ -82,11 +82,11 @@ export default function ListeningPage() {
                 "w-full rounded-2xl border p-3 text-left transition-colors",
                 item.id === activeId
                   ? "border-sakura-300 bg-sakura-50"
-                  : "border-ink-100 bg-white hover:border-sakura-200",
+                  : "border-ink-100 bg-surface hover:border-sakura-200",
               )}
             >
               <span className="flex items-center justify-between gap-2">
-                <span className="jp text-sm font-semibold text-ink-900">{item.title}</span>
+                <span lang="ja" className="jp text-sm font-semibold text-ink-900">{item.title}</span>
                 <Badge tone="neutral">{item.level}</Badge>
               </span>
               <span className="mt-1 block text-xs leading-relaxed text-ink-500">
@@ -101,7 +101,7 @@ export default function ListeningPage() {
           <CardContent className="p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h2 className="jp text-base font-semibold text-ink-900">{track?.title}</h2>
+                <h2 lang="ja" className="jp text-base font-semibold text-ink-900">{track?.title}</h2>
                 <p className="text-xs text-ink-500">
                   {track?.lines.length} baris dialog · {track?.level}
                 </p>
@@ -162,9 +162,9 @@ export default function ListeningPage() {
                     <p className="text-[11px] font-medium uppercase tracking-wide text-ink-400">
                       {line.speaker}
                     </p>
-                    <p className="jp mt-1 text-base text-ink-900">{line.jp}</p>
+                    <p lang="ja" className="jp mt-1 text-base text-ink-900">{line.jp}</p>
                     {showKana && line.kana && (
-                      <p className="jp mt-0.5 text-xs text-ink-400">{line.kana}</p>
+                      <p lang="ja" className="jp mt-0.5 text-xs text-ink-400">{line.kana}</p>
                     )}
                     {showTranslation && (
                       <p className="mt-1 text-xs text-ink-500">{line.id}</p>

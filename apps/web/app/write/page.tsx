@@ -70,7 +70,7 @@ export default function WritePage() {
                   : "text-ink-500 hover:text-ink-800",
               )}
             >
-              <span className="jp">{item.glyph}</span>
+              <span lang="ja" className="jp">{item.glyph}</span>
               {item.label}
             </button>
           ))}

@@ -192,7 +192,7 @@ export default function DashboardPage() {
                   href={module.href}
                   className="group flex items-center gap-3 rounded-xl border border-ink-100 px-3 py-2.5 transition-colors hover:border-sakura-200 hover:bg-sakura-50/60"
                 >
-                  <span className="jp grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-ink-50 text-sm font-semibold text-ink-600 group-hover:bg-sakura-100 group-hover:text-sakura-700">
+                  <span lang="ja" className="jp grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-ink-50 text-sm font-semibold text-ink-600 group-hover:bg-sakura-100 group-hover:text-sakura-700">
                     {module.glyph}
                   </span>
                   <span className="min-w-0 flex-1">
