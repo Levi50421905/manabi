@@ -23,6 +23,7 @@ const config: Config = {
         "fg-muted": "rgb(var(--fg-muted) / <alpha-value>)",
         accent: "rgb(var(--accent) / <alpha-value>)",
         "accent-soft": "rgb(var(--accent-soft) / <alpha-value>)",
+        "accent-contrast": "rgb(var(--accent-contrast) / <alpha-value>)",
         danger: "rgb(var(--danger) / <alpha-value>)",
         "danger-soft": "rgb(var(--danger-soft) / <alpha-value>)",
         success: "rgb(var(--success) / <alpha-value>)",

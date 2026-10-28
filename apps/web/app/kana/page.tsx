@@ -67,7 +67,7 @@ export default function KanaPage() {
                 }}
                 className={cn(
                   "rounded-lg px-3 py-1.5 text-xs font-medium capitalize transition-colors",
-                  type === item ? "bg-ink-900 text-white" : "text-ink-500 hover:text-ink-800",
+                  type === item ? "bg-fg text-canvas" : "text-ink-500 hover:text-ink-800",
                 )}
               >
                 {item}

@@ -187,10 +187,10 @@ export function QuizRunner({
                   onClick={() => setSelected(optionIndex)}
                   className={cn(
                     "jp flex items-center justify-between gap-3 rounded-xl border px-4 py-3 text-left text-base transition-colors",
-                    "border-ink-200 bg-white text-ink-800 hover:border-sakura-300 hover:bg-sakura-50",
-                    isSelected && !checked && "border-sakura-400 bg-sakura-50",
-                    showCorrect && "border-matcha-500 bg-matcha-50 text-matcha-600",
-                    showWrong && "border-red-400 bg-red-50 text-red-700",
+                    "border-border bg-surface text-fg hover:border-accent/40 hover:bg-accent-soft/40",
+                    isSelected && !checked && "border-accent bg-accent-soft",
+                    showCorrect && "border-success bg-success-soft text-success",
+                    showWrong && "border-danger bg-danger-soft text-danger",
                   )}
                 >
                   <span>{option}</span>
@@ -206,14 +206,14 @@ export function QuizRunner({
               className={cn(
                 "mt-5 rounded-xl border p-4 text-sm",
                 selected === current.answer
-                  ? "border-matcha-200 bg-matcha-50 text-matcha-600"
-                  : "border-red-200 bg-red-50 text-red-700",
+                  ? "border-success/40 bg-success-soft text-success"
+                  : "border-danger/40 bg-danger-soft text-danger",
               )}
             >
               <p className="font-medium">
                 {selected === current.answer ? "Benar!" : "Belum tepat."}
               </p>
-              <p className="mt-1 text-ink-700">{current.explanation}</p>
+              <p className="mt-1 text-fg">{current.explanation}</p>
             </div>
           )}
 

@@ -51,7 +51,7 @@ export function SegmentedControl<T extends string | number>({
               "flex items-center justify-center gap-1.5 rounded-lg font-medium transition-colors",
               size === "sm" ? "px-2.5 py-1 text-[11px]" : "px-3 py-1.5 text-xs",
               active
-                ? "bg-accent text-white shadow-sm"
+                ? "bg-accent text-accent-contrast shadow-sm"
                 : "text-fg-muted hover:bg-surface-muted hover:text-fg",
             )}
           >

@@ -29,6 +29,7 @@
     --fg-muted: 107 107 125;
     --accent: 201 79 124;
     --accent-soft: 253 229 238;
+    --accent-contrast: 255 255 255;
     --danger: 190 24 24;
     --danger-soft: 254 242 242;
     --success: 84 124 43;
@@ -63,6 +64,7 @@
     --fg-muted: 168 168 184;
     --accent: 239 127 164;
     --accent-soft: 55 24 38;
+    --accent-contrast: 23 23 31;
     --danger: 248 113 113;
     --danger-soft: 63 22 22;
     --success: 163 209 124;
@@ -136,6 +138,47 @@
 }
 .dark .border-white {
   border-color: rgb(var(--surface));
+}
+
+/* ------------------------------------------------------------------ *
+ * Animasi dekoratif: kelopak sakura jatuh (beranda)
+ * ------------------------------------------------------------------ */
+@keyframes petal-fall {
+  0% {
+    transform: translate3d(0, -12vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.75;
+  }
+  50% {
+    transform: translate3d(4vw, 45vh, 0) rotate(200deg);
+  }
+  92% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate3d(-3vw, 108vh, 0) rotate(420deg);
+    opacity: 0;
+  }
+}
+
+.sakura-petal {
+  position: absolute;
+  top: -6vh;
+  border-radius: 60% 0 60% 60%;
+  background: linear-gradient(135deg, #fbc9db 0%, #ef7fa4 100%);
+  box-shadow: 0 0 6px rgba(239, 127, 164, 0.35);
+  animation-name: petal-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sakura-petal {
+    display: none;
+  }
 }
 
 /* Hormati preferensi pengguna yang tidak ingin animasi */

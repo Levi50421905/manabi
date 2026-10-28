@@ -4,11 +4,11 @@ import { cn } from "./cn";
 export type BadgeTone = "neutral" | "sakura" | "matcha" | "amber" | "sky";
 
 const tones: Record<BadgeTone, string> = {
-  neutral: "bg-ink-100 text-ink-600",
-  sakura: "bg-sakura-100 text-sakura-700",
-  matcha: "bg-matcha-100 text-matcha-600",
-  amber: "bg-amber-100 text-amber-700",
-  sky: "bg-sky-100 text-sky-700",
+  neutral: "bg-surface-muted text-fg-muted",
+  sakura: "bg-accent-soft text-accent",
+  matcha: "bg-success-soft text-success",
+  amber: "bg-warning-soft text-warning",
+  sky: "bg-surface-muted text-fg",
 };
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {

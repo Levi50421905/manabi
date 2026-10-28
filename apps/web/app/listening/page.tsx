@@ -123,7 +123,7 @@ export default function ListeningPage() {
                     onClick={() => setPrefs({ ttsRate: item.value })}
                     className={cn(
                       "rounded-md px-2 py-1 text-[11px] font-medium transition-colors",
-                      rate === item.value ? "bg-ink-900 text-white" : "text-ink-500",
+                      rate === item.value ? "bg-fg text-canvas" : "text-ink-500",
                     )}
                   >
                     {item.label}
