@@ -23,6 +23,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/listening", label: "Listening", glyph: "聴" },
   { href: "/reading", label: "Membaca", glyph: "読" },
   { href: "/quiz", label: "Latihan", glyph: "問" },
+  { href: "/ujian", label: "Ujian", glyph: "試" },
   { href: "/dictionary", label: "Kamus", glyph: "辞" },
   { href: "/settings", label: "Pengaturan", glyph: "設" },
 ];

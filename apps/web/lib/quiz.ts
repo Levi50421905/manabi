@@ -1,7 +1,7 @@
 import { grammar, kana, kanji, vocab } from "@manabi/content";
 import type { GrammarPoint, Kana, Kanji, Vocab } from "@manabi/content";
 
-export type QuestionKind = "kana" | "kosakata" | "kanji" | "tata-bahasa";
+export type QuestionKind = "kana" | "kosakata" | "kanji" | "tata-bahasa" | "dengar" | "bacaan";
 
 export interface Question {
   id: string;
@@ -11,6 +11,8 @@ export interface Question {
   options: string[];
   answer: number;
   explanation: string;
+  /** Teks yang bisa diputar (khusus soal mendengar/ujian). */
+  audioText?: string;
 }
 
 export const QUESTION_KIND_LABEL: Record<QuestionKind, string> = {
@@ -18,6 +20,8 @@ export const QUESTION_KIND_LABEL: Record<QuestionKind, string> = {
   kosakata: "Kosakata",
   kanji: "Kanji",
   "tata-bahasa": "Tata bahasa",
+  dengar: "Mendengar",
+  bacaan: "Membaca",
 };
 
 export function shuffle<T>(input: T[]): T[] {
