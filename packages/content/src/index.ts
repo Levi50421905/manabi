@@ -19,6 +19,7 @@ import { kanjiN5 } from "./data/kanji-n5";
 import { kanjiN5Extra } from "./data/kanji-n5-extra";
 import { grammarN5 } from "./data/grammar-n5";
 import { grammarN5Extra } from "./data/grammar-n5-extra";
+import { grammarN5Fixes } from "./data/grammar-n5-fixes";
 import { listeningN5 } from "./data/listening-n5";
 import { listeningN5Extra } from "./data/listening-n5-extra";
 import { readingN5 } from "./data/reading-n5";
@@ -37,6 +38,7 @@ export { kanjiN5 } from "./data/kanji-n5";
 export { kanjiN5Extra } from "./data/kanji-n5-extra";
 export { grammarN5 } from "./data/grammar-n5";
 export { grammarN5Extra } from "./data/grammar-n5-extra";
+export { grammarN5Fixes } from "./data/grammar-n5-fixes";
 export { listeningN5 } from "./data/listening-n5";
 export { listeningN5Extra } from "./data/listening-n5-extra";
 export { listeningQuestions } from "./data/listening-questions";
@@ -91,7 +93,7 @@ export const kanji: Kanji[] = dedupeBy(
   (item) => item.character,
 );
 export const grammar: GrammarPoint[] = dedupeBy(
-  [...grammarN5, ...grammarN5Extra],
+  [...grammarN5, ...grammarN5Extra, ...grammarN5Fixes],
   (item) => item.id,
 );
 export const listening: ListeningTrack[] = dedupeBy(
