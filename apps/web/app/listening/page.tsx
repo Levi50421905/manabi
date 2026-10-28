@@ -30,6 +30,10 @@ export default function ListeningPage() {
   }, []);
 
   const track = listening.find((item) => item.id === activeId) ?? listening[0];
+  const speakerNames = track
+    ? Array.from(new Set(track.lines.map((line) => line.speaker)))
+    : [];
+  const speakerIndexOf = (name: string) => Math.max(0, speakerNames.indexOf(name));
 
   function playAll() {
     if (!isSpeechSupported() || !track) return;
@@ -39,12 +43,17 @@ export default function ListeningPage() {
 
     const lines = track.lines;
     let cursor = 0;
+    const names = Array.from(new Set(lines.map((line) => line.speaker)));
 
     const playNext = () => {
       if (cursor >= lines.length) return;
       const line = lines[cursor];
       cursor += 1;
-      const utterance = createUtterance(line?.jp ?? "", rate);
+      const utterance = createUtterance(
+        line?.jp ?? "",
+        rate,
+        Math.max(0, names.indexOf(line?.speaker ?? "")),
+      );
       if (!utterance) return;
       utterance.onend = playNext;
       synth.speak(utterance);
@@ -170,7 +179,11 @@ export default function ListeningPage() {
                       <p className="mt-1 text-xs text-ink-500">{line.id}</p>
                     )}
                   </div>
-                  <SpeakButton text={line.jp} rate={rate} />
+                  <SpeakButton
+                    text={line.jp}
+                    rate={rate}
+                    speakerIndex={speakerIndexOf(line.speaker)}
+                  />
                 </div>
               ))}
             </div>

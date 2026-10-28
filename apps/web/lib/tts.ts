@@ -42,29 +42,48 @@ export function voiceStatus(): VoiceStatus {
   return pickJapaneseVoice() ? "available" : "missing";
 }
 
+/** Semua voice Jepang yang tersedia di perangkat. */
+export function japaneseVoices(): SpeechSynthesisVoice[] {
+  refreshVoices();
+  return cachedVoices.filter((voice) => voice.lang.toLowerCase().startsWith("ja"));
+}
+
 /**
  * Buat utterance Jepang dengan voice & kecepatan yang benar.
- * Dipakai bersama oleh `speak()` dan pemutar dialog berurutan.
+ * `speakerIndex` membedakan pembicara dalam satu dialog: kalau perangkat punya
+ * beberapa voice Jepang, voice-nya berganti; kalau hanya satu, nadanya (pitch)
+ * yang dibedakan supaya pengguna tetap tahu giliran bicara sudah berganti.
  */
 export function createUtterance(
   text: string,
   rate?: number,
+  speakerIndex = 0,
 ): SpeechSynthesisUtterance | null {
   if (!isSpeechSupported()) return null;
 
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = "ja-JP";
   utterance.rate = rate ?? 0.9;
-  utterance.pitch = 1;
 
-  const voice = pickJapaneseVoice();
-  if (voice) utterance.voice = voice;
+  const voices = japaneseVoices();
+
+  if (voices.length > 0) {
+    utterance.voice = voices[speakerIndex % voices.length] ?? voices[0]!;
+  }
+
+  if (voices.length > 1) {
+    utterance.pitch = 1;
+  } else {
+    const pitches = [0.9, 1.25, 1.05, 0.8];
+    utterance.pitch = pitches[speakerIndex % pitches.length] ?? 1;
+  }
 
   return utterance;
 }
 
 interface SpeakOptions {
   rate?: number;
+  speakerIndex?: number;
 }
 
 /**
@@ -74,7 +93,7 @@ interface SpeakOptions {
 export function speak(text: string, options: SpeakOptions = {}): boolean {
   if (!isSpeechSupported()) return false;
 
-  const utterance = createUtterance(text, options.rate);
+  const utterance = createUtterance(text, options.rate, options.speakerIndex ?? 0);
   if (!utterance) return false;
 
   const synth = window.speechSynthesis;

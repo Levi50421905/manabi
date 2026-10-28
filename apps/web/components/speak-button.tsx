@@ -9,6 +9,8 @@ interface SpeakButtonProps {
   text: string;
   /** Override kecepatan; default mengikuti pengaturan pengguna. */
   rate?: number;
+  /** Indeks pembicara dalam dialog — membuat suara/nada berbeda per orang. */
+  speakerIndex?: number;
   size?: ButtonSize;
   variant?: "ghost" | "outline" | "primary";
   className?: string;
@@ -18,6 +20,7 @@ interface SpeakButtonProps {
 export function SpeakButton({
   text,
   rate,
+  speakerIndex = 0,
   size = "sm",
   variant = "outline",
   className,
@@ -62,7 +65,7 @@ export function SpeakButton({
       className={cn(className)}
       disabled={disabled}
       title={title}
-      onClick={() => speak(text, { rate: rate ?? prefs.ttsRate })}
+      onClick={() => speak(text, { rate: rate ?? prefs.ttsRate, speakerIndex })}
       aria-label={label ?? `Putar pelafalan: ${text}`}
     >
       <svg
