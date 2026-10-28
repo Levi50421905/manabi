@@ -12,7 +12,7 @@
 import { useEffect, useSyncExternalStore } from "react";
 import {
   createCard,
-  dueCards,
+  isDue,
   review as scheduleReview,
   summarize,
   type DeckSummary,
@@ -37,6 +37,8 @@ export interface ProgressState {
   quizzes: QuizRecord[];
   /** jumlah aktivitas per hari, untuk grafik mingguan */
   activity: Record<string, number>;
+  /** penanda "sudah dapat XP hari ini" per modul, mis. "2026-10-28:reading" */
+  studyMarks: string[];
 }
 
 const STORAGE_KEY = "manabi:v1:progress";
@@ -49,6 +51,7 @@ const INITIAL: ProgressState = {
   cards: {},
   quizzes: [],
   activity: {},
+  studyMarks: [],
 };
 
 let state: ProgressState = INITIAL;
@@ -74,6 +77,7 @@ function read(): ProgressState {
       cards: parsed.cards ?? {},
       quizzes: parsed.quizzes ?? [],
       activity: parsed.activity ?? {},
+      studyMarks: parsed.studyMarks ?? [],
       version: 1,
     };
   } catch {
@@ -107,7 +111,11 @@ function commit(next: ProgressState): void {
   emit();
 }
 
-function bumpStudy(input: ProgressState, now: Date = new Date()): ProgressState {
+function bumpStudy(
+  input: ProgressState,
+  now: Date = new Date(),
+  actions = 1,
+): ProgressState {
   const today = dayKey(now);
   const yesterdayDate = new Date(now);
   yesterdayDate.setDate(yesterdayDate.getDate() - 1);
@@ -128,7 +136,7 @@ function bumpStudy(input: ProgressState, now: Date = new Date()): ProgressState 
     lastStudyDate: today,
     activity: {
       ...input.activity,
-      [today]: (input.activity[today] ?? 0) + 1,
+      [today]: (input.activity[today] ?? 0) + actions,
     },
   };
 }
@@ -163,18 +171,35 @@ export function recordQuiz(label: string, correct: number, total: number): void 
   };
 
   commit(
-    bumpStudy({
-      ...state,
-      xp: state.xp + correct * 5,
-      quizzes: [record, ...state.quizzes].slice(0, 30),
-    }),
+    bumpStudy(
+      {
+        ...state,
+        xp: state.xp + correct * 5,
+        quizzes: [record, ...state.quizzes].slice(0, 30),
+      },
+      new Date(),
+      // satu kuis dihitung sebanyak jumlah soalnya, bukan 1 aksi
+      Math.max(1, total),
+    ),
   );
 }
 
-/** Tandai sesi belajar tanpa review kartu (mis. membaca / listening). */
-export function recordStudy(): void {
+/**
+ * Tandai sesi non-kartu (membaca / listening). XP & aksi hanya diberikan
+ * sekali per hari per modul — mencegah spam tombol untuk menaikkan XP.
+ */
+export function recordStudy(module: "reading" | "listening"): void {
   ensureHydrated();
-  commit(bumpStudy({ ...state, xp: state.xp + 3 }));
+  const stamp = `${dayKey()}:${module}`;
+  if (state.studyMarks.includes(stamp)) return;
+
+  commit(
+    bumpStudy({
+      ...state,
+      xp: state.xp + 3,
+      studyMarks: [...state.studyMarks, stamp].slice(-60),
+    }),
+  );
 }
 
 export function resetProgress(): void {
@@ -196,13 +221,47 @@ export function summaryFor(ids: string[]): DeckSummary {
   return summarize(cards);
 }
 
+/**
+ * Kartu yang BENAR-BENAR jatuh tempo (sudah pernah diulas), urut dari yang
+ * paling telat. Kartu baru tidak ikut di sini — lihat `newIds`.
+ */
 export function dueIds(ids: string[], now: Date = new Date()): string[] {
-  const cards = ids
-    .map((id) => state.cards[id])
-    .filter((card): card is SrsCard => Boolean(card));
-  const due = new Set(dueCards(cards, now).map((card) => card.id));
-  // materi yang belum pernah dilihat juga dianggap due
-  return ids.filter((id) => due.has(id) || !state.cards[id]);
+  return ids
+    .filter((id) => {
+      const card = state.cards[id];
+      return card ? isDue(card, now) : false;
+    })
+    .sort((a, b) => {
+      const cardA = state.cards[a];
+      const cardB = state.cards[b];
+      if (!cardA || !cardB) return 0;
+      return new Date(cardA.due).getTime() - new Date(cardB.due).getTime();
+    });
+}
+
+/** Kartu yang belum pernah dilihat sama sekali. */
+export function newIds(ids: string[]): string[] {
+  return ids.filter((id) => !state.cards[id]);
+}
+
+/**
+ * Antrean satu sesi review: kartu jatuh tempo lebih dulu (paling telat
+ * di depan), lalu kartu baru dibatasi `newLimit` agar tidak menumpuk.
+ */
+export function reviewQueue(ids: string[], newLimit = 5, now: Date = new Date()): string[] {
+  return [...dueIds(ids, now), ...newIds(ids).slice(0, newLimit)];
+}
+
+/** Streak yang sudah kedaluwarsa (tidak belajar kemarin/hari ini) = 0. */
+export function currentStreak(progress: ProgressState, now: Date = new Date()): number {
+  if (!progress.lastStudyDate) return 0;
+  const yesterday = new Date(now);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const todayKey = dayKey(now);
+  const yesterdayKey = dayKey(yesterday);
+  return progress.lastStudyDate === todayKey || progress.lastStudyDate === yesterdayKey
+    ? progress.streak
+    : 0;
 }
 
 export function levelFromXp(xp: number): { level: number; intoLevel: number; need: number } {

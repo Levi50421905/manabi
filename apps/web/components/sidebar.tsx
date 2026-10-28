@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn, ProgressBar } from "@manabi/ui";
-import { dayKey, levelFromXp, useProgress } from "@/lib/store";
+import { currentStreak, dayKey, levelFromXp, useProgress } from "@/lib/store";
 import { usePrefs } from "@/lib/prefs";
 
 interface NavItem {
@@ -122,7 +122,7 @@ export function Sidebar() {
           </div>
           <ProgressBar className="mt-2" value={intoLevel} max={need} />
           <p className="mt-2 text-[11px] text-ink-400">
-            🔥 Streak {progress.streak} hari · {intoLevel}/{need} XP
+            🔥 Streak {currentStreak(progress)} hari · {intoLevel}/{need} XP
           </p>
           <div className="mt-3 border-t border-ink-100 pt-2">
             <div className="flex items-center justify-between text-[11px] text-ink-400">

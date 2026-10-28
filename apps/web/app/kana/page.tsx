@@ -44,7 +44,7 @@ export default function KanaPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-ink-900">Kana Trainer</h1>
           <p className="mt-1 text-sm text-ink-500">
-            46 huruf dasar per aksara. Klik kartu untuk mendengar pelafalannya.
+            Huruf dasar + dakuten, handakuten, dan yoon. Klik kartu untuk mendengar pelafalannya.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -114,7 +114,7 @@ export default function KanaPage() {
                         key={item.id}
                         type="button"
                         onClick={() => speak(item.char)}
-                        title={`${item.char} — ${item.romaji} (klik untuk mendengar)`}
+                        title={`${item.char} â€” ${item.romaji} (klik untuk mendengar)`}
                         className="group flex flex-col items-center justify-center rounded-xl border border-ink-100 bg-white py-3 transition-colors hover:border-sakura-200 hover:bg-sakura-50"
                       >
                         <span className="jp text-2xl font-semibold text-ink-900">{item.char}</span>
@@ -139,7 +139,7 @@ export default function KanaPage() {
               <div>
                 <p className="text-sm font-medium text-ink-800">Sudah hafal hurufnya?</p>
                 <p className="text-xs text-ink-500">
-                  Uji dengan 10 soal acak — arahkan baca dan tulis.
+                  Uji dengan 10 soal acak â€” arahkan baca dan tulis.
                 </p>
               </div>
               <Button onClick={startQuiz}>Mulai latihan kana</Button>
@@ -156,13 +156,13 @@ export default function KanaPage() {
       ) : (
         <Card>
           <CardContent className="space-y-4 p-8 text-center">
-            <p className="jp text-4xl">あ</p>
+            <p className="jp text-4xl">ã‚</p>
             <div>
               <p className="text-sm font-medium text-ink-800">
                 10 soal acak dari {pool.length} huruf {type}
               </p>
               <p className="mt-1 text-xs text-ink-500">
-                Campuran membaca huruf → romaji dan romaji → huruf.
+                Campuran membaca huruf â†’ romaji dan romaji â†’ huruf.
               </p>
             </div>
             <Button onClick={startQuiz}>Mulai</Button>

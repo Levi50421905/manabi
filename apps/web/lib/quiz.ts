@@ -136,14 +136,16 @@ export function buildGrammarQuestions(pool: GrammarPoint[], count = 6): Question
   });
 }
 
-/** Quiz campuran: kana + kosakata + kanji + tata bahasa. */
+/** Quiz campuran: kana + kosakata + kanji + tata bahasa (total tepat = `count`). */
 export function buildMixedQuestions(count = 12): Question[] {
-  const vocabCount = Math.max(1, Math.round(count * 0.4));
-  const kanjiCount = Math.max(1, Math.round(count * 0.3));
-  const grammarCount = Math.max(1, count - vocabCount - kanjiCount);
+  const kanaCount = Math.min(2, count);
+  const rest = count - kanaCount;
+  const vocabCount = Math.max(1, Math.round(rest * 0.4));
+  const kanjiCount = Math.max(1, Math.round(rest * 0.3));
+  const grammarCount = Math.max(1, count - kanaCount - vocabCount - kanjiCount);
 
   return shuffle([
-    ...buildKanaQuestions(kana, 2),
+    ...buildKanaQuestions(kana, kanaCount),
     ...buildVocabQuestions(vocab, vocabCount),
     ...buildKanjiQuestions(kanji, kanjiCount),
     ...buildGrammarQuestions(grammar, grammarCount),

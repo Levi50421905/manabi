@@ -4,8 +4,9 @@ import { useMemo, useState } from "react";
 import { vocab, type PartOfSpeech } from "@manabi/content";
 import { Badge, Button, Card, CardContent, ProgressBar, cn } from "@manabi/ui";
 import type { Rating } from "@manabi/srs";
+import { createCard, review as scheduleReview } from "@manabi/srs";
 import { SpeakButton } from "@/components/speak-button";
-import { dueIds, rateCard, useProgress } from "@/lib/store";
+import { dueIds, newIds, rateCard, reviewQueue, useProgress } from "@/lib/store";
 
 const POS_LABEL: Record<PartOfSpeech, string> = {
   "kata-benda": "Kata benda",
@@ -37,11 +38,16 @@ export default function VocabPage() {
   const [finished, setFinished] = useState(false);
   const [reviewed, setReviewed] = useState(0);
 
-  const [requeued, setRequeued] = useState(0);
+  const [requeueCount, setRequeueCount] = useState<Record<string, number>>({});
 
   const allIds = useMemo(() => vocab.map((item) => item.id), []);
   const dueCount = useMemo(
     () => dueIds(allIds, new Date()).length,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [allIds, progress.cards],
+  );
+  const newCount = useMemo(
+    () => newIds(allIds).length,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [allIds, progress.cards],
   );
@@ -60,13 +66,21 @@ export default function VocabPage() {
   const current = vocab.find((item) => item.id === currentId);
 
   function startSession() {
-    const ids = dueIds(allIds, new Date()).slice(0, 15);
+    const ids = reviewQueue(allIds, 5);
     setSession(ids.length > 0 ? ids : allIds.slice(0, 10));
     setIndex(0);
     setRevealed(false);
     setFinished(false);
     setReviewed(0);
-    setRequeued(0);
+    setRequeueCount({});
+  }
+
+  /** Perkiraan interval berikutnya untuk tiap tombol rating (SM-2 asli). */
+  function hintFor(rating: Rating): string {
+    if (!current) return "";
+    const card = progress.cards[current.id] ?? createCard(current.id);
+    const preview = scheduleReview(card, rating);
+    return preview.interval === 0 ? "<10 mnt" : `${preview.interval} hr`;
   }
 
   function handleRate(rating: Rating) {
@@ -75,12 +89,13 @@ export default function VocabPage() {
     setReviewed((value) => value + 1);
     setRevealed(false);
 
-    // Kartu "Lupa" dimunculkan lagi di akhir sesi (maks. 2×) supaya
-    // langsung diulang selagi masih segar — bukan hilang dari sesi.
-    const requeue = rating === "again" && requeued < 2;
+    // Kartu "Lupa" diulang di akhir sesi — maksimal 2× PER KARTU
+    // (bukan per sesi, supaya kartu lain tetap mendapat giliran).
+    const alreadyRequeued = requeueCount[currentId] ?? 0;
+    const requeue = rating === "again" && alreadyRequeued < 2;
 
     if (requeue) {
-      setRequeued((value) => value + 1);
+      setRequeueCount((prev) => ({ ...prev, [currentId]: alreadyRequeued + 1 }));
       setSession((prev) => (prev ? [...prev, currentId] : prev));
       setIndex((value) => value + 1);
       return;
@@ -118,7 +133,9 @@ export default function VocabPage() {
         <Card className="animate-fade-up">
           <CardContent className="p-8 text-center">
             <p className="text-xs uppercase tracking-wide text-ink-400">{POS_LABEL[current.pos]}</p>
-            <p className="jp mt-4 text-5xl font-semibold text-ink-900">{current.kanji}</p>
+            <p className="jp mt-4 text-5xl font-semibold text-ink-900">
+              {current.kanji || current.kana}
+            </p>
             <div className="mt-2 flex items-center justify-center gap-2">
               <p className="jp text-lg text-ink-500">{current.kana}</p>
               <SpeakButton text={current.kana} />
@@ -162,7 +179,7 @@ export default function VocabPage() {
                   >
                     {item.label}
                     <span className="mt-0.5 block text-[10px] font-normal opacity-70">
-                      {item.hint}
+                      {hintFor(item.rating)}
                     </span>
                   </button>
                 ))}
@@ -210,7 +227,7 @@ export default function VocabPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-ink-900">Kosakata N5</h1>
           <p className="mt-1 text-sm text-ink-500">
-            {vocab.length} kata · {dueCount} siap diulang hari ini
+            {vocab.length} kata · {dueCount} jatuh tempo · {newCount} belum dipelajari
           </p>
         </div>
         <Button onClick={startSession}>

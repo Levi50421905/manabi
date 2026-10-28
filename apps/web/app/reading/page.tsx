@@ -201,8 +201,8 @@ export default function ReadingPage() {
                 </div>
               )}
               <div className="mt-4 border-t border-ink-100 pt-3">
-                <Button variant="ghost" size="sm" onClick={recordStudy}>
-                  Tandai sudah dibaca (+3 XP)
+                <Button variant="ghost" size="sm" onClick={() => recordStudy("reading")}>
+                  Tandai sudah dibaca (+3 XP, sekali per hari)
                 </Button>
               </div>
             </CardContent>

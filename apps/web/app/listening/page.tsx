@@ -48,7 +48,7 @@ export default function ListeningPage() {
     };
 
     playNext();
-    recordStudy();
+    recordStudy("listening");
   }
 
   return (
@@ -173,8 +173,8 @@ export default function ListeningPage() {
             </div>
 
             <div className="mt-4 flex justify-end">
-              <Button variant="ghost" size="sm" onClick={recordStudy}>
-                Tandai sudah didengarkan (+3 XP)
+              <Button variant="ghost" size="sm" onClick={() => recordStudy("listening")}>
+                Tandai sudah didengarkan (+3 XP, sekali per hari)
               </Button>
             </div>
           </CardContent>

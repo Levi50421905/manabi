@@ -1,4 +1,4 @@
-﻿# Normalisasi line ending: LF di repo, konsisten di semua OS
+# Normalisasi line ending: LF di repo, konsisten di semua OS
 * text=auto eol=lf
 
 # File biner
