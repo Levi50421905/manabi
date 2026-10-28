@@ -37,6 +37,8 @@ export default function VocabPage() {
   const [finished, setFinished] = useState(false);
   const [reviewed, setReviewed] = useState(0);
 
+  const [requeued, setRequeued] = useState(0);
+
   const allIds = useMemo(() => vocab.map((item) => item.id), []);
   const dueCount = useMemo(
     () => dueIds(allIds, new Date()).length,
@@ -64,6 +66,7 @@ export default function VocabPage() {
     setRevealed(false);
     setFinished(false);
     setReviewed(0);
+    setRequeued(0);
   }
 
   function handleRate(rating: Rating) {
@@ -71,6 +74,18 @@ export default function VocabPage() {
     rateCard(currentId, rating);
     setReviewed((value) => value + 1);
     setRevealed(false);
+
+    // Kartu "Lupa" dimunculkan lagi di akhir sesi (maks. 2×) supaya
+    // langsung diulang selagi masih segar — bukan hilang dari sesi.
+    const requeue = rating === "again" && requeued < 2;
+
+    if (requeue) {
+      setRequeued((value) => value + 1);
+      setSession((prev) => (prev ? [...prev, currentId] : prev));
+      setIndex((value) => value + 1);
+      return;
+    }
+
     if (session && index + 1 >= session.length) {
       setFinished(true);
     } else {

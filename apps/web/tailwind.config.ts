@@ -1,6 +1,11 @@
 import type { Config } from "tailwindcss";
 
+/**
+ * Warna netral memakai CSS variable (--ink-*, --paper, --surface) supaya
+ * dark mode bisa berganti tanpa menulis ulang setiap kelas di komponen.
+ */
 const config: Config = {
+  darkMode: "class",
   content: [
     "./app/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -9,7 +14,8 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        paper: "#fffdfb",
+        paper: "rgb(var(--paper) / <alpha-value>)",
+        surface: "rgb(var(--surface) / <alpha-value>)",
         sakura: {
           50: "#fff5f8",
           100: "#fde5ee",
@@ -30,20 +36,28 @@ const config: Config = {
           600: "#547c2b",
         },
         ink: {
-          50: "#f6f6f8",
-          100: "#e9e9ee",
-          200: "#d5d5dd",
-          300: "#b4b4c1",
-          400: "#8b8b9c",
-          500: "#6b6b7d",
-          600: "#545463",
-          700: "#40404d",
-          800: "#2b2b35",
-          900: "#1b1b21",
+          50: "rgb(var(--ink-50) / <alpha-value>)",
+          100: "rgb(var(--ink-100) / <alpha-value>)",
+          200: "rgb(var(--ink-200) / <alpha-value>)",
+          300: "rgb(var(--ink-300) / <alpha-value>)",
+          400: "rgb(var(--ink-400) / <alpha-value>)",
+          500: "rgb(var(--ink-500) / <alpha-value>)",
+          600: "rgb(var(--ink-600) / <alpha-value>)",
+          700: "rgb(var(--ink-700) / <alpha-value>)",
+          800: "rgb(var(--ink-800) / <alpha-value>)",
+          900: "rgb(var(--ink-900) / <alpha-value>)",
         },
       },
       fontFamily: {
-        sans: ["ui-sans-serif", "system-ui", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
+        sans: [
+          "ui-sans-serif",
+          "system-ui",
+          "Segoe UI",
+          "Roboto",
+          "Helvetica Neue",
+          "Arial",
+          "sans-serif",
+        ],
         ja: ['"Noto Sans JP"', '"Hiragino Sans"', '"Yu Gothic"', "Meiryo", "sans-serif"],
       },
       keyframes: {
@@ -51,7 +65,7 @@ const config: Config = {
           from: { opacity: "0", transform: "translateY(8px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
-        "pop": {
+        pop: {
           "0%": { transform: "scale(0.96)", opacity: "0" },
           "100%": { transform: "scale(1)", opacity: "1" },
         },

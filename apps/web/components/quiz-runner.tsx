@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge, Button, Card, CardContent, cn, ProgressBar } from "@manabi/ui";
 import { QUESTION_KIND_LABEL, scoreMessage, type Question } from "@/lib/quiz";
 import { recordQuiz } from "@/lib/store";
@@ -25,6 +25,35 @@ export function QuizRunner({
   const [correctCount, setCorrectCount] = useState(0);
   const [finished, setFinished] = useState(false);
   const [answers, setAnswers] = useState<Array<number | null>>([]);
+
+  // Shortcut keyboard: tombol 1–4 memilih jawaban, Enter untuk periksa/lanjut.
+  useEffect(() => {
+    function handleKey(event: KeyboardEvent) {
+      if (finished || !current) return;
+
+      if (event.key >= "1" && event.key <= "4") {
+        const optionIndex = Number(event.key) - 1;
+        if (!checked && optionIndex < current.options.length) {
+          event.preventDefault();
+          setSelected(optionIndex);
+        }
+        return;
+      }
+
+      if (event.key === "Enter") {
+        if (checked) {
+          event.preventDefault();
+          handleNext();
+        } else if (selected !== null) {
+          event.preventDefault();
+          handleCheck();
+        }
+      }
+    }
+
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  });
 
   const total = questions.length;
   const current = questions[index];
@@ -127,6 +156,9 @@ export function QuizRunner({
       <div className="flex items-center justify-between text-sm text-ink-500">
         <span>
           Soal {index + 1} dari {total}
+          <span className="ml-2 hidden text-[11px] text-ink-400 sm:inline">
+            1–4 pilih · Enter lanjut
+          </span>
         </span>
         <Badge tone="sakura">{QUESTION_KIND_LABEL[current.kind]}</Badge>
       </div>

@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn, ProgressBar } from "@manabi/ui";
-import { levelFromXp, useProgress } from "@/lib/store";
+import { dayKey, levelFromXp, useProgress } from "@/lib/store";
+import { usePrefs } from "@/lib/prefs";
 
 interface NavItem {
   href: string;
@@ -14,6 +15,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { href: "/dashboard", label: "Dasbor", glyph: "学" },
   { href: "/kana", label: "Kana", glyph: "あ" },
+  { href: "/write", label: "Menulis", glyph: "書" },
   { href: "/vocab", label: "Kosakata", glyph: "語" },
   { href: "/kanji", label: "Kanji", glyph: "漢" },
   { href: "/grammar", label: "Tata Bahasa", glyph: "文" },
@@ -21,6 +23,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "/reading", label: "Membaca", glyph: "読" },
   { href: "/quiz", label: "Latihan", glyph: "問" },
   { href: "/dictionary", label: "Kamus", glyph: "辞" },
+  { href: "/settings", label: "Pengaturan", glyph: "設" },
 ];
 
 function isActive(pathname: string, href: string): boolean {
@@ -30,7 +33,9 @@ function isActive(pathname: string, href: string): boolean {
 export function Sidebar() {
   const pathname = usePathname();
   const progress = useProgress();
+  const [prefs] = usePrefs();
   const { level, intoLevel, need } = levelFromXp(progress.xp);
+  const todayActions = progress.activity[dayKey()] ?? 0;
 
   return (
     <>
@@ -68,7 +73,7 @@ export function Sidebar() {
       </header>
 
       {/* ---------- Desktop ---------- */}
-      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-ink-100 bg-white/60 px-4 py-6 backdrop-blur md:flex">
+      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-ink-100 bg-surface/60 px-4 py-6 backdrop-blur md:flex">
         <Link href="/" className="flex items-center gap-2.5 px-2">
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-sakura-600 text-base font-bold text-white jp">
             学
@@ -110,7 +115,7 @@ export function Sidebar() {
           })}
         </nav>
 
-        <div className="mt-auto rounded-2xl border border-ink-100 bg-white p-3">
+        <div className="mt-auto rounded-2xl border border-ink-100 bg-surface p-3">
           <div className="flex items-center justify-between text-xs">
             <span className="font-medium text-ink-700">Level {level}</span>
             <span className="text-ink-400">{progress.xp} XP</span>
@@ -119,6 +124,20 @@ export function Sidebar() {
           <p className="mt-2 text-[11px] text-ink-400">
             🔥 Streak {progress.streak} hari · {intoLevel}/{need} XP
           </p>
+          <div className="mt-3 border-t border-ink-100 pt-2">
+            <div className="flex items-center justify-between text-[11px] text-ink-400">
+              <span>Target hari ini</span>
+              <span>
+                {Math.min(todayActions, prefs.dailyGoal)}/{prefs.dailyGoal}
+              </span>
+            </div>
+            <ProgressBar
+              className="mt-1.5"
+              value={Math.min(todayActions, prefs.dailyGoal)}
+              max={prefs.dailyGoal}
+              tone="matcha"
+            />
+          </div>
         </div>
       </aside>
     </>
