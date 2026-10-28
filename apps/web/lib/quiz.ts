@@ -292,6 +292,38 @@ export function buildKanjiWritingQuestions(count = 8): Question[] {
   });
 }
 
+/**
+ * Format JLPT 文脈規定: kalimat dengan bagian kosong (＿＿)
+ * → pilih kata yang paling tepat mengisi bagian itu.
+ */
+export function buildContextQuestions(count = 6): Question[] {
+  const pool = vocab.filter(
+    (item) => item.example.jp.length > 6 && item.example.jp.includes(item.kanji || item.kana),
+  );
+  const picks = take(pool, count);
+  const fallbackPool = vocab.map((item) => item.kanji || item.kana);
+
+  return picks.map((item, index) => {
+    const word = item.kanji || item.kana;
+    const sentence = item.example.jp.replace(word, "＿＿");
+    const samePos = vocab
+      .filter((other) => other.pos === item.pos && (other.kanji || other.kana) !== word)
+      .map((other) => other.kanji || other.kana);
+    const distractors = samePos.length >= 3 ? samePos : fallbackPool;
+    const { options, answer } = buildOptions(word, distractors);
+
+    return {
+      id: `context:${item.id}:${index}`,
+      kind: "kosakata",
+      prompt: sentence,
+      subPrompt: "Pilih kata yang tepat untuk mengisi ＿＿",
+      options,
+      answer,
+      explanation: `${word} (${item.kana}) = ${item.meaning}.`,
+    };
+  });
+}
+
 export function scoreMessage(correct: number, total: number): string {
   const ratio = total === 0 ? 0 : correct / total;
   if (ratio === 1) return "完璧！ Sempurna, semua benar!";

@@ -1,5 +1,6 @@
 import { grammar, kanji, listening, listeningQuestions, reading, vocab } from "@manabi/content";
 import {
+  buildContextQuestions,
   buildGrammarQuestions,
   buildKanjiQuestions,
   buildKanjiReadingQuestions,
@@ -110,8 +111,9 @@ export function buildExam(kind: ExamKind): ExamSpec {
   if (kind === "jlpt-n5") {
     const language = shuffle([
       ...buildKanjiReadingQuestions(8),
-      ...buildKanjiWritingQuestions(6),
-      ...buildGrammarQuestions(grammar, 6),
+      ...buildKanjiWritingQuestions(4),
+      ...buildContextQuestions(4),
+      ...buildGrammarQuestions(grammar, 4),
     ]);
 
     return {
