@@ -2,7 +2,16 @@
 
 import { useMemo, useState } from "react";
 import { vocab, type PartOfSpeech } from "@manabi/content";
-import { Badge, Button, Card, CardContent, ProgressBar, cn } from "@manabi/ui";
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  EmptyState,
+  Pagination,
+  ProgressBar,
+  cn,
+} from "@manabi/ui";
 import type { Rating } from "@manabi/srs";
 import { createCard, review as scheduleReview } from "@manabi/srs";
 import { SpeakButton } from "@/components/speak-button";
@@ -25,12 +34,14 @@ const RATINGS: Array<{ rating: Rating; label: string; className: string }> = [
 ];
 
 const ALL = "semua" as const;
+const PAGE_SIZE = 30;
 
 export default function VocabPage() {
   const progress = useProgress();
   const [query, setQuery] = useState("");
   const [pos, setPos] = useState<PartOfSpeech | typeof ALL>(ALL);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
 
   const [session, setSession] = useState<string[] | null>(null);
   const [index, setIndex] = useState(0);
@@ -61,6 +72,10 @@ export default function VocabPage() {
       return `${item.kanji} ${item.kana} ${item.romaji} ${item.meaning}`.toLowerCase().includes(q);
     });
   }, [query, pos]);
+
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount);
+  const pageItems = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   const currentId = session?.[index];
   const current = vocab.find((item) => item.id === currentId);
@@ -239,7 +254,10 @@ export default function VocabPage() {
         <input
           type="search"
           value={query}
-          onChange={(event) => setQuery(event.target.value)}
+          onChange={(event) => {
+            setQuery(event.target.value);
+            setPage(1);
+          }}
           placeholder="Cari kanji, kana, atau arti…"
           className="h-9 min-w-[220px] flex-1 rounded-xl border border-ink-200 bg-white px-3 text-sm text-ink-800 placeholder:text-ink-400 focus:border-sakura-300 focus:outline-none focus:ring-2 focus:ring-sakura-100"
         />
@@ -248,7 +266,10 @@ export default function VocabPage() {
             <button
               key={item}
               type="button"
-              onClick={() => setPos(item)}
+              onClick={() => {
+                setPos(item);
+                setPage(1);
+              }}
               className={cn(
                 "rounded-full border px-2.5 py-1 text-xs transition-colors",
                 pos === item
@@ -263,11 +284,15 @@ export default function VocabPage() {
       </div>
 
       <div className="space-y-1.5">
-        {filtered.map((item) => {
+        {pageItems.map((item, itemIndex) => {
           const card = progress.cards[item.id];
           const isOpen = expanded === item.id;
           return (
-            <Card key={item.id} className={cn(isOpen && "border-sakura-200")}>
+            <Card
+              key={item.id}
+              className={cn("animate-fade-up", isOpen && "border-sakura-200")}
+              style={{ animationDelay: `${Math.min(itemIndex, 10) * 25}ms` }}
+            >
               <button
                 type="button"
                 onClick={() => setExpanded(isOpen ? null : item.id)}
@@ -314,11 +339,19 @@ export default function VocabPage() {
         })}
 
         {filtered.length === 0 && (
-          <p className="rounded-2xl border border-dashed border-ink-200 p-8 text-center text-sm text-ink-400">
-            Tidak ada kosakata yang cocok.
-          </p>
+          <EmptyState
+            glyph="辞"
+            title="Tidak ada kosakata yang cocok"
+            description="Coba kata kunci lain, atau ubah filter jenis kata."
+          />
         )}
       </div>
+
+      <Pagination page={currentPage} pageCount={pageCount} onChange={setPage} />
+
+      <p className="text-center text-[11px] text-ink-400">
+        Menampilkan {pageItems.length} dari {filtered.length} kata
+      </p>
     </div>
   );
 }

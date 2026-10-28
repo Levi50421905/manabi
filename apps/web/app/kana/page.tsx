@@ -47,8 +47,16 @@ export default function KanaPage() {
             Huruf dasar + dakuten, handakuten, dan yoon. Klik kartu untuk mendengar pelafalannya.
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <div className="flex rounded-xl border border-ink-200 bg-white p-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            onClick={() => {
+              setMode("latihan");
+              startQuiz();
+            }}
+          >
+            Mulai latihan
+          </Button>
+          <div className="flex rounded-xl border border-ink-200 bg-surface p-1">
             {(["hiragana", "katakana"] as KanaType[]).map((item) => (
               <button
                 key={item}
@@ -108,13 +116,13 @@ export default function KanaPage() {
                   <p className="mb-2 text-[11px] font-medium uppercase tracking-wide text-ink-400">
                     {group.label}
                   </p>
-                  <div className="grid grid-cols-5 gap-2">
+                  <div className="grid grid-cols-5 gap-2 sm:grid-cols-8 lg:grid-cols-10">
                     {group.items.map((item) => (
                       <button
                         key={item.id}
                         type="button"
                         onClick={() => speak(item.char)}
-                        title={`${item.char} â€” ${item.romaji} (klik untuk mendengar)`}
+                        title={`${item.char} - ${item.romaji} (klik untuk mendengar)`}
                         className="group flex flex-col items-center justify-center rounded-xl border border-ink-100 bg-white py-3 transition-colors hover:border-sakura-200 hover:bg-sakura-50"
                       >
                         <span className="jp text-2xl font-semibold text-ink-900">{item.char}</span>
