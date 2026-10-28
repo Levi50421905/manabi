@@ -39,6 +39,8 @@ export { grammarN5 } from "./data/grammar-n5";
 export { grammarN5Extra } from "./data/grammar-n5-extra";
 export { listeningN5 } from "./data/listening-n5";
 export { listeningN5Extra } from "./data/listening-n5-extra";
+export { listeningQuestions } from "./data/listening-questions";
+export type { ListeningQuestion } from "./data/listening-questions";
 export { readingN5 } from "./data/reading-n5";
 export { readingN5Extra } from "./data/reading-n5-extra";
 

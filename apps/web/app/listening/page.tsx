@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { listening } from "@manabi/content";
+import { listening, listeningQuestions } from "@manabi/content";
 import { Badge, Button, Card, CardContent, cn } from "@manabi/ui";
 import { SpeakButton } from "@/components/speak-button";
 import { createUtterance, isSpeechSupported, stopSpeaking } from "@/lib/tts";
@@ -20,6 +20,8 @@ export default function ListeningPage() {
   const [showTranslation, setShowTranslation] = useState(true);
   const [prefs, setPrefs] = usePrefs();
   const [supported, setSupported] = useState(true);
+  const [answers, setAnswers] = useState<Record<string, number>>({});
+  const [checked, setChecked] = useState<Record<string, boolean>>({});
   const rate = prefs.ttsRate;
 
   useEffect(() => {
@@ -172,6 +174,81 @@ export default function ListeningPage() {
                 </div>
               ))}
             </div>
+
+            {track && (listeningQuestions[track.id]?.length ?? 0) > 0 && (
+              <div className="mt-5 border-t border-border pt-4">
+                <h3 className="text-sm font-semibold text-fg">Soal pemahaman</h3>
+                <p className="mt-0.5 text-[11px] text-fg-muted">
+                  Coba putar dialog tanpa melihat teks, lalu jawab pertanyaan ini.
+                </p>
+
+                {listeningQuestions[track.id]?.map((question) => {
+                  const selected = answers[question.id];
+                  const isChecked = checked[question.id] === true;
+                  const isCorrect = selected === question.answer;
+
+                  return (
+                    <div key={question.id} className="mt-3">
+                      <p className="text-sm font-medium text-fg">{question.prompt}</p>
+                      <div className="mt-2 space-y-1.5">
+                        {question.options.map((option, optionIndex) => {
+                          const picked = selected === optionIndex;
+                          const showCorrect = isChecked && optionIndex === question.answer;
+                          const showWrong = isChecked && picked && optionIndex !== question.answer;
+
+                          return (
+                            <button
+                              key={option}
+                              type="button"
+                              disabled={isChecked}
+                              onClick={() =>
+                                setAnswers((prev) => ({ ...prev, [question.id]: optionIndex }))
+                              }
+                              className={cn(
+                                "jp flex w-full items-center justify-between rounded-lg border px-3 py-2 text-left text-sm transition-colors",
+                                "border-border bg-surface text-fg hover:border-accent/40",
+                                picked && !isChecked && "border-accent bg-accent-soft",
+                                showCorrect && "border-success bg-success-soft text-success",
+                                showWrong && "border-danger bg-danger-soft text-danger",
+                              )}
+                            >
+                              <span>{option}</span>
+                              {showCorrect && <span aria-hidden="true">✓</span>}
+                              {showWrong && <span aria-hidden="true">✕</span>}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      <div className="mt-2">
+                        {!isChecked ? (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            disabled={selected === undefined}
+                            onClick={() =>
+                              setChecked((prev) => ({ ...prev, [question.id]: true }))
+                            }
+                          >
+                            Periksa jawaban
+                          </Button>
+                        ) : (
+                          <p
+                            className={cn(
+                              "text-xs",
+                              isCorrect ? "text-success" : "text-danger",
+                            )}
+                          >
+                            {isCorrect ? "Benar! " : "Belum tepat. "}
+                            <span className="text-fg-muted">{question.explanation}</span>
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
 
             <div className="mt-4 flex justify-end">
               <Button variant="ghost" size="sm" onClick={() => recordStudy("listening")}>
