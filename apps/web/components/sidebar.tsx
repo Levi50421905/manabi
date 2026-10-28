@@ -133,7 +133,7 @@ export function Sidebar() {
       </nav>
 
       {/* ---------- Desktop ---------- */}
-      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-ink-100 bg-surface/60 px-4 py-6 backdrop-blur md:flex">
+      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col overflow-hidden border-r border-border bg-surface/40 px-3 py-4 backdrop-blur md:flex">
         <Link href="/" className="flex items-center gap-2.5 px-2">
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-sakura-600 text-base font-bold text-white jp">
             学
@@ -144,7 +144,10 @@ export function Sidebar() {
           </span>
         </Link>
 
-        <nav className="mt-8 flex flex-col gap-0.5" aria-label="Navigasi utama">
+        <nav
+          className="mt-4 flex flex-1 flex-col gap-0.5 overflow-y-auto pr-1"
+          aria-label="Navigasi utama"
+        >
           {NAV_ITEMS.map((item) => {
             const active = isActive(pathname, item.href);
             return (
@@ -153,51 +156,47 @@ export function Sidebar() {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "group flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition-colors",
+                  "group flex shrink-0 items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm transition-colors",
                   active
-                    ? "bg-sakura-50 font-medium text-sakura-700"
-                    : "text-ink-600 hover:bg-ink-50 hover:text-ink-900",
+                    ? "bg-accent-soft font-medium text-accent"
+                    : "text-fg-muted hover:bg-surface-muted hover:text-fg",
                 )}
               >
                 <span
                   className={cn(
-                    "grid h-7 w-7 place-items-center rounded-lg text-xs jp transition-colors",
+                    "jp grid h-7 w-7 shrink-0 place-items-center rounded-md text-xs transition-colors",
                     active
-                      ? "bg-sakura-600 text-white"
-                      : "bg-ink-100 text-ink-500 group-hover:bg-ink-200",
+                      ? "bg-accent text-accent-contrast"
+                      : "bg-surface-muted text-fg-muted group-hover:bg-border",
                   )}
                 >
                   {item.glyph}
                 </span>
-                {item.label}
+                <span className="truncate">{item.label}</span>
               </Link>
             );
           })}
         </nav>
 
-        <div className="mt-auto rounded-2xl border border-ink-100 bg-surface p-3">
-          <div className="flex items-center justify-between text-xs">
-            <span className="font-medium text-ink-700">Level {level}</span>
-            <span className="text-ink-400">{progress.xp} XP</span>
+        <div className="mt-3 shrink-0 rounded-xl border border-border bg-surface p-2.5">
+          <div className="flex items-center justify-between text-[11px]">
+            <span className="font-medium text-fg">Level {level}</span>
+            <span className="text-fg-muted">{progress.xp} XP</span>
           </div>
-          <ProgressBar className="mt-2" value={intoLevel} max={need} />
-          <p className="mt-2 text-[11px] text-ink-400">
-            🔥 Streak {currentStreak(progress)} hari · {intoLevel}/{need} XP
-          </p>
-          <div className="mt-3 border-t border-ink-100 pt-2">
-            <div className="flex items-center justify-between text-[11px] text-ink-400">
-              <span>Target hari ini</span>
-              <span>
-                {Math.min(todayActions, prefs.dailyGoal)}/{prefs.dailyGoal}
-              </span>
-            </div>
-            <ProgressBar
-              className="mt-1.5"
-              value={Math.min(todayActions, prefs.dailyGoal)}
-              max={prefs.dailyGoal}
-              tone="matcha"
-            />
+          <ProgressBar className="mt-1.5 h-1.5" value={intoLevel} max={need} />
+
+          <div className="mt-2 flex items-center justify-between text-[10px] text-fg-muted">
+            <span>🔥 {currentStreak(progress)} hari</span>
+            <span>
+              {Math.min(todayActions, prefs.dailyGoal)}/{prefs.dailyGoal} target
+            </span>
           </div>
+          <ProgressBar
+            className="mt-1 h-1.5"
+            value={Math.min(todayActions, prefs.dailyGoal)}
+            max={prefs.dailyGoal}
+            tone="matcha"
+          />
         </div>
       </aside>
     </>

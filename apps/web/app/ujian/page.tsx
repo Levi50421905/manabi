@@ -133,6 +133,47 @@ export default function ExamPage() {
               ))}
             </ul>
 
+            {(() => {
+              const wrong = questions.filter((question) => answers[question.id] !== question.answer);
+              if (wrong.length === 0) {
+                return (
+                  <p className="mt-5 rounded-xl border border-success/40 bg-success-soft p-3 text-xs text-success">
+                    Semua jawaban benar. 素晴らしい！
+                  </p>
+                );
+              }
+              return (
+                <div className="mt-5">
+                  <h3 className="text-sm font-semibold text-fg">
+                    Pembahasan jawaban salah ({wrong.length})
+                  </h3>
+                  <ul className="mt-2 space-y-2">
+                    {wrong.slice(0, 20).map((question) => {
+                      const picked = answers[question.id];
+                      return (
+                        <li key={question.id} className="rounded-lg border border-border p-2.5">
+                          <p className="jp text-sm font-medium text-fg">{question.prompt}</p>
+                          <p className="mt-1 text-xs text-danger">
+                            Jawabanmu:{" "}
+                            {picked === undefined ? "(kosong)" : question.options[picked]}
+                          </p>
+                          <p className="text-xs text-success">
+                            Kunci: {question.options[question.answer]}
+                          </p>
+                          <p className="mt-1 text-[11px] text-fg-muted">{question.explanation}</p>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  {wrong.length > 20 && (
+                    <p className="mt-2 text-[11px] text-fg-muted">
+                      Menampilkan 20 dari {wrong.length} jawaban salah.
+                    </p>
+                  )}
+                </div>
+              );
+            })()}
+
             <div className="mt-5 flex flex-wrap gap-2">
               <Button onClick={() => start(spec.kind)}>Ulangi ujian</Button>
               <Button variant="outline" onClick={() => setSpec(null)}>
