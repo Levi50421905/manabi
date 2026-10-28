@@ -81,13 +81,7 @@ export default function HomePage() {
 
   return (
     <div className="relative isolate space-y-14 pb-6">
-      {/* Foto pohon (mode terang) & ilustrasi SVG (mode gelap) — di belakang konten */}
-      <img
-        src="/sakura-branch.png"
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none absolute right-0 top-0 -z-10 w-[min(520px,72%)] opacity-50 mix-blend-multiply dark:hidden"
-      />
+      {/* Ilustrasi pohon (mode gelap) — di belakang konten */}
       <SakuraTree />
       <SakuraRain />
       {/* ---------- Hero ---------- */}

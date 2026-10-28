@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn, ProgressBar } from "@manabi/ui";
@@ -30,47 +31,105 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+/** Item yang tampil langsung di bottom nav mobile. */
+const MOBILE_PRIMARY = ["/dashboard", "/kana", "/vocab", "/quiz", "/dictionary"];
+
 export function Sidebar() {
   const pathname = usePathname();
   const progress = useProgress();
   const [prefs] = usePrefs();
+  const [sheetOpen, setSheetOpen] = useState(false);
   const { level, intoLevel, need } = levelFromXp(progress.xp);
   const todayActions = progress.activity[dayKey()] ?? 0;
 
   return (
     <>
-      {/* ---------- Mobile ---------- */}
-      <header className="sticky top-0 z-30 border-b border-ink-100 bg-paper/95 backdrop-blur md:hidden">
-        <div className="flex items-center justify-between px-4 py-3">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-sakura-600 text-sm font-bold text-white jp">
-              学
-            </span>
-            <span className="text-sm font-semibold tracking-tight text-ink-900">Manabi</span>
-          </Link>
-          <div className="flex items-center gap-3 text-xs text-ink-500">
-            <span aria-label="streak">🔥 {progress.streak}</span>
-            <span aria-label="xp">{progress.xp} XP</span>
+      {/* ---------- Mobile: header tipis + bottom nav ---------- */}
+      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-paper/95 px-4 py-2.5 backdrop-blur md:hidden">
+        <Link href="/" className="flex items-center gap-2">
+          <span className="jp grid h-8 w-8 place-items-center rounded-lg bg-accent text-sm font-bold text-accent-contrast">
+            学
+          </span>
+          <span className="text-sm font-semibold tracking-tight text-fg">Manabi</span>
+        </Link>
+        <div className="flex items-center gap-3 text-xs text-fg-muted">
+          <span aria-label={`streak ${currentStreak(progress)} hari`}>🔥 {currentStreak(progress)}</span>
+          <span aria-label={`${progress.xp} XP`}>{progress.xp} XP</span>
+        </div>
+      </header>
+
+      {/* Sheet menu "Lainnya" */}
+      {sheetOpen && (
+        <div className="fixed inset-0 z-40 md:hidden" role="dialog" aria-label="Menu lainnya">
+          <button
+            type="button"
+            aria-label="Tutup menu"
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setSheetOpen(false)}
+          />
+          <div className="absolute inset-x-0 bottom-[58px] rounded-t-2xl border-t border-border bg-surface p-3 pb-5 shadow-xl">
+            <p className="mb-2 px-1 text-[11px] font-medium uppercase tracking-wide text-fg-muted">
+              Menu lainnya
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              {NAV_ITEMS.filter((item) => !MOBILE_PRIMARY.includes(item.href)).map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setSheetOpen(false)}
+                  className={cn(
+                    "flex flex-col items-center gap-1 rounded-xl border px-2 py-3 text-[11px] transition-colors",
+                    isActive(pathname, item.href)
+                      ? "border-accent bg-accent-soft text-accent"
+                      : "border-border text-fg-muted hover:bg-surface-muted",
+                  )}
+                >
+                  <span className="jp text-base leading-none">{item.glyph}</span>
+                  {item.label}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
-        <nav className="flex gap-1 overflow-x-auto px-3 pb-2" aria-label="Navigasi utama">
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
-                isActive(pathname, item.href)
-                  ? "bg-sakura-100 text-sakura-700"
-                  : "text-ink-500 hover:bg-ink-100",
-              )}
-            >
-              <span className="jp">{item.glyph}</span>
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-      </header>
+      )}
+
+      {/* Bottom navigation */}
+      <nav
+        className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-surface/95 backdrop-blur md:hidden"
+        aria-label="Navigasi bawah"
+      >
+        <div className="grid grid-cols-6 pb-[env(safe-area-inset-bottom)]">
+          {NAV_ITEMS.filter((item) => MOBILE_PRIMARY.includes(item.href)).map((item) => {
+            const active = isActive(pathname, item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "flex flex-col items-center gap-0.5 py-2 text-[10px] transition-colors",
+                  active ? "text-accent" : "text-fg-muted",
+                )}
+              >
+                <span className="jp text-lg leading-none">{item.glyph}</span>
+                {item.label}
+              </Link>
+            );
+          })}
+          <button
+            type="button"
+            onClick={() => setSheetOpen((value) => !value)}
+            aria-expanded={sheetOpen}
+            className={cn(
+              "flex flex-col items-center gap-0.5 py-2 text-[10px] transition-colors",
+              sheetOpen ? "text-accent" : "text-fg-muted",
+            )}
+          >
+            <span className="text-lg leading-none">⋯</span>
+            Lainnya
+          </button>
+        </div>
+      </nav>
 
       {/* ---------- Desktop ---------- */}
       <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-ink-100 bg-surface/60 px-4 py-6 backdrop-blur md:flex">
