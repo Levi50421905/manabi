@@ -2,6 +2,8 @@ import { grammar, kanji, listening, listeningQuestions, reading, vocab } from "@
 import {
   buildGrammarQuestions,
   buildKanjiQuestions,
+  buildKanjiReadingQuestions,
+  buildKanjiWritingQuestions,
   buildVocabQuestions,
   shuffle,
   type Question,
@@ -100,9 +102,9 @@ function buildReading(): Question[] {
 export function buildExam(kind: ExamKind): ExamSpec {
   if (kind === "jlpt-n5") {
     const language = shuffle([
-      ...buildVocabQuestions(vocab, 10, { withKana: false }),
-      ...buildKanjiQuestions(kanji, 6),
-      ...buildGrammarQuestions(grammar, 4),
+      ...buildKanjiReadingQuestions(8),
+      ...buildKanjiWritingQuestions(6),
+      ...buildGrammarQuestions(grammar, 6),
     ]);
 
     return {
@@ -133,8 +135,9 @@ export function buildExam(kind: ExamKind): ExamSpec {
         label: "文字・語彙 (Huruf & Kosakata)",
         maxPoints: 63,
         questions: shuffle([
-          ...buildVocabQuestions(vocab, 8, { withKana: false }),
-          ...buildKanjiQuestions(kanji, 4),
+          ...buildKanjiReadingQuestions(6),
+          ...buildKanjiWritingQuestions(6),
+          ...buildVocabQuestions(vocab, 4, { withKana: false }),
         ]),
       },
       {

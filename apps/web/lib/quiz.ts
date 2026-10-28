@@ -237,6 +237,59 @@ export function buildTypedQuestions(
   });
 }
 
+/** Tandai kata target dalam kalimat dengan 「」 agar jelas mana yang ditanyakan. */
+function markWord(sentence: string, word: string): string {
+  if (!word || !sentence.includes(word)) return sentence;
+  return sentence.replace(word, `「${word}」`);
+}
+
+/**
+ * Format JLPT 漢字の読み方: kalimat dengan kata bergaris bawah (ditandai 「」)
+ * → pilih cara bacanya dalam kana.
+ */
+export function buildKanjiReadingQuestions(count = 8): Question[] {
+  const pool = vocab.filter((item) => item.kanji && item.example.jp.includes(item.kanji));
+  const picks = take(pool, count);
+  const kanaPool = vocab.map((item) => item.kana);
+
+  return picks.map((item, index) => {
+    const { options, answer } = buildOptions(item.kana, kanaPool);
+    return {
+      id: `kanji-reading:${item.id}:${index}`,
+      kind: "kanji",
+      prompt: markWord(item.example.jp, item.kanji),
+      subPrompt: "Bagaimana cara membaca kata di dalam 「」?",
+      options,
+      answer,
+      explanation: `${item.kanji} dibaca ${item.kana} (${item.meaning}).`,
+    };
+  });
+}
+
+/**
+ * Format JLPT 漢字の書き方: kalimat dengan kata ditulis kana
+ * → pilih kanji yang benar.
+ */
+export function buildKanjiWritingQuestions(count = 8): Question[] {
+  const pool = vocab.filter((item) => item.kanji && item.example.jp.includes(item.kanji));
+  const picks = take(pool, count);
+  const kanjiPool = vocab.filter((item) => item.kanji).map((item) => item.kanji);
+
+  return picks.map((item, index) => {
+    const kanaSentence = item.example.jp.replace(item.kanji, item.kana);
+    const { options, answer } = buildOptions(item.kanji, kanjiPool);
+    return {
+      id: `kanji-writing:${item.id}:${index}`,
+      kind: "kanji",
+      prompt: markWord(kanaSentence, item.kana),
+      subPrompt: "Kanji mana yang tepat untuk kata di dalam 「」?",
+      options,
+      answer,
+      explanation: `${item.kana} = ${item.kanji} (${item.meaning}).`,
+    };
+  });
+}
+
 export function scoreMessage(correct: number, total: number): string {
   const ratio = total === 0 ? 0 : correct / total;
   if (ratio === 1) return "完璧！ Sempurna, semua benar!";
