@@ -6,26 +6,29 @@
 - [x] Next.js 15 App Router + TypeScript + Tailwind
 - [x] Design system dasar (Button, Card, Badge, ProgressBar)
 - [x] Kana trainer: grid hiragana/katakana + kuis dua arah + TTS
-- [x] Kanji N5: 26 kanji + detail bacaan/radikal/mnemonic + kuis
-- [x] Kosakata N5: 40 kata, filter, pencarian, sesi SRS 4 tombol
-- [x] Tata bahasa N5: 13 pola, contoh + catatan
-- [x] Listening: 4 dialog, 3 kecepatan, putar berurutan
-- [x] Reading: 3 bacaan berfurigana + pertanyaan pemahaman
+- [x] Kanji N5: 111 kanji + detail bacaan/radikal/mnemonic + kuis
+- [x] Kosakata N5: 708 kata, filter, pencarian, sesi SRS 4 tombol
+- [x] Tata bahasa N5: 39 pola, contoh + catatan
+- [x] Listening: 12 dialog, 3 kecepatan, putar berurutan
+- [x] Reading: 10 bacaan berfurigana + pertanyaan pemahaman
 - [x] Latihan campuran & per modul dengan pembahasan
 - [x] Dasbor: XP, level, streak, aktivitas 7 hari, riwayat latihan
 - [x] Kamus lintas materi
 - [x] Progres persisten via localStorage
 - [x] Skema Supabase disiapkan (belum aktif)
+- [x] Latihan menulis kana & kanji di kanvas (mouse/stylus/sentuh)
+- [x] Target harian + progress bar di sidebar
+- [x] Halaman pengaturan (tema, target, kecepatan suara, furigana)
+- [x] Mode gelap (CSS variables, anti-flicker)
+- [x] Re-queue kartu "Lupa" + shortcut keyboard di quiz
 
-## v0.2 — akun & konten lebih dalam
+## v0.2 — akun & penyempurnaan
 
 - [ ] Supabase Auth (Google + email), sinkron progres
-- [ ] Latihan menulis goresan (KanjiVG, kanvas + penilaian kemiripan)
-- [ ] Target harian & notifikasi pengingat
-- [ ] Import dataset lengkap: N5 penuh (~100 kanji, ~800 kata)
-- [ ] Halaman pengaturan (suara, furigana default, target level)
-- [ ] Mode gelap
+- [ ] Penilaian kemiripan goresan (data KanjiVG) — saat ini menulis masih bebas tanpa skor
+- [ ] Pengingat harian (notifikasi browser)
 - [ ] Unit test untuk `@manabi/srs` (batas interval, lapse, ease)
+- [ ] Optimasi bundle: data materi dipecah per rute (~175 kB First Load JS karena 708 kata ikut ter-bundle)
 
 ## v1.0 — kurikulum N4–N3
 

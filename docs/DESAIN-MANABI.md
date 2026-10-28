@@ -32,21 +32,22 @@
 ### Inti (MVP — sudah ada di repo)
 
 - **Kana Trainer** — hiragana & katakana, grid per baris, kuis dua arah (huruf → romaji, romaji → huruf), klik untuk mendengar.
-- **Kanji N5** — grid kanji, detail On'yomi / Kun'yomi / radikal / goresan / mnemonic / contoh kata, kuis arti.
-- **Kosakata + SRS** — flashcard dengan rating 4 tombol (Lupa/Sulit/Biasa/Mudah), jadwal ulang otomatis, filter jenis kata & pencarian.
-- **Tata Bahasa N5** — 13 pola fondasi, penjelasan bahasa Indonesia, contoh yang bisa diputar, catatan penting.
-- **Listening** — dialog dengan pelafalan Jepang, tiga kecepatan, toggle kana & terjemahan, putar semua berurutan.
-- **Membaca** — bacaan berfurigana (bisa disembunyikan), terjemahan, pertanyaan pemahaman.
-- **Latihan (Quiz)** — mode campuran, kosakata, kanji, kana, tata bahasa; pembahasan tiap soal; hasil tercatat.
+- **Latihan Menulis** — kanvas menulis kana & kanji dengan panduan samar, undo, dan grid bantu (mouse, stylus, layar sentuh).
+- **Kanji N5** — 111 kanji: grid, detail On'yomi / Kun'yomi / radikal / goresan / mnemonic / contoh kata, kuis arti.
+- **Kosakata + SRS** — 708 kata; flashcard 4 tombol (Lupa/Sulit/Biasa/Mudah), jadwal ulang otomatis, kartu "Lupa" diulang di akhir sesi, filter jenis kata & pencarian.
+- **Tata Bahasa N5** — 39 pola, penjelasan bahasa Indonesia, contoh yang bisa diputar, catatan penting.
+- **Listening** — 12 dialog dengan pelafalan Jepang, tiga kecepatan, toggle kana & terjemahan, putar semua berurutan.
+- **Membaca** — 10 bacaan berfurigana (bisa disembunyikan), terjemahan, pertanyaan pemahaman.
+- **Latihan (Quiz)** — mode campuran, kosakata, kanji, kana, tata bahasa; pembahasan tiap soal; shortcut 1–4 & Enter.
 - **Dasbor** — XP, level, streak, ulasan tertunda, grafik aktivitas 7 hari, riwayat latihan.
 - **Kamus** — pencarian lintas kosakata/kanji/tata bahasa/bacaan.
+- **Pengaturan** — tema terang/gelap/sistem, target harian, kecepatan suara, furigana default, reset data.
 
 ### Pendukung (v0.2+)
 
-- Latihan menulis goresan kanji (data KanjiVG, kanvas).
 - Auth + sinkronisasi progres (Supabase).
-- Target harian & pengingat.
-- Mode gelap, PWA/offline.
+- Penilaian kemiripan goresan kanji (data KanjiVG).
+- Pengingat harian, PWA/offline.
 - Gamifikasi lanjutan: badge, leaderboard.
 
 ### Lanjutan (v1+)
