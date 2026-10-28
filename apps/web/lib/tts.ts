@@ -65,20 +65,59 @@ export function createUtterance(
   utterance.lang = "ja-JP";
   utterance.rate = rate ?? 0.9;
 
-  const voices = japaneseVoices();
-
-  if (voices.length > 0) {
-    utterance.voice = voices[speakerIndex % voices.length] ?? voices[0]!;
-  }
-
-  if (voices.length > 1) {
-    utterance.pitch = 1;
-  } else {
-    const pitches = [0.9, 1.25, 1.05, 0.8];
-    utterance.pitch = pitches[speakerIndex % pitches.length] ?? 1;
-  }
+  const { voice, pitch } = voiceForSpeaker(speakerIndex);
+  if (voice) utterance.voice = voice;
+  utterance.pitch = pitch;
 
   return utterance;
+}
+
+/** Tebak gender voice dari namanya (banyak voice OS memakai nama orang). */
+function classifyVoice(voice: SpeechSynthesisVoice): "male" | "female" | "unknown" {
+  const name = voice.name.toLowerCase();
+  if (
+    /(female|女性|haruka|ayumi|nanami|kyoko|yumi|misaki|sayaka|mei-?jia|sakura|o-?ren|xiaoxiao|nanami)/.test(
+      name,
+    )
+  ) {
+    return "female";
+  }
+  if (
+    /(male|男性|ichiro|otoya|hattori|kenta|takumi|daichi|keita|naoki|takeshi|hiroshi|satoshi)/.test(
+      name,
+    )
+  ) {
+    return "male";
+  }
+  return "unknown";
+}
+
+/**
+ * Voice cowok/cewek bergantian sesuai urutan pembicara.
+ * Pembicara 0 = cewek, 1 = cowok, 2 = cewek, … agar jelas siapa yang bicara.
+ */
+export function voiceForSpeaker(speakerIndex: number): {
+  voice?: SpeechSynthesisVoice;
+  pitch: number;
+} {
+  const voices = japaneseVoices();
+  if (voices.length === 0) return { pitch: 1 };
+
+  const females = voices.filter((voice) => classifyVoice(voice) === "female");
+  const males = voices.filter((voice) => classifyVoice(voice) === "male");
+  const unknown = voices.filter((voice) => classifyVoice(voice) === "unknown");
+
+  const wantFemale = speakerIndex % 2 === 0;
+  const femalePool = females.length > 0 ? females : unknown;
+  const malePool = males.length > 0 ? males : unknown;
+  const pool = wantFemale ? femalePool : malePool;
+
+  if (pool.length > 0) {
+    return { voice: pool[Math.floor(speakerIndex / 2) % pool.length], pitch: 1 };
+  }
+
+  // Hanya satu voice Jepang: bedakan seminimal mungkin (tanpa efek "serak")
+  return { voice: voices[0], pitch: wantFemale ? 1.06 : 0.94 };
 }
 
 interface SpeakOptions {
