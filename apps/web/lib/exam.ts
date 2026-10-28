@@ -1,10 +1,18 @@
-import { grammar, kanji, listening, listeningQuestions, reading, vocab } from "@manabi/content";
+import {
+  EXAM_LISTENING_HINT,
+  EXAM_LISTENING_LABEL,
+  examListeningN5,
+  grammar,
+  reading,
+  vocab,
+  type ExamListeningType,
+} from "@manabi/content";
 import {
   buildContextQuestions,
   buildGrammarQuestions,
-  buildKanjiQuestions,
   buildKanjiReadingQuestions,
   buildKanjiWritingQuestions,
+  buildSentenceOrderQuestions,
   buildVocabQuestions,
   shuffle,
   type Question,
@@ -48,37 +56,45 @@ export interface ExamResult {
   passed: boolean;
 }
 
-/** Soal listening (dialog Jepang → pertanyaan pemahaman). */
+const LISTENING_TYPE_ORDER: ExamListeningType[] = ["task", "point", "expression", "response"];
+
+/** Soal 聴解 N5: 4 tipe resmi, total 24 soal. */
 function buildListening(): Question[] {
-  const questions: Question[] = [];
-  const tracks = new Map(listening.map((track) => [track.id, track]));
+  return LISTENING_TYPE_ORDER.flatMap((type) => {
+    const items = examListeningN5.filter((item) => item.type === type);
 
-  for (const [trackId, items] of Object.entries(listeningQuestions)) {
-    const track = tracks.get(trackId);
-    const lines = track?.lines ?? [];
-    const speakerNames = Array.from(new Set(lines.map((line) => line.speaker)));
-    const audioLines = lines.map((line) => ({
-      jp: line.jp,
-      speakerIndex: Math.max(0, speakerNames.indexOf(line.speaker)),
-    }));
-    const audioText = lines.map((line) => line.jp).join(" ");
+    return shuffle(items).map((item) => {
+      const speakerNames = Array.from(new Set(item.script.map((line) => line.speaker)));
 
-    for (const item of items) {
-      questions.push({
-        id: `${trackId}:${item.id}`,
-        kind: "dengar",
+      return {
+        id: item.id,
+        kind: "dengar" as const,
         prompt: item.prompt,
-        subPrompt: "Putar dialog terlebih dahulu",
+        subPrompt: `${EXAM_LISTENING_LABEL[type]} — ${EXAM_LISTENING_HINT[type]}`,
         options: item.options,
         answer: item.answer,
         explanation: item.explanation,
-        audioText,
-        audioLines,
-      });
-    }
-  }
+        audioText: item.script.map((line) => line.jp).join(" "),
+        audioLines: item.script.map((line) => ({
+          jp: line.jp,
+          speakerIndex: Math.max(0, speakerNames.indexOf(line.speaker)),
+        })),
+        audioLabel:
+          type === "expression"
+            ? "Putar situasi"
+            : type === "response"
+              ? "Putar ucapan"
+              : "Putar dialog",
+        sectionKey: "listening",
+        sectionLabel: "Mendengar",
+      };
+    });
+  });
+}
 
-  return shuffle(questions);
+/** Tempelkan identitas seksi agar layar ujian bisa menampilkan konteksnya. */
+function tagSection(questions: Question[], key: string, label: string): Question[] {
+  return questions.map((question) => ({ ...question, sectionKey: key, sectionLabel: label }));
 }
 
 /** Soal pemahaman bacaan. */
@@ -109,19 +125,24 @@ function buildReading(): Question[] {
  */
 export function buildExam(kind: ExamKind): ExamSpec {
   if (kind === "jlpt-n5") {
-    const language = shuffle([
-      ...buildKanjiReadingQuestions(8),
-      ...buildKanjiWritingQuestions(4),
-      ...buildContextQuestions(4),
-      ...buildGrammarQuestions(grammar, 4),
-    ]);
+    const language = tagSection(
+      shuffle([
+        ...buildKanjiReadingQuestions(8),
+        ...buildKanjiWritingQuestions(4),
+        ...buildContextQuestions(4),
+        ...buildGrammarQuestions(grammar, 4),
+        ...buildSentenceOrderQuestions(5),
+      ]),
+      "language",
+      "Bahasa & Membaca",
+    );
 
     return {
       kind,
       title: "JLPT N5 — Simulasi",
       description:
         "2 seksi: Bahasa & Membaca (120 poin) dan Mendengar (60 poin). Lulus bila total ≥ 80 dan setiap seksi ≥ 19.",
-      minutes: 30,
+      minutes: 45,
       passTotal: 80,
       minSectionPoints: 19,
       sections: [
@@ -143,29 +164,37 @@ export function buildExam(kind: ExamKind): ExamSpec {
         key: "moji-goi",
         label: "文字・語彙 (Huruf & Kosakata)",
         maxPoints: 63,
-        questions: shuffle([
-          ...buildKanjiReadingQuestions(6),
-          ...buildKanjiWritingQuestions(6),
-          ...buildVocabQuestions(vocab, 4, { withKana: false }),
-        ]),
+        questions: tagSection(
+          shuffle([
+            ...buildKanjiReadingQuestions(6),
+            ...buildKanjiWritingQuestions(6),
+            ...buildVocabQuestions(vocab, 4, { withKana: false }),
+          ]),
+          "moji-goi",
+          "文字・語彙",
+        ),
       },
       {
         key: "kaiwa-hyougen",
         label: "会話・表現 (Percakapan & Ungkapan)",
         maxPoints: 63,
-        questions: buildGrammarQuestions(grammar, 8),
+        questions: tagSection(
+          buildGrammarQuestions(grammar, 8),
+          "kaiwa-hyougen",
+          "会話・表現",
+        ),
       },
       {
         key: "choukai",
         label: "聴解 (Pemahaman Mendengar)",
         maxPoints: 62,
-        questions: buildListening(),
+        questions: tagSection(buildListening(), "choukai", "聴解"),
       },
       {
         key: "dokkai",
         label: "読解 (Pemahaman Membaca)",
         maxPoints: 62,
-        questions: buildReading(),
+        questions: tagSection(buildReading(), "dokkai", "読解"),
       },
     ],
   };

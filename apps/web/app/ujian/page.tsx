@@ -20,7 +20,7 @@ const MODES: Array<{ kind: ExamKind; title: string; detail: string }> = [
   {
     kind: "jlpt-n5",
     title: "JLPT N5",
-    detail: "180 poin · 2 seksi · lulus ≥ 80 total dan ≥ 19 per seksi",
+    detail: "180 poin · 2 seksi · 45 menit · lulus ≥ 80 total dan ≥ 19 per seksi",
   },
   {
     kind: "jft-basic",
@@ -234,7 +234,7 @@ export default function ExamPage() {
                 </div>
                 <p className="mt-1 text-xs text-fg-muted">{mode.detail}</p>
                 <p className="mt-3 text-[11px] text-fg-muted">
-                  {mode.kind === "jlpt-n5" ? "30 menit" : "40 menit"} · tanpa umpan balik di tengah
+                  {mode.kind === "jlpt-n5" ? "45 menit" : "40 menit"} · tanpa umpan balik di tengah
                   ujian
                 </p>
                 <Button className="mt-4 w-full" onClick={() => start(mode.kind)}>
@@ -249,8 +249,8 @@ export default function ExamPage() {
           <CardContent className="p-4">
             <p className="text-xs leading-relaxed text-fg-muted">
               Catatan kejujuran: bank soal N5 di aplikasi ini masih terbatas (708 kosakata, 111
-              kanji, 39 pola, 12 dialog). Simulasi ini mengukur kesiapan pada materi yang tersedia,
-              bukan prediksi skor JLPT resmi.
+              kanji, 48 pola, 12 dialog, 12 soal 文の組み立て, dan 24 soal 聴解). Simulasi ini
+              mengukur kesiapan pada materi yang tersedia, bukan prediksi skor JLPT resmi.
             </p>
           </CardContent>
         </Card>
@@ -294,16 +294,19 @@ export default function ExamPage() {
         <CardContent className="p-6">
           <div className="flex items-center justify-between gap-2">
             <p className="text-xs font-medium uppercase tracking-wide text-fg-muted">
+              {current.sectionLabel ? `${current.sectionLabel} · ` : ""}
               {current.subPrompt ?? QUESTION_KIND_LABEL[current.kind]}
             </p>
             <Badge tone="neutral">{QUESTION_KIND_LABEL[current.kind]}</Badge>
           </div>
 
-          <p lang="ja" className="jp mt-3 text-xl font-semibold text-fg">{current.prompt}</p>
+          <p lang="ja" className="jp mt-3 whitespace-pre-wrap text-xl font-semibold text-fg">
+            {current.prompt}
+          </p>
 
           {(current.audioLines || current.audioText) && (
             <Button className="mt-3" size="sm" variant="outline" onClick={playDialogue}>
-              ▶ Putar dialog
+              ▶ {current.audioLabel ?? "Putar audio"}
             </Button>
           )}
 

@@ -35,7 +35,7 @@
 - **Latihan Menulis** — kanvas menulis kana & kanji dengan panduan samar, undo, dan grid bantu (mouse, stylus, layar sentuh).
 - **Kanji N5** — 111 kanji: grid, detail On'yomi / Kun'yomi / radikal / goresan / mnemonic / contoh kata, kuis arti.
 - **Kosakata + SRS** — 708 kata; flashcard 4 tombol (Lupa/Sulit/Biasa/Mudah), jadwal ulang otomatis, kartu "Lupa" diulang di akhir sesi, filter jenis kata & pencarian.
-- **Tata Bahasa N5** — 39 pola, penjelasan bahasa Indonesia, contoh yang bisa diputar, catatan penting.
+- **Tata Bahasa N5** — 48 pola, penjelasan bahasa Indonesia, contoh yang bisa diputar, catatan penting.
 - **Listening** — 12 dialog dengan pelafalan Jepang, tiga kecepatan, toggle kana & terjemahan, putar semua berurutan.
 - **Membaca** — 10 bacaan berfurigana (bisa disembunyikan), terjemahan, pertanyaan pemahaman.
 - **Latihan (Quiz)** — mode campuran, kosakata, kanji, kana, tata bahasa; pembahasan tiap soal; shortcut 1–4 & Enter.

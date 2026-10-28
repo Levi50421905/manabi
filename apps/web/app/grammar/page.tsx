@@ -5,14 +5,22 @@ import { grammar } from "@manabi/content";
 import { Badge, Button, Card, CardContent, cn } from "@manabi/ui";
 import { QuizRunner } from "@/components/quiz-runner";
 import { SpeakButton } from "@/components/speak-button";
-import { buildGrammarQuestions, type Question } from "@/lib/quiz";
+import { buildGrammarQuestions, buildSentenceOrderQuestions, type Question } from "@/lib/quiz";
+
+type QuizMode = "grammar" | "order";
 
 export default function GrammarPage() {
   const [openId, setOpenId] = useState<string | null>(grammar[0]?.id ?? null);
   const [questions, setQuestions] = useState<Question[] | null>(null);
+  const [quizMode, setQuizMode] = useState<QuizMode>("grammar");
 
-  function startQuiz() {
-    setQuestions(buildGrammarQuestions(grammar, 6));
+  function startQuiz(mode: QuizMode = quizMode) {
+    setQuizMode(mode);
+    setQuestions(
+      mode === "order"
+        ? buildSentenceOrderQuestions(5)
+        : buildGrammarQuestions(grammar, 6),
+    );
   }
 
   return (
@@ -24,14 +32,19 @@ export default function GrammarPage() {
             {grammar.length} pola kalimat dasar, dijelaskan dalam bahasa Indonesia.
           </p>
         </div>
-        <Button onClick={startQuiz}>Latihan tata bahasa</Button>
+        <div className="flex flex-wrap gap-2">
+          <Button onClick={() => startQuiz("grammar")}>Latihan tata bahasa</Button>
+          <Button variant="outline" onClick={() => startQuiz("order")}>
+            Latihan 文の組み立て
+          </Button>
+        </div>
       </header>
 
       {questions ? (
         <QuizRunner
           questions={questions}
-          label="Latihan tata bahasa"
-          onRestart={startQuiz}
+          label={quizMode === "order" ? "Latihan 文の組み立て" : "Latihan tata bahasa"}
+          onRestart={() => startQuiz(quizMode)}
           restartLabel="Soal baru"
         />
       ) : (

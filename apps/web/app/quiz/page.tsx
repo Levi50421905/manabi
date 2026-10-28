@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Badge, Button, Card, CardContent, PageHeader, SegmentedControl, cn } from "@manabi/ui";
 import { QuizRunner } from "@/components/quiz-runner";
+import { availableLevels, contentCountByLevel, levels } from "@manabi/content";
 import {
   buildTypedQuestions,
   type AnswerType,
@@ -142,21 +143,30 @@ export default function QuizPage() {
             Level JLPT
           </h2>
           <div className="mt-3 flex flex-wrap gap-2">
-            <span className="rounded-full border border-accent bg-accent-soft px-4 py-1.5 text-xs font-medium text-accent">
-              N5
-            </span>
-            {["N4", "N3", "N2"].map((level) => (
-              <span
-                key={level}
-                className="rounded-full border border-border px-4 py-1.5 text-xs text-fg-muted opacity-50"
-                title="Materi belum tersedia"
-              >
-                {level}
-              </span>
-            ))}
+            {levels.map((level) => {
+              const aktif = availableLevels.includes(level);
+              const jumlah = aktif ? contentCountByLevel(level) : null;
+              return (
+                <span
+                  key={level}
+                  className={cn(
+                    "rounded-full border px-4 py-1.5 text-xs",
+                    aktif
+                      ? "border-accent bg-accent-soft font-medium text-accent"
+                      : "border-border text-fg-muted opacity-50",
+                  )}
+                  title={aktif ? undefined : "Materi belum tersedia"}
+                >
+                  {level}
+                  {jumlah ? (
+                    <span className="ml-1 opacity-70">· {jumlah.vocab} kata</span>
+                  ) : null}
+                </span>
+              );
+            })}
           </div>
           <p className="mt-2 text-[11px] text-fg-muted">
-            N4–N2 akan aktif otomatis setelah materinya ditambahkan.
+            Level aktif otomatis mengikuti materi yang tersedia.
           </p>
         </CardContent>
       </Card>

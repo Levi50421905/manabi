@@ -22,6 +22,8 @@ import { grammarN5Extra } from "./data/grammar-n5-extra";
 import { grammarN5Fixes } from "./data/grammar-n5-fixes";
 import { listeningN5 } from "./data/listening-n5";
 import { listeningN5Extra } from "./data/listening-n5-extra";
+import { examListeningN5 } from "./data/listening-n5-exam";
+import { sentenceOrderN5 } from "./data/sentence-order-n5";
 import { readingN5 } from "./data/reading-n5";
 import { readingN5Extra } from "./data/reading-n5-extra";
 
@@ -42,7 +44,15 @@ export { grammarN5Fixes } from "./data/grammar-n5-fixes";
 export { listeningN5 } from "./data/listening-n5";
 export { listeningN5Extra } from "./data/listening-n5-extra";
 export { listeningQuestions } from "./data/listening-questions";
+export { examListeningN5, EXAM_LISTENING_HINT, EXAM_LISTENING_LABEL } from "./data/listening-n5-exam";
+export type {
+  ExamListeningItem,
+  ExamListeningLine,
+  ExamListeningType,
+} from "./data/listening-n5-exam";
 export type { ListeningQuestion } from "./data/listening-questions";
+export { sentenceOrderN5 } from "./data/sentence-order-n5";
+export type { SentenceOrderItem } from "./data/sentence-order-n5";
 export { readingN5 } from "./data/reading-n5";
 export { readingN5Extra } from "./data/reading-n5-extra";
 
@@ -106,6 +116,33 @@ export const reading: ReadingPassage[] = dedupeBy(
 );
 
 export const levels: JlptLevel[] = ["N5", "N4", "N3", "N2", "N1"];
+
+/**
+ * Level yang benar-benar memiliki materi. UI memakai daftar ini agar level
+ * kosong tidak bisa dipilih, dan otomatis aktif begitu datanya ditambahkan.
+ */
+export const availableLevels: JlptLevel[] = levels.filter(
+  (level) =>
+    vocab.some((item) => item.level === level) ||
+    kanji.some((item) => item.level === level) ||
+    grammar.some((item) => item.level === level),
+);
+
+export function contentCountByLevel(level: JlptLevel): {
+  vocab: number;
+  kanji: number;
+  grammar: number;
+  reading: number;
+  listening: number;
+} {
+  return {
+    vocab: vocab.filter((item) => item.level === level).length,
+    kanji: kanji.filter((item) => item.level === level).length,
+    grammar: grammar.filter((item) => item.level === level).length,
+    reading: reading.filter((item) => item.level === level).length,
+    listening: listening.filter((item) => item.level === level).length,
+  };
+}
 
 export function vocabByLevel(level: JlptLevel): Vocab[] {
   return vocab.filter((item) => item.level === level);

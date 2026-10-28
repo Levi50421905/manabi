@@ -8,7 +8,8 @@
 - [x] Kana trainer: grid hiragana/katakana + kuis dua arah + TTS
 - [x] Kanji N5: 111 kanji + detail bacaan/radikal/mnemonic + kuis
 - [x] Kosakata N5: 708 kata, filter, pencarian, sesi SRS 4 tombol
-- [x] Tata bahasa N5: 39 pola, contoh + catatan
+- [x] Tata bahasa N5: 48 pola, contoh + catatan
+- [x] Ujian: 文の組み立て (12 soal) + 聴解 4 tipe (24 soal)
 - [x] Listening: 12 dialog, 3 kecepatan, putar berurutan
 - [x] Reading: 10 bacaan berfurigana + pertanyaan pemahaman
 - [x] Latihan campuran & per modul dengan pembahasan

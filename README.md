@@ -49,10 +49,11 @@ manabi/
 | `/write` | Latihan menulis kana & kanji di kanvas (mouse/stylus/sentuh) |
 | `/vocab` | 708 kosakata N5 + sesi SRS + re-queue otomatis saat "Lupa" |
 | `/kanji` | 111 kanji N5: bacaan, radikal, goresan, mnemonic, kuis |
-| `/grammar` | 39 pola tata bahasa N5 dengan contoh |
+| `/grammar` | 48 pola tata bahasa N5 dengan contoh + latihan 文の組み立て |
 | `/listening` | 12 dialog, 3 kecepatan, toggle kana & terjemahan |
 | `/reading` | 10 bacaan berfurigana + pertanyaan pemahaman |
 | `/quiz` | Latihan campuran / per modul + pembahasan + shortcut 1–4 & Enter |
+| `/ujian` | Simulasi JLPT N5 (49 soal: 文の組み立て + 4 tipe 聴解) dan JFT-Basic |
 | `/dictionary` | Pencarian lintas kosakata, kanji, tata bahasa, bacaan |
 | `/settings` | Tema terang/gelap/sistem, target harian, kecepatan suara, reset data |
 | `/about` | Kredit data terbuka & lisensi |

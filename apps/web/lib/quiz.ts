@@ -1,7 +1,14 @@
-import { grammar, kana, kanji, vocab } from "@manabi/content";
+import { grammar, kana, kanji, sentenceOrderN5, vocab } from "@manabi/content";
 import type { GrammarPoint, Kana, Kanji, Vocab } from "@manabi/content";
 
-export type QuestionKind = "kana" | "kosakata" | "kanji" | "tata-bahasa" | "dengar" | "bacaan";
+export type QuestionKind =
+  | "kana"
+  | "kosakata"
+  | "kanji"
+  | "tata-bahasa"
+  | "susun"
+  | "dengar"
+  | "bacaan";
 
 export interface Question {
   id: string;
@@ -15,6 +22,11 @@ export interface Question {
   audioText?: string;
   /** Dialog per baris + indeks pembicara, agar tiap orang bersuara berbeda. */
   audioLines?: Array<{ jp: string; speakerIndex: number }>;
+  /** Label tombol audio: dialog, situasi, atau ucapan pendek. */
+  audioLabel?: string;
+  /** Pengelompokan seksi saat ditampilkan di ujian. */
+  sectionKey?: string;
+  sectionLabel?: string;
 }
 
 export const QUESTION_KIND_LABEL: Record<QuestionKind, string> = {
@@ -22,6 +34,7 @@ export const QUESTION_KIND_LABEL: Record<QuestionKind, string> = {
   kosakata: "Kosakata",
   kanji: "Kanji",
   "tata-bahasa": "Tata bahasa",
+  susun: "文の組み立て",
   dengar: "Mendengar",
   bacaan: "Membaca",
 };
@@ -144,6 +157,33 @@ export function buildGrammarQuestions(pool: GrammarPoint[], count = 6): Question
       options,
       answer,
       explanation: `${item.title} — ${item.explanation}`,
+    };
+  });
+}
+
+/**
+ * Format JLPT 文の組み立て: empat celah, celah ketiga ditandai ★.
+ * Pilihan diacak setiap sesi, lalu posisi ★ dihitung ulang.
+ */
+export function buildSentenceOrderQuestions(count = 5): Question[] {
+  const picks = take(sentenceOrderN5, count);
+
+  return picks.map((item) => {
+    const starOriginal = item.order[2];
+    const shuffled = shuffle(
+      item.fragments.map((text, original) => ({ text, original })),
+    );
+    const answer = shuffled.findIndex((fragment) => fragment.original === starOriginal);
+    const correctOrder = item.order.map((fragmentIndex) => item.fragments[fragmentIndex]);
+
+    return {
+      id: item.id,
+      kind: "susun",
+      prompt: item.prompt,
+      subPrompt: "Pilih kata yang masuk ke ★ (celah ketiga)",
+      options: shuffled.map((fragment) => fragment.text),
+      answer: Math.max(0, answer),
+      explanation: `Urutan benar: ${correctOrder.join(" → ")}. ${item.full} (${item.translation})`,
     };
   });
 }
