@@ -136,7 +136,9 @@ export default function WritePage() {
               <div
                 className={cn(
                   "max-h-[320px] overflow-y-auto pr-1",
-                  setKey === "kanji" ? "grid grid-cols-8 gap-1" : "grid grid-cols-10 gap-1",
+                  setKey === "kanji"
+                    ? "grid grid-cols-5 gap-1 sm:grid-cols-8"
+                    : "grid grid-cols-6 gap-1 sm:grid-cols-10",
                 )}
               >
                 {items.map((item, itemIndex) => (

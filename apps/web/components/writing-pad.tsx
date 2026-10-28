@@ -154,7 +154,7 @@ export function WritingPad({
 
   return (
     <div className="flex flex-col items-center gap-3">
-      <div className="relative h-[300px] w-[300px]">
+      <div className="relative aspect-square w-full max-w-[300px]">
         <div className="genko-grid absolute inset-0 rounded-2xl border border-ink-200 bg-surface" />
         {showGuide && (
           <span

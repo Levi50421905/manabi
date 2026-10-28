@@ -32,12 +32,12 @@ const THEME_SCRIPT = `try{var p=JSON.parse(localStorage.getItem("manabi:v1:prefs
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="id" suppressHydrationWarning>
-      <body className="min-h-screen bg-paper font-sans text-ink-800 antialiased">
+      <body className="min-h-screen overflow-x-hidden bg-paper font-sans text-ink-800 antialiased">
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
         <ThemeSync />
         <div className="mx-auto flex min-h-screen w-full max-w-[1440px] flex-col md:flex-row">
           <Sidebar />
-          <main className="min-w-0 flex-1 px-4 pb-20 pt-4 md:px-8 md:py-8">{children}</main>
+          <main className="min-w-0 flex-1 px-3 pb-24 pt-3 sm:px-4 md:px-8 md:pb-20 md:py-8">{children}</main>
         </div>
       </body>
     </html>
