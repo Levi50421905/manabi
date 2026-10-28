@@ -20,6 +20,22 @@
     --ink-700: 64 64 77;
     --ink-800: 43 43 53;
     --ink-900: 27 27 33;
+
+    /* Token semantik — komponen UI memakai ini agar tema otomatis ikut */
+    --canvas: 255 253 251;
+    --surface-muted: 246 246 248;
+    --border: 233 233 238;
+    --fg: 27 27 33;
+    --fg-muted: 107 107 125;
+    --accent: 201 79 124;
+    --accent-soft: 253 229 238;
+    --danger: 190 24 24;
+    --danger-soft: 254 242 242;
+    --success: 84 124 43;
+    --success-soft: 244 249 236;
+    --warning: 161 78 7;
+    --warning-soft: 255 251 235;
+
     --glow-a: rgba(253, 229, 238, 0.7);
     --glow-b: rgba(230, 242, 211, 0.55);
     color-scheme: light;
@@ -39,6 +55,21 @@
     --ink-700: 219 219 230;
     --ink-800: 232 232 240;
     --ink-900: 246 246 250;
+
+    --canvas: 17 17 23;
+    --surface-muted: 34 34 44;
+    --border: 45 45 58;
+    --fg: 246 246 250;
+    --fg-muted: 168 168 184;
+    --accent: 239 127 164;
+    --accent-soft: 55 24 38;
+    --danger: 248 113 113;
+    --danger-soft: 63 22 22;
+    --success: 163 209 124;
+    --success-soft: 30 46 22;
+    --warning: 251 191 36;
+    --warning-soft: 53 40 12;
+
     --glow-a: rgba(201, 79, 124, 0.18);
     --glow-b: rgba(110, 159, 58, 0.14);
     color-scheme: dark;

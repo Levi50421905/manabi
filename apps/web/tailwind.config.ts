@@ -15,7 +15,20 @@ const config: Config = {
     extend: {
       colors: {
         paper: "rgb(var(--paper) / <alpha-value>)",
+        canvas: "rgb(var(--canvas) / <alpha-value>)",
         surface: "rgb(var(--surface) / <alpha-value>)",
+        "surface-muted": "rgb(var(--surface-muted) / <alpha-value>)",
+        border: "rgb(var(--border) / <alpha-value>)",
+        fg: "rgb(var(--fg) / <alpha-value>)",
+        "fg-muted": "rgb(var(--fg-muted) / <alpha-value>)",
+        accent: "rgb(var(--accent) / <alpha-value>)",
+        "accent-soft": "rgb(var(--accent-soft) / <alpha-value>)",
+        danger: "rgb(var(--danger) / <alpha-value>)",
+        "danger-soft": "rgb(var(--danger-soft) / <alpha-value>)",
+        success: "rgb(var(--success) / <alpha-value>)",
+        "success-soft": "rgb(var(--success-soft) / <alpha-value>)",
+        warning: "rgb(var(--warning) / <alpha-value>)",
+        "warning-soft": "rgb(var(--warning-soft) / <alpha-value>)",
         sakura: {
           50: "#fff5f8",
           100: "#fde5ee",

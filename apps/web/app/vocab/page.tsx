@@ -17,11 +17,11 @@ const POS_LABEL: Record<PartOfSpeech, string> = {
   lainnya: "Lainnya",
 };
 
-const RATINGS: Array<{ rating: Rating; label: string; hint: string; className: string }> = [
-  { rating: "again", label: "Lupa", hint: "< 10 menit", className: "bg-red-50 text-red-700 border-red-200 hover:bg-red-100" },
-  { rating: "hard", label: "Sulit", hint: "~1 hari", className: "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100" },
-  { rating: "good", label: "Biasa", hint: "terjadwal", className: "bg-matcha-50 text-matcha-600 border-matcha-200 hover:bg-matcha-100" },
-  { rating: "easy", label: "Mudah", hint: "lebih lama", className: "bg-sky-50 text-sky-700 border-sky-200 hover:bg-sky-100" },
+const RATINGS: Array<{ rating: Rating; label: string; className: string }> = [
+  { rating: "again", label: "Lupa", className: "border-danger/30 bg-danger-soft text-danger hover:border-danger/60" },
+  { rating: "hard", label: "Sulit", className: "border-warning/30 bg-warning-soft text-warning hover:border-warning/60" },
+  { rating: "good", label: "Biasa", className: "border-success/30 bg-success-soft text-success hover:border-success/60" },
+  { rating: "easy", label: "Mudah", className: "border-accent/30 bg-accent-soft text-accent hover:border-accent/60" },
 ];
 
 const ALL = "semua" as const;
