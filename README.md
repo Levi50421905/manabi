@@ -46,13 +46,15 @@ manabi/
 | `/` | Landing: ringkasan fitur & statistik materi |
 | `/dashboard` | XP, level, streak, ulasan tertunda, aktivitas 7 hari, riwayat latihan |
 | `/kana` | Hiragana & katakana + kuis dua arah |
-| `/vocab` | 40 kosakata N5 + sesi SRS (Lupa / Sulit / Biasa / Mudah) |
-| `/kanji` | 26 kanji N5: bacaan, radikal, goresan, mnemonic, kuis |
-| `/grammar` | 13 pola tata bahasa N5 dengan contoh |
-| `/listening` | 4 dialog, 3 kecepatan, toggle kana & terjemahan |
-| `/reading` | 3 bacaan berfurigana + pertanyaan pemahaman |
-| `/quiz` | Latihan campuran / per modul dengan pembahasan |
+| `/write` | Latihan menulis kana & kanji di kanvas (mouse/stylus/sentuh) |
+| `/vocab` | 708 kosakata N5 + sesi SRS + re-queue otomatis saat "Lupa" |
+| `/kanji` | 111 kanji N5: bacaan, radikal, goresan, mnemonic, kuis |
+| `/grammar` | 39 pola tata bahasa N5 dengan contoh |
+| `/listening` | 12 dialog, 3 kecepatan, toggle kana & terjemahan |
+| `/reading` | 10 bacaan berfurigana + pertanyaan pemahaman |
+| `/quiz` | Latihan campuran / per modul + pembahasan + shortcut 1–4 & Enter |
 | `/dictionary` | Pencarian lintas kosakata, kanji, tata bahasa, bacaan |
+| `/settings` | Tema terang/gelap/sistem, target harian, kecepatan suara, reset data |
 | `/about` | Kredit data terbuka & lisensi |
 
 ## Perintah
