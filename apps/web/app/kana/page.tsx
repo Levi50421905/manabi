@@ -74,7 +74,7 @@ export default function KanaPage() {
               </button>
             ))}
           </div>
-          <div className="flex rounded-xl border border-ink-200 bg-white p-1">
+          <div className="flex rounded-xl border border-ink-200 bg-surface p-1">
             {(
               [
                 { key: "belajar", label: "Belajar" },
@@ -87,7 +87,7 @@ export default function KanaPage() {
                 onClick={() => setMode(item.key)}
                 className={cn(
                   "rounded-lg px-3 py-1.5 text-xs font-medium transition-colors",
-                  mode === item.key ? "bg-sakura-600 text-white" : "text-ink-500 hover:text-ink-800",
+                  mode === item.key ? "bg-accent text-accent-contrast" : "text-ink-500 hover:text-ink-800",
                 )}
               >
                 {item.label}
@@ -123,7 +123,7 @@ export default function KanaPage() {
                         type="button"
                         onClick={() => speak(item.char)}
                         title={`${item.char} - ${item.romaji} (klik untuk mendengar)`}
-                        className="group flex flex-col items-center justify-center rounded-xl border border-ink-100 bg-white py-3 transition-colors hover:border-sakura-200 hover:bg-sakura-50"
+                        className="group flex flex-col items-center justify-center rounded-xl border border-border bg-surface py-3 transition-colors hover:border-sakura-200 hover:bg-accent-soft"
                       >
                         <span className="jp text-2xl font-semibold text-ink-900">{item.char}</span>
                         <span
@@ -142,7 +142,7 @@ export default function KanaPage() {
             ))}
           </div>
 
-          <Card className="bg-sakura-50/60">
+          <Card className="bg-accent-soft/50">
             <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4">
               <div>
                 <p className="text-sm font-medium text-ink-800">Sudah hafal hurufnya?</p>

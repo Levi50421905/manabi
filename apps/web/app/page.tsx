@@ -2,45 +2,46 @@ import Link from "next/link";
 import { Badge, Button, Card, CardContent } from "@manabi/ui";
 import { grammar, kana, kanji, vocab } from "@manabi/content";
 import { SakuraRain } from "@/components/sakura-rain";
+import { SakuraTree } from "@/components/sakura-tree";
 
 const FEATURES = [
   {
-    glyph: "ã‚",
+    glyph: "あ",
     title: "Kana Trainer",
     description:
       "Hiragana & katakana lengkap dengan latihan baca dan kuis dua arah.",
     href: "/kana",
   },
   {
-    glyph: "æ¼¢",
+    glyph: "漢",
     title: "Kanji N5",
     description:
       "On'yomi, kun'yomi, radikal, jumlah goresan, dan jembatan ingatan (mnemonic).",
     href: "/kanji",
   },
   {
-    glyph: "èªž",
+    glyph: "語",
     title: "Kosakata + SRS",
     description:
-      "Flashcard dengan algoritma spaced repetition â€” ulasan muncul tepat saat hampir lupa.",
+      "Flashcard dengan algoritma spaced repetition — ulasan muncul tepat saat hampir lupa.",
     href: "/vocab",
   },
   {
-    glyph: "æ–‡",
+    glyph: "文",
     title: "Tata Bahasa",
     description:
       "Pola kalimat dengan penjelasan bahasa Indonesia dan contoh yang bisa diputar.",
     href: "/grammar",
   },
   {
-    glyph: "è´",
+    glyph: "聴",
     title: "Listening",
     description:
       "Dialog sehari-hari dengan pelafalan Jepang dan kecepatan yang bisa diatur.",
     href: "/listening",
   },
   {
-    glyph: "èª­",
+    glyph: "読",
     title: "Membaca",
     description:
       "Bacaan pendek berfurigana, terjemahan, dan pertanyaan pemahaman.",
@@ -81,16 +82,17 @@ export default function HomePage() {
   return (
     <div className="relative space-y-14 pb-6">
       <SakuraRain />
+      <SakuraTree />
       {/* ---------- Hero ---------- */}
       <section className="grid items-center gap-8 pt-6 lg:grid-cols-[1.15fr_0.85fr] lg:pt-10">
         <div className="animate-fade-up">
-          <Badge tone="sakura">MVP Â· JLPT N5</Badge>
+          <Badge tone="sakura">MVP · JLPT N5</Badge>
           <h1 className="mt-4 text-4xl font-bold leading-[1.15] tracking-tight text-ink-900 sm:text-5xl">
             Belajar bahasa Jepang
             <span className="mt-1 block text-sakura-600">satu langkah setiap hari.</span>
           </h1>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-500">
-            <strong className="font-semibold text-ink-700">Manabi (å­¦ã³)</strong> menyusun
+            <strong className="font-semibold text-ink-700">Manabi (学び)</strong> menyusun
             huruf, kosakata, kanji, dan tata bahasa dalam satu jalur belajar. Materi
             diulang otomatis lewat spaced repetition, jadi yang sudah dipelajari tidak
             mudah hilang.
@@ -106,7 +108,7 @@ export default function HomePage() {
             </Link>
           </div>
           <p className="mt-4 text-xs text-ink-400">
-            Progres tersimpan di browser Â· tanpa perlu daftar akun
+            Progres tersimpan di browser · tanpa perlu daftar akun
           </p>
         </div>
 
@@ -117,17 +119,17 @@ export default function HomePage() {
           </div>
           <CardContent className="p-5">
             <div className="flex items-center justify-center rounded-2xl bg-white py-8">
-              <span className="jp text-7xl font-semibold text-ink-900">å­¦</span>
+              <span className="jp text-7xl font-semibold text-ink-900">学</span>
             </div>
             <div className="mt-4 flex items-baseline justify-between">
               <div>
-                <p className="text-sm font-medium text-ink-800">ã¾ãªã¶ Â· manabu</p>
-                <p className="text-xs text-ink-500">belajar Â· 8 goresan</p>
+                <p className="text-sm font-medium text-ink-800">まなぶ · manabu</p>
+                <p className="text-xs text-ink-500">belajar · 8 goresan</p>
               </div>
-              <span className="text-xs text-ink-400">radikal å­</span>
+              <span className="text-xs text-ink-400">radikal 子</span>
             </div>
             <p className="mt-3 rounded-xl bg-ink-50 p-3 text-xs leading-relaxed text-ink-600">
-              Mnemonic: anak (å­) di bawah atap sekolah â€” sedang menimba ilmu.
+              Mnemonic: anak (子) di bawah atap sekolah — sedang menimba ilmu.
             </p>
           </CardContent>
         </Card>
@@ -199,7 +201,7 @@ export default function HomePage() {
 
       <footer className="border-t border-ink-100 pt-5 text-xs leading-relaxed text-ink-400">
         <p>
-          Manabi MVP Â· Materi disusun mengikuti silabus JLPT N5. Data terbuka yang dipakai:
+          Manabi MVP · Materi disusun mengikuti silabus JLPT N5. Data terbuka yang dipakai:
           JMDict, KANJIDIC2, KanjiVG, Tatoeba. Pelafalan memakai Web Speech API browser.
         </p>
         <p className="mt-1">

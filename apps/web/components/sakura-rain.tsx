@@ -24,7 +24,7 @@ export function SakuraRain() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
+      className="pointer-events-none fixed inset-y-0 left-0 right-0 z-0 overflow-hidden md:left-64"
     >
       {PETALS.map((petal, index) => (
         <span
