@@ -1,14 +1,21 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { reading } from "@manabi/content";
 import { Badge, Button, Card, CardContent, cn } from "@manabi/ui";
 import { SpeakButton } from "@/components/speak-button";
 import { recordStudy } from "@/lib/store";
+import { usePrefs } from "@/lib/prefs";
 
 export default function ReadingPage() {
+  const [prefs] = usePrefs();
   const [activeId, setActiveId] = useState(reading[0]?.id ?? "");
   const [showFurigana, setShowFurigana] = useState(true);
+
+  // Furigana mengikuti pengaturan pengguna saat halaman dibuka.
+  useEffect(() => {
+    setShowFurigana(prefs.furigana);
+  }, [prefs.furigana]);
   const [showTranslation, setShowTranslation] = useState(false);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [checked, setChecked] = useState<Record<string, boolean>>({});

@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { listening } from "@manabi/content";
 import { Badge, Button, Card, CardContent, cn } from "@manabi/ui";
 import { SpeakButton } from "@/components/speak-button";
-import { isSpeechSupported, stopSpeaking } from "@/lib/tts";
+import { createUtterance, isSpeechSupported, stopSpeaking } from "@/lib/tts";
 import { recordStudy } from "@/lib/store";
+import { usePrefs } from "@/lib/prefs";
 
 const RATES = [
   { value: 0.7, label: "Lambat" },
@@ -17,8 +18,9 @@ export default function ListeningPage() {
   const [activeId, setActiveId] = useState(listening[0]?.id ?? "");
   const [showKana, setShowKana] = useState(false);
   const [showTranslation, setShowTranslation] = useState(true);
-  const [rate, setRate] = useState(0.9);
+  const [prefs, setPrefs] = usePrefs();
   const [supported, setSupported] = useState(true);
+  const rate = prefs.ttsRate;
 
   useEffect(() => {
     setSupported(isSpeechSupported());
@@ -40,9 +42,8 @@ export default function ListeningPage() {
       if (cursor >= lines.length) return;
       const line = lines[cursor];
       cursor += 1;
-      const utterance = new SpeechSynthesisUtterance(line?.jp ?? "");
-      utterance.lang = "ja-JP";
-      utterance.rate = rate;
+      const utterance = createUtterance(line?.jp ?? "", rate);
+      if (!utterance) return;
       utterance.onend = playNext;
       synth.speak(utterance);
     };
@@ -119,7 +120,7 @@ export default function ListeningPage() {
                   <button
                     key={item.value}
                     type="button"
-                    onClick={() => setRate(item.value)}
+                    onClick={() => setPrefs({ ttsRate: item.value })}
                     className={cn(
                       "rounded-md px-2 py-1 text-[11px] font-medium transition-colors",
                       rate === item.value ? "bg-ink-900 text-white" : "text-ink-500",
