@@ -24,7 +24,7 @@ export function Pagination({ page, pageCount, onChange, className }: PaginationP
   if (pageCount <= 1) return null;
 
   const button =
-    "grid h-8 min-w-8 place-items-center rounded-lg border border-border px-2 text-xs font-medium transition-colors";
+    "grid h-9 min-w-9 place-items-center rounded-md border px-2 text-caption font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1";
 
   return (
     <nav
@@ -33,7 +33,7 @@ export function Pagination({ page, pageCount, onChange, className }: PaginationP
     >
       <button
         type="button"
-        className={cn(button, "text-fg-muted hover:bg-surface-muted disabled:opacity-40")}
+        className={cn(button, "border-border bg-surface text-fg-muted hover:bg-surface-muted disabled:opacity-40")}
         onClick={() => onChange(page - 1)}
         disabled={page <= 1}
         aria-label="Halaman sebelumnya"
@@ -50,8 +50,8 @@ export function Pagination({ page, pageCount, onChange, className }: PaginationP
           className={cn(
             button,
             item === page
-              ? "border-accent bg-accent text-white"
-              : "bg-surface text-fg-muted hover:bg-surface-muted hover:text-fg",
+              ? "border-transparent bg-fg text-paper"
+              : "border-border bg-surface text-fg-muted hover:bg-surface-muted hover:text-fg",
           )}
         >
           {item}
@@ -60,7 +60,7 @@ export function Pagination({ page, pageCount, onChange, className }: PaginationP
 
       <button
         type="button"
-        className={cn(button, "text-fg-muted hover:bg-surface-muted disabled:opacity-40")}
+        className={cn(button, "border-border bg-surface text-fg-muted hover:bg-surface-muted disabled:opacity-40")}
         onClick={() => onChange(page + 1)}
         disabled={page >= pageCount}
         aria-label="Halaman berikutnya"

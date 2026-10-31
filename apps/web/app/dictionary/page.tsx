@@ -2,101 +2,278 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { grammar, kanji, vocab, searchContent, type SearchHit } from "@manabi/content";
-import { Badge, Card, CardContent, cn } from "@manabi/ui";
+import {
+  Badge,
+  Button,
+  Card,
+  CardBody,
+  EmptyState,
+  PageHeader,
+  Pill,
+  PillRow,
+  Section,
+  SearchField,
+  cn,
+} from "@manabi/ui";
+import {
+  grammar,
+  kanji,
+  levelClassName,
+  levelHref,
+  reading,
+  searchContent,
+  vocab,
+  type SearchHit,
+} from "@manabi/content";
 
-const KIND_TONE: Record<SearchHit["kind"], "sakura" | "matcha" | "amber" | "sky"> = {
-  kosakata: "sakura",
-  kanji: "matcha",
-  "tata-bahasa": "amber",
-  bacaan: "sky",
+type KindFilter = "semua" | SearchHit["kind"];
+
+const GROUP_ORDER: SearchHit["kind"][] = ["kosakata", "kanji", "tata-bahasa", "bacaan"];
+
+const KIND_LABEL: Record<SearchHit["kind"], string> = {
+  kosakata: "Kosakata",
+  kanji: "Kanji",
+  "tata-bahasa": "Tata Bahasa",
+  bacaan: "Bacaan",
 };
 
-const KIND_LINK: Record<SearchHit["kind"], string> = {
-  kosakata: "/vocab",
-  kanji: "/kanji",
-  "tata-bahasa": "/grammar",
-  bacaan: "/reading",
+const KIND_GLYPH: Record<SearchHit["kind"], string> = {
+  kosakata: "語",
+  kanji: "漢",
+  "tata-bahasa": "文",
+  bacaan: "読",
 };
+
+const KIND_PATH: Record<SearchHit["kind"], string> = {
+  kosakata: "vocab",
+  kanji: "kanji",
+  "tata-bahasa": "grammar",
+  bacaan: "reading",
+};
+
+const FILTERS: Array<{ key: KindFilter; label: string; glyph: string }> = [
+  { key: "semua", label: "Semua", glyph: "全" },
+  ...GROUP_ORDER.map((kind) => ({
+    key: kind as KindFilter,
+    label: KIND_LABEL[kind],
+    glyph: KIND_GLYPH[kind],
+  })),
+];
 
 const SUGGESTIONS = ["makan", "学生", "partikel", "みず", "teman", "大きい"];
 
+/** Apakah teks memuat huruf Jepang (kana/kanji)? */
+const JAPANESE = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uff66-\uff9f]/;
+
+/** Judul Jepang tampil paling besar — konten Jepang adalah bintang halaman. */
+function entryTitle(title: string): string {
+  const japanese = JAPANESE.test(title);
+  return cn(
+    japanese ? "font-jp-serif" : "font-display",
+    title.length <= 8 ? "text-h1" : "text-h2",
+    "font-semibold leading-snug tracking-tight",
+  );
+}
+
 export default function DictionaryPage() {
   const [query, setQuery] = useState("");
+  const [kind, setKind] = useState<KindFilter>("semua");
 
   const results = useMemo(() => searchContent(query), [query]);
 
-  return (
-    <div className="space-y-5 pb-6">
-      <header>
-        <h1 className="text-2xl font-bold tracking-tight text-ink-900">Kamus</h1>
-        <p className="mt-1 text-sm text-ink-500">
-          Cari lintas {vocab.length} kosakata, {kanji.length} kanji, dan {grammar.length} pola
-          tata bahasa.
-        </p>
-      </header>
+  const counts = useMemo(() => {
+    const base: Record<SearchHit["kind"], number> = {
+      kosakata: 0,
+      kanji: 0,
+      "tata-bahasa": 0,
+      bacaan: 0,
+    };
+    for (const hit of results) base[hit.kind] += 1;
+    return base;
+  }, [results]);
 
-      <div>
-        <input
-          type="search"
-          autoFocus
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder="Ketik kanji, kana, romaji, atau arti Indonesia…"
-          className="h-12 w-full rounded-2xl border border-ink-200 bg-surface px-4 text-sm text-ink-800 shadow-sm placeholder:text-ink-400 focus:border-sakura-300 focus:outline-none focus:ring-2 focus:ring-sakura-100"
-        />
-        <div className="mt-2 flex flex-wrap items-center gap-1.5">
-          <span className="text-[11px] text-ink-400">Coba:</span>
+  const filtered = useMemo(
+    () => (kind === "semua" ? results : results.filter((hit) => hit.kind === kind)),
+    [results, kind],
+  );
+
+  const groups = useMemo(
+    () =>
+      GROUP_ORDER.map((groupKind) => ({
+        kind: groupKind,
+        hits: filtered.filter((hit) => hit.kind === groupKind),
+      })).filter((group) => group.hits.length > 0),
+    [filtered],
+  );
+
+  const filterLabel =
+    kind === "semua" ? "semua jenis" : KIND_LABEL[kind].toLowerCase();
+  const searching = query.trim().length > 0;
+
+  return (
+    <div className="space-y-8 pb-8">
+      <PageHeader
+        eyebrow={<span className="label-micro">Referensi · Kamus</span>}
+        title="Kamus"
+        japanese="辞書"
+        description={`Cari lintas ${vocab.length} kosakata, ${kanji.length} kanji, ${grammar.length} pola tata bahasa, dan ${reading.length} bacaan dari semua level.`}
+      />
+
+      {/* Pencarian — fokus utama halaman */}
+      <section
+        aria-label="Pencarian kamus"
+        className="rounded-2xl border border-border bg-surface p-4 sm:p-5"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p className="label-micro">Cari lintas materi</p>
+          <span className="tnum text-caption text-fg-subtle">
+            {searching ? `${results.length} hasil` : "kanji · kana · romaji · arti"}
+          </span>
+        </div>
+
+        <div className="mt-3">
+          <SearchField
+            autoFocus
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            onClear={() => setQuery("")}
+            placeholder="Ketik kanji, kana, romaji, atau arti Indonesia…"
+            aria-label="Cari di kamus"
+            enterKeyHint="search"
+            className="h-14 rounded-xl pl-11 pr-10 text-base sm:h-16"
+          />
+        </div>
+
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <span className="text-caption text-fg-subtle">Coba:</span>
           {SUGGESTIONS.map((item) => (
-            <button
+            <Pill
               key={item}
-              type="button"
+              active={query === item}
               onClick={() => setQuery(item)}
-              className={cn(
-                "jp rounded-full border border-ink-200 px-2.5 py-0.5 text-[11px] text-ink-500 transition-colors hover:border-sakura-300 hover:text-sakura-700",
-                query === item && "border-sakura-300 bg-sakura-50 text-sakura-700",
-              )}
+              aria-label={`Cari ${item}`}
             >
-              {item}
-            </button>
+              <span lang={JAPANESE.test(item) ? "ja" : undefined} className={JAPANESE.test(item) ? "font-jp" : undefined}>
+                {item}
+              </span>
+            </Pill>
           ))}
         </div>
-      </div>
+      </section>
 
-      {query.trim().length === 0 ? (
-        <Card>
-          <CardContent className="p-8 text-center">
-            <p lang="ja" className="jp book-open text-3xl text-ink-300">辞</p>
-            <p className="mt-2 text-sm font-medium text-ink-700">Mulai mengetik untuk mencari</p>
-            <p className="mt-1 text-xs text-ink-400">
-              Contoh: <span lang="ja" className="jp">学生</span> (gakusei), &quot;makan&quot;, atau
-              &quot;partikel&quot;.
-            </p>
-          </CardContent>
-        </Card>
+      {/* Filter jenis materi */}
+      <PillRow aria-label="Filter jenis materi">
+        {FILTERS.map((filter) => {
+          const total = filter.key === "semua" ? results.length : counts[filter.key];
+          return (
+            <Pill
+              key={filter.key}
+              active={kind === filter.key}
+              glyph={filter.glyph}
+              onClick={() => setKind(filter.key)}
+            >
+              {filter.label}
+              {searching ? (
+                <span className="tnum opacity-70" aria-hidden="true">
+                  {total}
+                </span>
+              ) : null}
+            </Pill>
+          );
+        })}
+      </PillRow>
+
+      {!searching ? (
+        <EmptyState
+          glyph="辞"
+          title="Mulai mengetik untuk mencari"
+          description="Kamus mencakup seluruh level. Coba kanji seperti 学生, kata seperti “makan”, atau istilah seperti “partikel”."
+        />
       ) : results.length === 0 ? (
-        <p className="rounded-2xl border border-dashed border-ink-200 p-8 text-center text-sm text-ink-400">
-          Tidak ada hasil untuk &quot;{query}&quot;. Coba kata kunci lain.
-        </p>
+        <EmptyState
+          glyph="無"
+          title={`Tidak ada hasil untuk “${query.trim()}”`}
+          description="Coba kanji, kana, romaji, atau arti Indonesia lain. Pencarian berlaku untuk semua level."
+          action={
+            <Button variant="outline" onClick={() => setQuery("")}>
+              Hapus pencarian
+            </Button>
+          }
+        />
+      ) : filtered.length === 0 ? (
+        <EmptyState
+          glyph="空"
+          title={`Tidak ada ${filterLabel} untuk “${query.trim()}”`}
+          description="Jenis materi lain tetap punya hasil untuk kata kunci ini."
+          action={
+            <Button variant="outline" onClick={() => setKind("semua")}>
+              Tampilkan semua hasil
+            </Button>
+          }
+        />
       ) : (
-        <div>
-          <p className="mb-2 text-xs text-ink-400">{results.length} hasil ditemukan</p>
-          <div className="space-y-1.5">
-            {results.map((hit) => (
-              <Link key={`${hit.kind}-${hit.id}`} href={KIND_LINK[hit.kind]}>
-                <Card className="transition-colors hover:border-sakura-200 hover:bg-sakura-50/40">
-                  <CardContent className="flex items-center gap-3 p-3">
-                    <Badge tone={KIND_TONE[hit.kind]}>{hit.kind}</Badge>
-                    <div className="min-w-0 flex-1">
-                      <p lang="ja" className="jp truncate text-sm font-medium text-ink-900">{hit.title}</p>
-                      <p className="truncate text-xs text-ink-500">{hit.subtitle}</p>
-                    </div>
-                    <span className="text-xs text-ink-300">{hit.level}</span>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+        <div className="space-y-8">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-3">
+            <p aria-live="polite" className="text-caption text-fg-muted">
+              <span className="tnum font-semibold text-fg">{filtered.length}</span> hasil ·{" "}
+              {filterLabel}
+            </p>
+            <span className="label-micro">Semua level</span>
           </div>
+
+          {groups.map((group) => (
+            <Section
+              key={group.kind}
+              title={KIND_LABEL[group.kind]}
+              glyph={KIND_GLYPH[group.kind]}
+              action={
+                <Badge tone="neutral" mono>
+                  {group.hits.length}
+                </Badge>
+              }
+            >
+              <ul className="space-y-2">
+                {group.hits.map((hit) => (
+                  <li key={`${hit.kind}-${hit.id}`}>
+                    <Link href={levelHref(hit.level, KIND_PATH[hit.kind])} className="group block">
+                      <Card variant="interactive">
+                        <CardBody className="flex items-start gap-3 p-4 sm:p-5">
+                          <span
+                            lang="ja"
+                            aria-hidden="true"
+                            className={cn(
+                              levelClassName(hit.level),
+                              "jp-serif grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-level-soft text-base font-semibold text-level",
+                            )}
+                          >
+                            {KIND_GLYPH[hit.kind]}
+                          </span>
+                          <div className="min-w-0 flex-1">
+                            <p
+                              lang={JAPANESE.test(hit.title) ? "ja" : undefined}
+                              className={entryTitle(hit.title)}
+                            >
+                              {hit.title}
+                            </p>
+                            <p className="mt-1 text-caption leading-relaxed text-fg-muted">
+                              {hit.subtitle}
+                            </p>
+                          </div>
+                          <Badge
+                            tone="level"
+                            mono
+                            className={cn(levelClassName(hit.level), "shrink-0")}
+                          >
+                            {hit.level}
+                          </Badge>
+                        </CardBody>
+                      </Card>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </Section>
+          ))}
         </div>
       )}
     </div>

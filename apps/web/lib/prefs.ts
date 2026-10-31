@@ -7,6 +7,7 @@
  */
 
 import { useSyncExternalStore } from "react";
+import { isJlptLevel, type JlptLevel } from "@manabi/content";
 
 export type Theme = "light" | "dark" | "system";
 
@@ -15,6 +16,8 @@ export interface Prefs {
   dailyGoal: number;
   ttsRate: number;
   furigana: boolean;
+  /** Level JLPT yang terakhir dibuka — dipakai halaman global (dasbor, kamus). */
+  level: JlptLevel;
 }
 
 export const DEFAULT_PREFS: Prefs = {
@@ -22,6 +25,7 @@ export const DEFAULT_PREFS: Prefs = {
   dailyGoal: 20,
   ttsRate: 0.9,
   furigana: true,
+  level: "N5",
 };
 
 const STORAGE_KEY = "manabi:v1:prefs";
@@ -41,6 +45,7 @@ function read(): Prefs {
       dailyGoal: typeof parsed.dailyGoal === "number" ? parsed.dailyGoal : DEFAULT_PREFS.dailyGoal,
       ttsRate: typeof parsed.ttsRate === "number" ? parsed.ttsRate : DEFAULT_PREFS.ttsRate,
       furigana: typeof parsed.furigana === "boolean" ? parsed.furigana : DEFAULT_PREFS.furigana,
+      level: isJlptLevel(parsed.level) ? parsed.level : DEFAULT_PREFS.level,
     };
   } catch {
     return DEFAULT_PREFS;

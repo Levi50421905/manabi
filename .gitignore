@@ -43,3 +43,7 @@ yarn-error.log*
 # supabase
 supabase/.branches
 supabase/.temp
+
+# QA visual (screenshot lokal dari tools/shots.ps1) & catatan pemulihan izin folder
+.design-review/
+.dsh-acl-recovery/

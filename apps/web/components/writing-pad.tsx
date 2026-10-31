@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button, cn } from "@manabi/ui";
+import { Button } from "@manabi/ui";
 
 const SIZE = 300;
 const LINE_WIDTH = 12;
@@ -19,13 +19,13 @@ interface WritingPadProps {
   nextLabel?: string;
 }
 
-function inkColor(): string {
-  if (typeof window === "undefined") return "#16161a";
-  const raw = getComputedStyle(document.documentElement)
-    .getPropertyValue("--ink-900")
-    .trim();
-  if (!raw) return "#16161a";
-  return `rgb(${raw.split(/\s+/).join(", ")})`;
+/**
+ * Warna tinta mengikuti `color` kanvas (token `text-fg`), jadi otomatis
+ * menyesuaikan tema terang/gelap tanpa menulis kode warna di sini.
+ */
+function inkColor(canvas: HTMLCanvasElement | null): string {
+  if (!canvas || typeof window === "undefined") return "";
+  return window.getComputedStyle(canvas).color;
 }
 
 export function WritingPad({
@@ -39,6 +39,7 @@ export function WritingPad({
   const strokesRef = useRef<Point[][]>([]);
   const currentRef = useRef<Point[]>([]);
   const drawingRef = useRef(false);
+  const inkRef = useRef("");
   const [strokeCount, setStrokeCount] = useState(0);
   const [showGuide, setShowGuide] = useState(true);
 
@@ -57,7 +58,9 @@ export function WritingPad({
     ctx.lineJoin = "round";
     ctx.lineWidth = LINE_WIDTH;
 
-    const ink = inkColor();
+    const ink = inkColor(canvas);
+    if (!ink) return;
+    inkRef.current = ink;
     ctx.strokeStyle = ink;
     ctx.fillStyle = ink;
 
@@ -79,7 +82,7 @@ export function WritingPad({
     }
   }, []);
 
-  // Kanvas baru & gambar petunjuk setiap kali huruf berganti
+  // Kanvas baru setiap kali huruf berganti.
   useEffect(() => {
     strokesRef.current = [];
     currentRef.current = [];
@@ -102,8 +105,8 @@ export function WritingPad({
     currentRef.current = [point];
 
     const ctx = canvasRef.current?.getContext("2d");
-    if (ctx) {
-      ctx.fillStyle = inkColor();
+    if (ctx && inkRef.current) {
+      ctx.fillStyle = inkRef.current;
       ctx.beginPath();
       ctx.arc(point.x, point.y, LINE_WIDTH / 2, 0, Math.PI * 2);
       ctx.fill();
@@ -118,8 +121,8 @@ export function WritingPad({
     if (!previous) return;
 
     const ctx = canvasRef.current?.getContext("2d");
-    if (!ctx) return;
-    ctx.strokeStyle = inkColor();
+    if (!ctx || !inkRef.current) return;
+    ctx.strokeStyle = inkRef.current;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.lineWidth = LINE_WIDTH;
@@ -152,21 +155,27 @@ export function WritingPad({
     redraw();
   }
 
+  /** Untuk kanji, "romaji" berisi bacaan Jepang — beri font & atribut bahasa yang tepat. */
+  const hintIsJapanese = Boolean(romaji && /[^\x00-\x7F]/.test(romaji));
+
   return (
-    <div className="flex flex-col items-center gap-3">
-      <div className="relative aspect-square w-full max-w-[300px]">
-        <div className="genko-grid absolute inset-0 rounded-2xl border border-ink-200 bg-surface" />
-        {showGuide && (
+    <div className="flex flex-col items-center gap-4">      <div className="relative aspect-square w-full max-w-[340px] sm:max-w-[420px]">
+        <div
+          className="genko-grid absolute inset-0 rounded-xl border border-border bg-surface"
+          aria-hidden="true"
+        />
+        {showGuide ? (
           <span
             aria-hidden="true"
-            lang="ja" className="jp pointer-events-none absolute inset-0 flex select-none items-center justify-center text-[210px] leading-none text-ink-900 opacity-[0.09]"
+            lang="ja"
+            className="font-jp-serif pointer-events-none absolute inset-0 flex select-none items-center justify-center text-[clamp(180px,55vw,280px)] leading-none text-fg opacity-[0.08]"
           >
             {character}
           </span>
-        )}
+        ) : null}
         <canvas
           ref={canvasRef}
-          className="absolute inset-0 h-full w-full cursor-crosshair touch-none rounded-2xl"
+          className="absolute inset-0 h-full w-full cursor-crosshair touch-none rounded-xl text-fg"
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
@@ -178,36 +187,51 @@ export function WritingPad({
       </div>
 
       <div className="text-center">
-        <p lang="ja" className="jp text-xl font-semibold text-ink-900">{character}</p>
-        {(romaji || meaning) && (
-          <p className="text-xs text-ink-500">
-            {romaji}
-            {romaji && meaning ? " · " : ""}
-            {meaning}
+        <p lang="ja" className="font-jp-serif text-[40px] font-semibold leading-none text-fg">
+          {character}
+        </p>
+        {romaji || meaning ? (
+          <p className="mt-2 text-sm leading-relaxed text-fg-muted">
+            {romaji ? (
+              <span
+                lang={hintIsJapanese ? "ja" : undefined}
+                className={hintIsJapanese ? "font-jp font-medium text-fg" : "font-medium text-fg"}
+              >
+                {romaji}
+              </span>
+            ) : null}
+            {romaji && meaning ? <span aria-hidden="true"> · </span> : null}
+            {meaning ? <span>{meaning}</span> : null}
           </p>
-        )}
+        ) : null}
       </div>
 
-      <div className="flex flex-wrap items-center justify-center gap-2">
-        <Button size="sm" variant="outline" onClick={handleUndo} disabled={strokeCount === 0}>
+      <div className="flex w-full flex-wrap items-center justify-center gap-2">
+        <Button size="lg" variant="outline" onClick={handleUndo} disabled={strokeCount === 0}>
           Undo
         </Button>
-        <Button size="sm" variant="outline" onClick={handleClear} disabled={strokeCount === 0}>
+        <Button size="lg" variant="outline" onClick={handleClear} disabled={strokeCount === 0}>
           Hapus
         </Button>
-        <Button size="sm" variant="ghost" onClick={() => setShowGuide((value) => !value)}>
+        <Button
+          size="lg"
+          variant="ghost"
+          onClick={() => setShowGuide((value) => !value)}
+          aria-pressed={showGuide}
+        >
           {showGuide ? "Sembunyikan contoh" : "Tampilkan contoh"}
         </Button>
-        {onNext && (
-          <Button size="sm" onClick={onNext}>
-            {nextLabel}
-          </Button>
-        )}
       </div>
 
-      <p className={cn("text-[11px] text-ink-400", strokeCount === 0 && "opacity-60")}>
-        Coretan: {strokeCount}
+      <p className="text-caption text-fg-muted" aria-live="polite">
+        Coretan: <span className="tnum font-semibold text-fg">{strokeCount}</span>
       </p>
+
+      {onNext ? (
+        <Button size="lg" variant="level" block className="sm:w-auto" onClick={onNext}>
+          {nextLabel}
+        </Button>
+      ) : null}
     </div>
   );
 }

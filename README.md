@@ -41,22 +41,69 @@ manabi/
 
 ## Halaman
 
+Semua modul berada di bawah segmen level: `/[level]/<modul>`, mis. `/n5/vocab`.
+Menambah level baru otomatis menambah rute (lihat **Level & kurikulum** di bawah).
+
 | Rute | Isi |
 |---|---|
-| `/` | Landing: ringkasan fitur & statistik materi |
-| `/dashboard` | XP, level, streak, ulasan tertunda, aktivitas 7 hari, riwayat latihan |
-| `/kana` | Hiragana & katakana + kuis dua arah |
-| `/write` | Latihan menulis kana & kanji di kanvas (mouse/stylus/sentuh) |
-| `/vocab` | 708 kosakata N5 + sesi SRS + re-queue otomatis saat "Lupa" |
-| `/kanji` | 111 kanji N5: bacaan, radikal, goresan, mnemonic, kuis |
-| `/grammar` | 48 pola tata bahasa N5 dengan contoh + latihan 文の組み立て |
-| `/listening` | 12 dialog, 3 kecepatan, toggle kana & terjemahan |
-| `/reading` | 10 bacaan berfurigana + pertanyaan pemahaman |
-| `/quiz` | Latihan campuran / per modul + pembahasan + shortcut 1–4 & Enter |
-| `/ujian` | Simulasi JLPT N5 (49 soal: 文の組み立て + 4 tipe 聴解) dan JFT-Basic |
-| `/dictionary` | Pencarian lintas kosakata, kanji, tata bahasa, bacaan |
-| `/settings` | Tema terang/gelap/sistem, target harian, kecepatan suara, reset data |
-| `/about` | Kredit data terbuka & lisensi |
+| `/` | Landing: konsep, peta kurikulum, daftar modul |
+| `/dashboard` | XP, level, streak, kartu jatuh tempo, aktivitas 7 hari, riwayat latihan |
+| `/[level]` | Ringkasan level: jumlah materi, progres per modul, aktivitas minggu ini |
+| `/[level]/kana` | Hiragana & katakana + kuis dua arah |
+| `/[level]/write` | Latihan menulis kana & kanji di kanvas (mouse/stylus/sentuh) |
+| `/[level]/vocab` | 708 kosakata N5 + sesi SRS + re-queue otomatis saat "Lupa" |
+| `/[level]/kanji` | 111 kanji N5: bacaan, radikal, goresan, mnemonic, kuis |
+| `/[level]/grammar` | 48 pola tata bahasa N5 dengan contoh + latihan 文の組み立て |
+| `/[level]/listening` | 12 dialog, 3 kecepatan, toggle kana & terjemahan |
+| `/[level]/reading` | 10 bacaan berfurigana + pertanyaan pemahaman |
+| `/[level]/quiz` | Latihan campuran / per modul + pembahasan + shortcut 1–4 & Enter |
+| `/[level]/ujian` | Simulasi JLPT N5 dan JFT-Basic |
+| `/dictionary` | Pencarian lintas level: kosakata, kanji, tata bahasa, bacaan (global) |
+| `/settings` | Tema, target harian, kecepatan suara, furigana, reset data (global) |
+| `/about` | Metodologi, kredit data terbuka, lisensi, peta level |
+
+Rute lama (`/vocab`, `/kanji`, …) dialihkan permanen ke `/n5/…` lewat `next.config.mjs`.
+
+## Level & kurikulum
+
+Metadata setiap level JLPT ada di satu tempat: `packages/content/src/levels.ts`
+(`LEVEL_META`, `LEVEL_ORDER`, `levelHref`, `levelMeta`). Yang dibaca dari sana
+adalah warna aksen, nama, deskripsi, jam belajar, dan label di seluruh UI.
+
+**Menambah level baru (mis. N4):**
+
+1. Buat file data dengan bentuk yang sama, mis. `data/vocab-n4.ts` (`level: "N4"`).
+2. Import & spread di `packages/content/src/index.ts` seperti batch N5.
+3. Selesai. `availableLevels` mendeteksi materi baru, sehingga:
+   - level N4 otomatis aktif di pemilih level (sebelumnya berlabel "Segera"),
+   - rute `/[level]/…` langsung melayani `/n4/vocab`, `/n4/kanji`, dst.,
+   - warna aksen N4 (`--level` per level, lihat `globals.css`) otomatis terpakai,
+   - dasbor, hub level, dan kamus ikut menghitung materi baru.
+
+Tidak ada komponen atau layout yang perlu disunting. Level yang belum punya
+materi menampilkan layar "segera hadir" dari `apps/web/app/[level]/layout.tsx`
+alih-alih halaman kosong.
+
+## Cara menambah materi
+
+Semua isi materi ada di `packages/content/src/data/` dan dikumpulkan oleh
+`packages/content/src/index.ts`.
+
+**Menambah kosakata** — edit `data/vocab-n5.ts`:
+
+```ts
+{
+  id: "vocab:n5:ringo",          // wajib unik, dipakai sebagai kunci SRS
+  kanji: "林檎",
+  kana: "りんご",
+  romaji: "ringo",
+  meaning: "apel",
+  pos: "kata-benda",
+  level: "N5",
+  example: { jp: "林檎を一つください。", id: "Tolong satu apel." },
+}
+```
+
 
 ## Perintah
 
@@ -91,15 +138,40 @@ Semua isi materi ada di `packages/content/src/data/` dan dikumpulkan oleh
 
 **Menambah level baru (mis. N4)**
 
-1. Buat `data/vocab-n4.ts`, `data/kanji-n4.ts`, dst. dengan bentuk data yang sama.
-2. Import & spread di `packages/content/src/index.ts`:
+Lihat bagian [Level & kurikulum](#level--kurikulum) — cukup tambah data, tanpa
+menyunting komponen.
 
-```ts
-import { vocabN4 } from "./data/vocab-n4";
-export const vocab: Vocab[] = [...vocabN5, ...vocabN4];
+## Design system
+
+Tampilan memakai arah 「和モダン」 Editorial Warm: netral hangat (kertas & tinta),
+judul serif, garis rambut, dan warna aksen yang mengikuti level JLPT.
+
+- Kontrak lengkap: [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md) — tipografi,
+  token warna, ukuran huruf, aturan mobile, dan daftar komponen. **Baca ini
+  sebelum menulis UI baru.**
+- Token: `apps/web/app/globals.css` (variabel CSS + varian gelap + `--level` per level)
+  dan `apps/web/tailwind.config.ts` (pemetaan ke kelas Tailwind).
+- Komponen: `packages/ui/src/` — `Button`, `Card`, `Badge`, `Pill`, `ProgressBar`,
+  `ProgressRing`, `SegmentedControl`, `PageHeader`, `Section`, `StatTile`,
+  `Toolbar`, `SearchField`, `EmptyState`, `Callout`, `ListRow`, `Skeleton`, `Pagination`.
+- Kerangka aplikasi: `apps/web/components/app-shell.tsx` (rail desktop, top bar +
+  bottom nav mobile, sheet) dan `apps/web/components/level-switcher.tsx`.
+
+## QA visual
+
+`tools/shots.ps1` mengambil screenshot halaman lewat Chrome headless.
+
+```powershell
+# desktop
+pwsh -File tools/shots.ps1 -Prefix qa -Pages "/dashboard","/n5/vocab" -Viewport desktop
+# mobile (viewport 390x844 jujur, lewat iframe) + mode terang
+pwsh -File tools/shots.ps1 -Prefix qa -Pages "/n5/vocab" -Frames "390x844,834x1112" -Scheme light
 ```
 
-Semua halaman otomatis ikut menampilkan materi baru.
+Catatan: Chrome di Windows menolak window lebih sempit dari ~500 CSS px, jadi mode
+`-Frames` me-render halaman di dalam `<iframe>` selebar yang diminta. Viewer-nya
+ditulis sementara ke `public/_qa/` lalu dihapus lagi pada akhir skrip.
+
 
 ## Model progres & SRS
 
@@ -129,6 +201,21 @@ Alternatif: set Root Directory ke akar repo, build command
 `pnpm --filter @manabi/web build`, output `apps/web/.next`.
 
 ## Troubleshooting
+
+**Halaman error 500 dengan `Cannot find module './vendor-chunks/....js'`**
+
+`next dev` dan `next build` memakai folder `.next` yang sama, jadi menjalankan
+`next build` saat dev server aktif akan menimpa artefak dev dan merusaknya
+(gejalanya: halaman 500, chunk hilang, atau UI tampil dengan data lama).
+
+Perbaikannya: hentikan dev server, hapus cache, lalu jalankan lagi.
+
+```bash
+pnpm clean          # hapus apps/web/.next
+pnpm dev
+```
+
+Sebaiknya jangan menjalankan `build` selama `dev` hidup.
 
 **`Cannot find module 'styled-jsx/package.json'` saat `pnpm dev` / `pnpm build`**
 
@@ -160,8 +247,7 @@ ganti browser, atau `localhost` vs `127.0.0.1` akan dianggap sesi berbeda.
 
 ## Dokumen
 
-- [Desain produk](docs/DESAIN-MANABI.md) — konsep, fitur, kurikulum, arsitektur
-- [Roadmap](docs/ROADMAP.md) — status MVP dan rencana v0.2 → v2.0
+- [Design system](docs/DESIGN-SYSTEM.md) — arah visual, token, tipografi, aturan mobile
 - [Supabase](supabase/README.md) — langkah mengaktifkan backend
 
 ## Kredit data

@@ -15,6 +15,8 @@ export interface SegmentedControlProps<T extends string | number> {
   size?: "sm" | "md";
   ariaLabel?: string;
   className?: string;
+  /** Pakai tinggi penuh dan bagi rata — cocok untuk mobile. */
+  block?: boolean;
 }
 
 /**
@@ -29,13 +31,15 @@ export function SegmentedControl<T extends string | number>({
   size = "md",
   ariaLabel,
   className,
+  block,
 }: SegmentedControlProps<T>) {
   return (
     <div
       role="group"
       aria-label={ariaLabel}
       className={cn(
-        "inline-flex flex-wrap gap-1 rounded-xl border border-border bg-surface p-1",
+        "inline-flex gap-1 rounded-lg border border-border bg-surface-muted p-1",
+        block ? "flex w-full" : "flex-wrap",
         className,
       )}
     >
@@ -48,14 +52,19 @@ export function SegmentedControl<T extends string | number>({
             aria-pressed={active}
             onClick={() => onChange(option.value)}
             className={cn(
-              "flex items-center justify-center gap-1.5 rounded-lg font-medium transition-colors",
-              size === "sm" ? "px-2.5 py-1 text-[11px]" : "px-3 py-1.5 text-xs",
+              "flex items-center justify-center gap-1.5 rounded-md font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1",
+              block && "flex-1",
+              size === "sm" ? "px-2.5 py-1 text-caption" : "px-3 py-1.5 text-xs",
               active
-                ? "bg-accent text-accent-contrast shadow-sm"
-                : "text-fg-muted hover:bg-surface-muted hover:text-fg",
+                ? "bg-surface text-fg shadow-soft"
+                : "text-fg-muted hover:text-fg",
             )}
           >
-            {option.glyph ? <span className="jp">{option.glyph}</span> : null}
+            {option.glyph ? (
+              <span lang="ja" className="jp text-xs leading-none">
+                {option.glyph}
+              </span>
+            ) : null}
             {option.label}
           </button>
         );

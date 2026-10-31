@@ -28,6 +28,16 @@ import { readingN5 } from "./data/reading-n5";
 import { readingN5Extra } from "./data/reading-n5-extra";
 
 export * from "./types";
+export {
+  LEVEL_META,
+  LEVEL_ORDER,
+  isJlptLevel,
+  levelClassName,
+  levelHref,
+  levelMeta,
+  nextAvailableLevel,
+} from "./levels";
+export type { LevelMeta } from "./levels";
 export { hiragana, katakana, kana, kanaRows, kanaRowLabels } from "./data/kana";
 export { vocabN5 } from "./data/vocab-n5";
 export { vocabN5Batch1 } from "./data/vocab-n5-batch-1";
