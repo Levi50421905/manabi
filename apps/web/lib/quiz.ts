@@ -102,20 +102,24 @@ export function buildKanaQuestions(pool: Kana[], count = 10): Question[] {
 export function buildVocabQuestions(
   pool: Vocab[],
   count = 10,
-  options: { withKana?: boolean } = {},
+  options: { withKana?: boolean; answerType?: AnswerType } = {},
 ): Question[] {
   const withKana = options.withKana ?? true;
+  const answerType = options.answerType ?? "meaning";
   const picks = take(pool, count);
-  const meaningPool = pool.map((item) => item.meaning);
+  const answerPool = pool.map((item) => answerOfVocab(item, answerType));
 
   return picks.map((item, index) => {
-    const { options: built, answer } = buildOptions(item.meaning, meaningPool);
+    const correct = answerOfVocab(item, answerType);
+    const { options: built, answer } = buildOptions(correct, answerPool);
+    // Petunjuk kana hanya aman saat yang ditanya artinya — kalau jawabannya
+    // kana atau romaji, menampilkan kana sama saja membocorkan jawaban.
+    const showKanaHint = withKana && answerType === "meaning";
     return {
       id: `vocab:${item.id}:${index}`,
       kind: "kosakata",
       prompt: item.kanji || item.kana,
-      // Di ujian bacaan kana disembunyikan — itu contekan untuk level yang sama.
-      subPrompt: withKana ? item.kana : `Kosakata ${item.level}`,
+      subPrompt: showKanaHint ? item.kana : subPromptFor(answerType, "kata"),
       options: built,
       answer,
       explanation: `${item.kanji || item.kana} (${item.kana}) berarti "${item.meaning}". Contoh: ${item.example.jp}`,
@@ -123,18 +127,27 @@ export function buildVocabQuestions(
   });
 }
 
-export function buildKanjiQuestions(pool: Kanji[], count = 8): Question[] {
+export function buildKanjiQuestions(
+  pool: Kanji[],
+  count = 8,
+  answerType: AnswerType = "meaning",
+): Question[] {
   const picks = take(pool, count);
-  const meaningPool = pool.map((item) => item.meanings[0] ?? "");
+  const answerPool = pool.map((item) => answerOfKanji(item, answerType));
 
   return picks.map((item, index) => {
-    const meaning = item.meanings[0] ?? "";
-    const { options, answer } = buildOptions(meaning, meaningPool);
+    const correct = answerOfKanji(item, answerType);
+    const { options, answer } = buildOptions(correct, answerPool);
     return {
       id: `kanji:${item.id}:${index}`,
       kind: "kanji",
       prompt: item.character,
-      subPrompt: `${item.strokes} goresan · radikal ${item.radical}`,
+      // Saat menjawab arti, info goresan jadi petunjuk yang membantu; saat
+      // menjawab bacaan, info itu tidak relevan sehingga diganti pertanyaan.
+      subPrompt:
+        answerType === "meaning"
+          ? `${item.strokes} goresan · radikal ${item.radical}`
+          : subPromptFor(answerType, "kanji"),
       options,
       answer,
       explanation: `${item.character} berarti ${item.meanings.join(", ")}. On'yomi: ${item.onyomi.join("、") || "—"}; Kun'yomi: ${item.kunyomi.join("、") || "—"}.`,
@@ -205,78 +218,69 @@ export function buildMixedQuestions(count = 12): Question[] {
 }
 
 export type AnswerType = "meaning" | "romaji" | "kana";
-export type QuizSource = "kanji-recognize" | "kanji-recall" | "vocab";
 
-/** Ambil jawaban sesuai tipe yang dipilih peserta. */
-function answerOfKanji(item: Kanji, answerType: AnswerType): string {
-  if (answerType === "kana") return item.kunyomi[0] ?? item.onyomi[0] ?? "";
-  return item.meanings.join(", ");
+export const ANSWER_TYPE_LABEL: Record<AnswerType, string> = {
+  meaning: "Terjemahan",
+  romaji: "Romaji",
+  kana: "Kana",
+};
+
+export const ANSWER_TYPE_HINT: Record<AnswerType, string> = {
+  meaning: "arti dalam bahasa Indonesia",
+  romaji: "cara baca dengan huruf Latin",
+  kana: "cara baca dalam huruf kana",
+};
+
+/** Peta huruf kana → romaji, memakai data kana yang sudah ada di paket konten. */
+const KANA_ROMAJI = new Map<string, string>(kana.map((item) => [item.char, item.romaji]));
+
+/**
+ * Ubah teks kana menjadi romaji, mis. "ひ" → "hi", "きょう" → "kyou".
+ * Pasangan yōon dicoba lebih dulu supaya "きゃ" tidak dipecah jadi dua suku.
+ */
+export function toRomaji(text: string): string {
+  let result = "";
+  let index = 0;
+  while (index < text.length) {
+    const pair = text.slice(index, index + 2);
+    const pairRomaji = KANA_ROMAJI.get(pair);
+    if (pairRomaji) {
+      result += pairRomaji;
+      index += 2;
+      continue;
+    }
+    const single = text[index] ?? "";
+    result += KANA_ROMAJI.get(single) ?? single;
+    index += 1;
+  }
+  return result;
 }
 
+/** Bacaan kanji tanpa okurigana, mis. "た.べる" → "た". */
+function kanjiReading(item: Kanji): string {
+  const raw = item.kunyomi[0] ?? item.onyomi[0] ?? "";
+  return raw.split(".")[0] ?? raw;
+}
+
+/** Jawaban kanji sesuai bentuk yang dipilih peserta. */
+function answerOfKanji(item: Kanji, answerType: AnswerType): string {
+  if (answerType === "meaning") return item.meanings.join(", ");
+  const reading = kanjiReading(item);
+  return answerType === "romaji" ? toRomaji(reading) : reading;
+}
+
+/** Jawaban kosakata sesuai bentuk yang dipilih peserta. */
 function answerOfVocab(item: Vocab, answerType: AnswerType): string {
   if (answerType === "romaji") return item.romaji;
   if (answerType === "kana") return item.kana;
   return item.meaning;
 }
 
-/**
- * Builder untuk latihan yang bisa dikonfigurasi:
- * - kanji-recognize : kanji → jawaban (arti / bacaan kana)
- * - kanji-recall    : jawaban (arti / kana) → kanji
- * - vocab           : kosakata → arti / romaji / kana
- */
-export function buildTypedQuestions(
-  source: QuizSource,
-  answerType: AnswerType,
-  count = 10,
-): Question[] {
-  if (source === "vocab") {
-    const picks = take(vocab, count);
-    const pool = vocab.map((item) => answerOfVocab(item, answerType));
-
-    return picks.map((item, index) => {
-      const correct = answerOfVocab(item, answerType);
-      const { options, answer } = buildOptions(correct, pool);
-      return {
-        id: `typed:vocab:${item.id}:${index}`,
-        kind: "kosakata",
-        prompt: item.kanji || item.kana,
-        subPrompt:
-          answerType === "meaning"
-            ? "Apa arti kata ini?"
-            : answerType === "romaji"
-              ? "Bagaimana romaji kata ini?"
-              : "Bagaimana cara membacanya (kana)?",
-        options,
-        answer,
-        explanation: `${item.kanji || item.kana} (${item.kana}) = ${item.meaning}`,
-      };
-    });
-  }
-
-  const picks = take(kanji, count);
-  const recall = source === "kanji-recall";
-  const pool = kanji.map((item) => (recall ? item.character : answerOfKanji(item, answerType)));
-
-  return picks.map((item, index) => {
-    const prompt = recall ? answerOfKanji(item, answerType) : item.character;
-    const correct = recall ? item.character : answerOfKanji(item, answerType);
-    const { options, answer } = buildOptions(correct, pool);
-
-    return {
-      id: `typed:${source}:${item.id}:${index}`,
-      kind: "kanji",
-      prompt,
-      subPrompt: recall
-        ? "Kanji mana yang sesuai?"
-        : answerType === "kana"
-          ? "Bagaimana bacaan kanji ini?"
-          : "Apa arti kanji ini?",
-      options,
-      answer,
-      explanation: `${item.character} — ${item.meanings.join(", ")} · kana: ${item.onyomi[0] ?? ""}${item.kunyomi[0] ? ` / ${item.kunyomi[0]}` : ""}`,
-    };
-  });
+/** Pertanyaan yang ditampilkan untuk tiap bentuk jawaban. */
+function subPromptFor(answerType: AnswerType, subject: "kata" | "kanji"): string {
+  if (answerType === "romaji") return `Bagaimana romaji ${subject} ini?`;
+  if (answerType === "kana") return `Bagaimana cara membacanya (kana)?`;
+  return `Apa arti ${subject} ini?`;
 }
 
 /** Tandai kata target dalam kalimat dengan 「」 agar jelas mana yang ditanyakan. */

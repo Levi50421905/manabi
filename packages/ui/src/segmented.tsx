@@ -56,7 +56,7 @@ export function SegmentedControl<T extends string | number>({
               block && "flex-1",
               size === "sm" ? "px-2.5 py-1 text-caption" : "px-3 py-1.5 text-xs",
               active
-                ? "bg-surface text-fg shadow-soft"
+                ? "bg-fg text-paper shadow-soft"
                 : "text-fg-muted hover:text-fg",
             )}
           >

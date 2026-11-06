@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Badge,
@@ -16,11 +16,14 @@ import {
 import { grammarByLevel, kana, kanjiByLevel, levelHref, levelMeta, vocabByLevel } from "@manabi/content";
 import { QuizRunner } from "@/components/quiz-runner";
 import {
+  ANSWER_TYPE_HINT,
+  ANSWER_TYPE_LABEL,
   buildGrammarQuestions,
   buildKanaQuestions,
   buildKanjiQuestions,
   buildVocabQuestions,
   shuffle,
+  type AnswerType,
   type Question,
 } from "@/lib/quiz";
 import { useActiveLevel } from "@/lib/level";
@@ -75,20 +78,45 @@ const MODES: ModeOption[] = [
 
 const COUNTS = [10, 20, 30];
 
+/** Pilihan bentuk jawaban untuk soal kosakata dan kanji. */
+const ANSWER_OPTIONS: Array<{ value: AnswerType; label: string }> = (
+  ["meaning", "romaji", "kana"] as const
+).map((value) => ({ value, label: ANSWER_TYPE_LABEL[value] }));
+
 export default function QuizPage() {
   const { level } = useActiveLevel();
   const meta = levelMeta(level);
 
-  const vocabPool = vocabByLevel(level);
-  const kanjiPool = kanjiByLevel(level);
-  const grammarPool = grammarByLevel(level);
+  const vocabPool = useMemo(() => vocabByLevel(level), [level]);
+  const kanjiPool = useMemo(() => kanjiByLevel(level), [level]);
+  const grammarPool = useMemo(() => grammarByLevel(level), [level]);
 
   const [mode, setMode] = useState<QuizMode>("campuran");
   const [count, setCount] = useState(10);
   const [label, setLabel] = useState("");
   const [questions, setQuestions] = useState<Question[] | null>(null);
+  /** Bentuk jawaban yang diminta untuk soal kosakata dan kanji. */
+  const [answerType, setAnswerType] = useState<AnswerType>("meaning");
 
   const modeInfo = MODES.find((item) => item.key === mode) ?? MODES[0]!;
+
+  /** Mode yang soalnya bisa memakai bentuk jawaban pilihan. */
+  const isTyped = mode === "kosakata" || mode === "kanji" || mode === "campuran";
+
+  const preview = useMemo(() => {
+    if (!isTyped) return null;
+    const samples =
+      mode === "kanji"
+        ? buildKanjiQuestions(kanjiPool, 1, answerType)
+        : buildVocabQuestions(vocabPool, 1, { answerType });
+    const sample = samples[0];
+    if (!sample) return null;
+    return {
+      prompt: sample.prompt,
+      subPrompt: sample.subPrompt ?? "",
+      answer: sample.options[sample.answer] ?? "",
+    };
+  }, [isTyped, mode, answerType, kanjiPool, vocabPool]);
 
   /** Jumlah materi yang bisa dijadikan soal untuk sebuah mode. */
   function materialCount(key: QuizMode): number {
@@ -110,11 +138,11 @@ export default function QuizPage() {
   function buildQuestions(key: QuizMode, amount: number): Question[] {
     switch (key) {
       case "kosakata":
-        return buildVocabQuestions(vocabPool, amount);
+        return buildVocabQuestions(vocabPool, amount, { answerType });
       case "kana":
         return buildKanaQuestions(kana, amount);
       case "kanji":
-        return buildKanjiQuestions(kanjiPool, amount);
+        return buildKanjiQuestions(kanjiPool, amount, answerType);
       case "tata-bahasa":
         return buildGrammarQuestions(grammarPool, amount);
       case "campuran": {
@@ -126,8 +154,8 @@ export default function QuizPage() {
 
         return shuffle([
           ...buildKanaQuestions(kana, kanaCount),
-          ...buildVocabQuestions(vocabPool, vocabCount),
-          ...buildKanjiQuestions(kanjiPool, kanjiCount),
+          ...buildVocabQuestions(vocabPool, vocabCount, { answerType }),
+          ...buildKanjiQuestions(kanjiPool, kanjiCount, answerType),
           ...buildGrammarQuestions(grammarPool, grammarCount),
         ]);
       }
@@ -136,7 +164,12 @@ export default function QuizPage() {
 
   function start() {
     const info = MODES.find((item) => item.key === mode) ?? MODES[0]!;
-    setLabel(`Latihan ${info.title} · ${level}`);
+    const answerLabel = ANSWER_TYPE_LABEL[answerType];
+    setLabel(
+      isTyped
+        ? `Latihan ${info.title} · ${answerLabel} · ${level}`
+        : `Latihan ${info.title} · ${level}`,
+    );
     setQuestions(buildQuestions(mode, count));
     window.scrollTo({ top: 0 });
   }
@@ -156,7 +189,7 @@ export default function QuizPage() {
           }
           title="Latihan"
           japanese="練習"
-          description={`${questions.length} soal · mode ${modeInfo.title.toLowerCase()}`}
+          description={label}
           actions={
             <Button variant="ghost" onClick={() => setQuestions(null)}>
               Ubah pilihan
@@ -258,6 +291,62 @@ export default function QuizPage() {
         </div>
       </Section>
 
+      {isTyped ? (
+        <Section
+          title="Bentuk jawaban"
+          glyph="答"
+          description={
+            mode === "campuran"
+              ? "Berlaku untuk soal kosakata dan kanji di sesi ini."
+              : "Pilih apa yang ingin kamu jawab dari tiap soal."
+          }
+        >
+          <Card>
+            <CardBody className="space-y-5 p-4 sm:p-5">
+              <div>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-h3 font-semibold text-fg">Jawab dengan</p>
+                  <span className="text-caption text-fg-subtle">
+                    {ANSWER_TYPE_HINT[answerType]}
+                  </span>
+                </div>
+                <SegmentedControl
+                  className="mt-2"
+                  block
+                  ariaLabel="Bentuk jawaban"
+                  value={answerType}
+                  onChange={setAnswerType}
+                  options={ANSWER_OPTIONS}
+                />
+              </div>
+
+              <div className="rounded-lg border border-border bg-surface-muted p-3.5">
+                <p className="label-micro">Contoh soal</p>
+                {preview ? (
+                  <>
+                    <p
+                      lang="ja"
+                      className="jp-serif mt-2 text-h1 font-semibold leading-tight text-fg"
+                    >
+                      {preview.prompt}
+                    </p>
+                    <p className="mt-1 text-caption text-fg-muted">{preview.subPrompt}</p>
+                    <p className="mt-2.5 border-t border-border pt-2.5 text-caption text-fg-subtle">
+                      Jawaban benar:{" "}
+                      <span className="font-semibold text-fg">{preview.answer}</span>
+                    </p>
+                  </>
+                ) : (
+                  <p className="mt-2 text-caption text-fg-muted">
+                    Belum ada materi untuk level ini, jadi contoh soal belum bisa dibuat.
+                  </p>
+                )}
+              </div>
+            </CardBody>
+          </Card>
+        </Section>
+      ) : null}
+
       <Section title="Jumlah soal" glyph="数" description="Sesuaikan dengan waktu yang kamu punya.">
         <Card>
           <CardBody className="p-4 sm:p-5">
@@ -285,6 +374,7 @@ export default function QuizPage() {
             <p className="label-micro">Siap mulai</p>
             <p className="mt-1.5 text-body font-semibold text-fg">
               {modeInfo.title} · {count} soal
+              {isTyped ? ` · ${ANSWER_TYPE_LABEL[answerType]}` : ""}
             </p>
             <p className="mt-0.5 text-caption text-fg-muted">{modeInfo.description}</p>
           </div>

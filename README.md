@@ -56,7 +56,7 @@ Menambah level baru otomatis menambah rute (lihat **Level & kurikulum** di bawah
 | `/[level]/grammar` | 48 pola tata bahasa N5 dengan contoh + latihan 文の組み立て |
 | `/[level]/listening` | 12 dialog, 3 kecepatan, toggle kana & terjemahan |
 | `/[level]/reading` | 10 bacaan berfurigana + pertanyaan pemahaman |
-| `/[level]/quiz` | Latihan campuran / per modul + pembahasan + shortcut 1–4 & Enter |
+| `/[level]/quiz` | Latihan: pilih mode dan bentuk jawaban + pembahasan + shortcut 1–4 & Enter |
 | `/[level]/ujian` | Simulasi JLPT N5 dan JFT-Basic |
 | `/dictionary` | Pencarian lintas level: kosakata, kanji, tata bahasa, bacaan (global) |
 | `/settings` | Tema, target harian, kecepatan suara, furigana, reset data (global) |
@@ -247,6 +247,7 @@ ganti browser, atau `localhost` vs `127.0.0.1` akan dianggap sesi berbeda.
 
 ## Dokumen
 
+- [Changelog](CHANGELOG.md) — riwayat rilis per versi (versi terbaru: 2.1.0)
 - [Design system](docs/DESIGN-SYSTEM.md) — arah visual, token, tipografi, aturan mobile
 - [Supabase](supabase/README.md) — langkah mengaktifkan backend
 
