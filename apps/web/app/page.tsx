@@ -12,12 +12,23 @@ import {
   levelHref,
   vocab,
 } from "@manabi/content";
+import { dailyCards, dayKey } from "@/lib/daily-card";
+import { SiteMenu } from "@/components/site-menu";
+import { TodayCard } from "@/components/today-card";
 
 export const metadata: Metadata = {
   title: "Manabi — Belajar bahasa Jepang terstruktur",
   description:
     "Kana, kanji, kosakata dengan spaced repetition, tata bahasa, listening, membaca, dan simulasi ujian JLPT — satu jalur belajar per level dari N5 sampai N1.",
 };
+
+/**
+ * "Kartu hari ini" bergantung pada tanggal saat halaman diminta, jadi rute ini
+ * tidak boleh diprasajikan statis (kalau statis, kartu akan membeku di tanggal
+ * build). Dengan force-dynamic, HTML selalu memakai tanggal lokal hari ini dan
+ * isi kartu tetap stabil selama satu hari.
+ */
+export const dynamic = "force-dynamic";
 
 const MODULES = [
   {
@@ -102,6 +113,11 @@ export default function HomePage() {
 
   const n5 = contentCountByLevel("N5");
 
+  // Kartu hari ini: satu item deterministik dari tanggal lokal hari ini.
+  // `dailyCards` mengembalikan kartu utama + kandidat lain dari modul yang
+  // sama untuk tombol "Acak".
+  const todayCards = dailyCards(dayKey(), 4);
+
   return (
     <div className="min-h-screen bg-paper">
       {/* ---------- Nav atas ---------- */}
@@ -139,11 +155,14 @@ export default function HomePage() {
             </Link>
           </nav>
 
-          <Link href="/dashboard">
-            <Button variant="outline" size="sm">
-              Buka dasbor
-            </Button>
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link href="/dashboard" className="hidden md:block">
+              <Button variant="outline" size="sm">
+                Buka dasbor
+              </Button>
+            </Link>
+            <SiteMenu />
+          </div>
         </div>
       </header>
 
@@ -192,36 +211,7 @@ export default function HomePage() {
                 </span>
               </div>
 
-              <div className="rounded-2xl border border-border bg-surface p-1 shadow-lifted">
-                <div className="flex items-center justify-between px-4 py-3">
-                  <span className="label-micro">Kartu hari ini</span>
-                  <Badge tone="level" mono>
-                    N5
-                  </Badge>
-                </div>
-                <div className="mx-1 grid place-items-center rounded-xl border border-border bg-surface-muted py-10">
-                  <span lang="ja" className="jp-serif text-7xl font-semibold leading-none text-fg">
-                    学
-                  </span>
-                </div>
-                <div className="px-4 py-4">
-                  <div className="flex items-baseline justify-between gap-3">
-                    <div>
-                      <p lang="ja" className="jp text-sm font-medium text-fg">
-                        まなぶ
-                        <span className="ml-2 text-fg-muted">manabu</span>
-                      </p>
-                      <p className="mt-0.5 text-caption text-fg-muted">belajar · 8 goresan</p>
-                    </div>
-                    <span lang="ja" className="jp text-caption text-fg-subtle">
-                      子
-                    </span>
-                  </div>
-                  <p className="mt-3 border-t border-border pt-3 text-caption leading-relaxed text-fg-muted">
-                    Anak (子) di bawah atap sekolah — sedang menimba ilmu.
-                  </p>
-                </div>
-              </div>
+              <TodayCard cards={todayCards} />
             </div>
           </div>
         </section>

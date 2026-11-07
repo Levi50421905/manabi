@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Badge,
@@ -18,12 +19,30 @@ import {
 import { QUESTION_KIND_LABEL, scoreMessage, type Question } from "@/lib/quiz";
 import { recordQuiz } from "@/lib/store";
 
+/** API imperatif runner, dipakai halaman sesi untuk menyelesaikan lebih awal. */
+export interface QuizRunnerHandle {
+  /** Selesaikan sesi sekarang. Soal yang belum dijawab dihitung kosong. */
+  finish: () => void;
+}
+
 interface QuizRunnerProps {
   questions: Question[];
   /** Label untuk disimpan di riwayat quiz, contoh: "Latihan kana" */
   label: string;
   onRestart?: () => void;
   restartLabel?: string;
+  /** Kembali ke layar penyiapan (tombol "Selesai" di layar hasil). */
+  onDone?: () => void;
+  /** Label tombol "Selesai". */
+  doneLabel?: string;
+  /** Tautan kembali ke modul asal, mis. /n5/kanji. */
+  moduleHref?: string;
+  /** Label tautan modul; default "Kembali ke modul". */
+  moduleLabel?: string;
+  /** Minta konfirmasi keluar dari halaman induk; tombol "Keluar" hanya tampil bila diisi. */
+  onRequestExit?: () => void;
+  /** Dipanggil saat ringkasan skor tampil — sesi berakhir. */
+  onFinished?: () => void;
 }
 
 /** Apakah teks memuat huruf Jepang (kana/kanji)? */
@@ -60,12 +79,21 @@ function Key({ children }: { children: ReactNode }) {
  * Mesin latihan: satu kartu soal fokus, empat opsi lebar, umpan balik seketika,
  * lalu ringkasan skor di akhir. Shortcut 1–4 dan Enter dipertahankan.
  */
-export function QuizRunner({
-  questions,
-  label,
-  onRestart,
-  restartLabel = "Buat soal baru",
-}: QuizRunnerProps) {
+export const QuizRunner = forwardRef<QuizRunnerHandle, QuizRunnerProps>(function QuizRunner(
+  {
+    questions,
+    label,
+    onRestart,
+    restartLabel = "Buat soal baru",
+    onDone,
+    doneLabel = "Selesai",
+    moduleHref,
+    moduleLabel = "Kembali ke modul",
+    onRequestExit,
+    onFinished,
+  },
+  ref,
+) {
   const router = useRouter();
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
@@ -73,6 +101,8 @@ export function QuizRunner({
   const [correctCount, setCorrectCount] = useState(0);
   const [finished, setFinished] = useState(false);
   const [answers, setAnswers] = useState<Array<number | null>>([]);
+  /** Penjaga agar recordQuiz dan onFinished tidak terpanggil dua kali. */
+  const finishedRef = useRef(false);
 
   const total = questions.length;
   const current = questions[index];
@@ -84,11 +114,23 @@ export function QuizRunner({
     if (selected === current.answer) setCorrectCount((count) => count + 1);
   }
 
+  /**
+   * Akhiri sesi: tampilkan ringkasan dan simpan hasil. Jawaban yang belum
+   * terjawab otomatis dihitung kosong karena hanya jawaban diperiksa yang
+   * masuk ke `correctCount`.
+   */
+  function finishSession() {
+    if (finishedRef.current || total === 0) return;
+    finishedRef.current = true;
+    setFinished(true);
+    recordQuiz(label, correctCount, total);
+    onFinished?.();
+  }
+
   function handleNext() {
     if (!current) return;
     if (index + 1 >= total) {
-      setFinished(true);
-      recordQuiz(label, correctCount, total);
+      finishSession();
       return;
     }
     setIndex((value) => value + 1);
@@ -103,8 +145,12 @@ export function QuizRunner({
     setCorrectCount(0);
     setAnswers([]);
     setFinished(false);
+    finishedRef.current = false;
     onRestart?.();
   }
+
+  // Halaman sesi bisa menyelesaikan lebih awal lewat dialog konfirmasi.
+  useImperativeHandle(ref, () => ({ finish: finishSession }));
 
   // Shortcut keyboard: tombol 1–4 memilih jawaban, Enter untuk periksa/lanjut.
   useEffect(() => {
@@ -242,10 +288,29 @@ export function QuizRunner({
           </CardBody>
         </Card>
 
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <Button size="lg" className="w-full sm:w-auto" onClick={handleRestart}>
-            {restartLabel}
-          </Button>
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+          {onDone ? (
+            <Button size="lg" className="w-full sm:w-auto" onClick={onDone}>
+              {doneLabel}
+            </Button>
+          ) : null}
+          {onRestart ? (
+            <Button
+              size="lg"
+              variant={onDone ? "outline" : "primary"}
+              className="w-full sm:w-auto"
+              onClick={handleRestart}
+            >
+              {restartLabel}
+            </Button>
+          ) : null}
+          {moduleHref ? (
+            <Link href={moduleHref} className="w-full sm:w-auto">
+              <Button size="lg" variant="outline" className="w-full">
+                {moduleLabel}
+              </Button>
+            </Link>
+          ) : null}
           <Button
             size="lg"
             variant="outline"
@@ -268,7 +333,20 @@ export function QuizRunner({
         <p className="label-micro tnum">
           Soal {index + 1} / {total}
         </p>
-        <Badge tone="level">{QUESTION_KIND_LABEL[current.kind]}</Badge>
+        <div className="flex shrink-0 items-center gap-2">
+          <Badge tone="level">{QUESTION_KIND_LABEL[current.kind]}</Badge>
+          {onRequestExit ? (
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-11 px-3"
+              aria-label="Keluar dari sesi latihan"
+              onClick={onRequestExit}
+            >
+              Keluar
+            </Button>
+          ) : null}
+        </div>
       </div>
 
       <ProgressBar
@@ -388,4 +466,4 @@ export function QuizRunner({
       </Card>
     </div>
   );
-}
+});

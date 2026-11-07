@@ -19,6 +19,7 @@ import {
   cn,
 } from "@manabi/ui";
 import { levelHref, levelMeta } from "@manabi/content";
+import { SessionExitDialog } from "@/components/session-exit-dialog";
 import {
   allQuestions,
   buildExam,
@@ -32,6 +33,7 @@ import { QUESTION_KIND_LABEL, type Question } from "@/lib/quiz";
 import { recordQuiz } from "@/lib/store";
 import { createUtterance, speak } from "@/lib/tts";
 import { useActiveLevel } from "@/lib/level";
+import { setSessionActive, useBeforeUnloadGuard } from "@/lib/session-guard";
 
 const EXAM_KINDS: ExamKind[] = ["jlpt-n5", "jft-basic"];
 
@@ -86,6 +88,7 @@ export default function ExamPage() {
   const [index, setIndex] = useState(0);
   const [remaining, setRemaining] = useState(0);
   const [result, setResult] = useState<ExamResult | null>(null);
+  const [exitOpen, setExitOpen] = useState(false);
 
   // Ringkasan kertas ujian untuk layar pemilihan (jumlah soal & seksi asli).
   const papers = useMemo(() => EXAM_KINDS.map((kind) => previewOf(buildExam(kind))), []);
@@ -108,12 +111,14 @@ export default function ExamPage() {
     const scored = scoreExam(examSpec, currentAnswers);
     const all = allQuestions(examSpec);
     const correct = all.filter((question) => currentAnswers[question.id] === question.answer).length;
+    setExitOpen(false);
     setResult(scored);
     recordQuiz(examSpec.title, correct, all.length);
     window.scrollTo({ top: 0 });
   }
 
   function backToPapers() {
+    setExitOpen(false);
     setSpec(null);
     setResult(null);
     setAnswers({});
@@ -147,6 +152,18 @@ export default function ExamPage() {
       finish(answers, spec);
     }
   }, [remaining, spec, result, answers]);
+
+  /** Sesi ujian berjalan: dari mulai sampai hasil ditampilkan. */
+  const sessionRunning = spec !== null && result === null;
+
+  // Kunci navigasi selama ujian; keluar hanya lewat dialog konfirmasi.
+  useEffect(() => {
+    if (!sessionRunning) return;
+    setSessionActive(true, spec ? `Ujian · ${spec.title}` : "Ujian");
+    return () => setSessionActive(false);
+  }, [sessionRunning, spec]);
+
+  useBeforeUnloadGuard(sessionRunning);
 
   /** Putar dialog berurutan dengan suara berbeda per pembicara. */
   function playDialogue() {
@@ -335,17 +352,17 @@ export default function ExamPage() {
           ) : null}
         </Section>
 
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <Button size="lg" className="w-full sm:w-auto" onClick={() => start(spec.kind)}>
-            Ulangi ujian
+        <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+          <Button size="lg" className="w-full sm:w-auto" onClick={backToPapers}>
+            Selesai
           </Button>
           <Button
             size="lg"
             variant="outline"
             className="w-full sm:w-auto"
-            onClick={backToPapers}
+            onClick={() => start(spec.kind)}
           >
-            Pilih kertas lain
+            Ulangi ujian
           </Button>
           <Button
             size="lg"
@@ -495,8 +512,12 @@ export default function ExamPage() {
 
   return (
     <div className="space-y-5 pb-8">
-      {/* Header lengket: seksi, timer, progres, tombol selesai */}
-      <div className="sticky top-14 z-20 -mx-4 border-b border-border bg-paper/95 px-4 py-2.5 backdrop-blur sm:-mx-6 sm:px-6 md:-mx-8 md:px-8 lg:top-0">
+      <p role="status" aria-live="polite" className="sr-only">
+        Ujian berjalan. Timer tetap berjalan dan navigasi dikunci sampai ujian selesai.
+      </p>
+
+      {/* Header lengket: seksi, timer, progres, tombol keluar/selesai */}
+      <div className="sticky top-0 z-20 -mx-4 border-b border-border bg-paper/95 px-4 py-2.5 backdrop-blur sm:-mx-6 sm:px-6 md:-mx-8 md:px-8">
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0">
             <p
@@ -519,7 +540,20 @@ export default function ExamPage() {
             >
               ⏱ {formatClock(remaining)}
             </Badge>
-            <Button size="sm" variant="outline" onClick={() => finish(answers, spec)}>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-11 px-3"
+              onClick={() => setExitOpen(true)}
+            >
+              Keluar
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-11 px-3"
+              onClick={() => finish(answers, spec)}
+            >
               Selesai
             </Button>
           </div>
@@ -667,6 +701,20 @@ export default function ExamPage() {
           className="lg:sticky lg:top-24"
         />
       </div>
+
+      <SessionExitDialog
+        open={exitOpen}
+        title="Selesaikan ujian ini?"
+        onCancel={() => setExitOpen(false)}
+        onFinish={() => {
+          setExitOpen(false);
+          finish(answers, spec);
+        }}
+        onDiscard={() => {
+          setExitOpen(false);
+          backToPapers();
+        }}
+      />
     </div>
   );
 }

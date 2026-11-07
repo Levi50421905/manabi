@@ -157,6 +157,17 @@ export default function LevelHubPage() {
       },
     },
     {
+      path: "partikel",
+      glyph: "助",
+      title: "Partikel",
+      description: "助詞 — penanda fungsi kata, plus pasangan yang sering tertukar.",
+      progress: {
+        value: counts.particles,
+        max: counts.particles,
+        label: `${counts.particles} partikel`,
+      },
+    },
+    {
       path: "quiz",
       glyph: "問",
       title: "Latihan",

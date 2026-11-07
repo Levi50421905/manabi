@@ -13,6 +13,7 @@ import {
 import { currentStreak, dayKey, levelFromXp, useProgress } from "@/lib/store";
 import { usePrefs } from "@/lib/prefs";
 import { useActiveLevel } from "@/lib/level";
+import { useSessionActive } from "@/lib/session-guard";
 import { LevelList, LevelRail } from "./level-switcher";
 
 /* ------------------------------------------------------------------ *
@@ -40,6 +41,7 @@ const NAV_SECTIONS: NavSection[] = [
       { label: "Kosakata", glyph: "語", path: "vocab" },
       { label: "Kanji", glyph: "漢", path: "kanji" },
       { label: "Tata Bahasa", glyph: "文", path: "grammar" },
+      { label: "Partikel", glyph: "助", path: "partikel" },
       { label: "Mendengar", glyph: "聴", path: "listening" },
       { label: "Membaca", glyph: "読", path: "reading" },
     ],
@@ -137,6 +139,7 @@ function Sheet({
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? "/";
   const { level } = useActiveLevel();
+  const session = useSessionActive();
   const [menu, setMenu] = useState<null | "belajar" | "lainnya" | "level">(null);
   const closeMenu = useCallback(() => setMenu(null), []);
 
@@ -148,6 +151,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   // Landing page tampil tanpa kerangka aplikasi
   if (pathname === "/") {
     return <div className={cn(levelClassName(level), "min-h-screen")}>{children}</div>;
+  }
+
+  /**
+   * Saat sesi latihan/ujian berjalan, tidak ada navigasi sama sekali.
+   * Keluar hanya lewat dialog konfirmasi di halaman sesi.
+   */
+  if (session.active) {
+    return (
+      <div className={cn(levelClassName(level), "min-h-screen bg-paper text-fg")}>
+        <main className="mx-auto w-full max-w-[1120px] px-4 pb-10 pt-5 sm:px-6 md:px-8 md:py-8">
+          {children}
+        </main>
+      </div>
+    );
   }
 
   return (

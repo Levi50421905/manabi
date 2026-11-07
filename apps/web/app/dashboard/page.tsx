@@ -151,6 +151,15 @@ export default function DashboardPage() {
       due: grammarStats.due,
     },
     {
+      path: "partikel",
+      glyph: "助",
+      title: "Partikel",
+      detail: "Penanda fungsi kata + pasangan yang sering tertukar",
+      value: null,
+      caption: `${counts.particles} partikel`,
+      due: 0,
+    },
+    {
       path: "reading",
       glyph: "読",
       title: "Membaca",

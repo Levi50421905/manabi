@@ -4,6 +4,9 @@ import type {
   Kana,
   Kanji,
   ListeningTrack,
+  Particle,
+  ParticleComparison,
+  ParticleTier,
   ReadingPassage,
   Vocab,
 } from "./types";
@@ -26,6 +29,12 @@ import { examListeningN5 } from "./data/listening-n5-exam";
 import { sentenceOrderN5 } from "./data/sentence-order-n5";
 import { readingN5 } from "./data/reading-n5";
 import { readingN5Extra } from "./data/reading-n5-extra";
+import {
+  particleComparisonsN5,
+  particlePitfallsN5,
+  particleQuestionsN5,
+  particlesN5,
+} from "./data/particles-n5";
 
 export * from "./types";
 export {
@@ -65,6 +74,12 @@ export { sentenceOrderN5 } from "./data/sentence-order-n5";
 export type { SentenceOrderItem } from "./data/sentence-order-n5";
 export { readingN5 } from "./data/reading-n5";
 export { readingN5Extra } from "./data/reading-n5-extra";
+export {
+  particleComparisonsN5,
+  particlePitfallsN5,
+  particleQuestionsN5,
+  particlesN5,
+} from "./data/particles-n5";
 
 /**
  * Kumpulan materi. Saat menambah level baru (N4, N3, …), cukup import
@@ -144,6 +159,7 @@ export function contentCountByLevel(level: JlptLevel): {
   grammar: number;
   reading: number;
   listening: number;
+  particles: number;
 } {
   return {
     vocab: vocab.filter((item) => item.level === level).length,
@@ -151,6 +167,7 @@ export function contentCountByLevel(level: JlptLevel): {
     grammar: grammar.filter((item) => item.level === level).length,
     reading: reading.filter((item) => item.level === level).length,
     listening: listening.filter((item) => item.level === level).length,
+    particles: particlesN5.filter((item) => item.level === level).length,
   };
 }
 
@@ -172,6 +189,31 @@ export function listeningByLevel(level: JlptLevel): ListeningTrack[] {
 
 export function readingByLevel(level: JlptLevel): ReadingPassage[] {
   return reading.filter((item) => item.level === level);
+}
+
+/** Semua partikel untuk satu level, urut dari tingkat paling dasar. */
+export function particlesByLevel(level: JlptLevel): Particle[] {
+  const order: Record<ParticleTier, number> = { dasar: 0, inti: 1, menengah: 2 };
+  return particlesN5
+    .filter((item) => item.level === level)
+    .sort((a, b) => order[a.tier] - order[b.tier]);
+}
+
+export function particleById(id: string): Particle | undefined {
+  return particlesN5.find((item) => item.id === id);
+}
+
+/** Cari partikel berdasarkan karakternya, mis. "は". */
+export function particleByChar(char: string): Particle | undefined {
+  return particlesN5.find((item) => item.char === char);
+}
+
+/** Pasangan partikel yang relevan untuk level tertentu. */
+export function particleComparisonsByLevel(level: JlptLevel): ParticleComparison[] {
+  const chars = new Set(particlesByLevel(level).map((item) => item.id));
+  return particleComparisonsN5.filter(
+    (pair) => chars.has(pair.left.particleId) && chars.has(pair.right.particleId),
+  );
 }
 
 export interface SearchHit {

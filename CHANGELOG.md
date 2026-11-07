@@ -6,6 +6,43 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/) dan
 versi mengikuti [Semantic Versioning](https://semver.org/lang/id/). Catatan
 pembaruan lintas project tidak tinggal di sini — itu ada di situs pribadi.
 
+## [2.2.0] — 2026-11-07
+
+Rilis ini menambah modul **partikel (助詞)**, mengunci sesi latihan/ujian,
+dan membuat beranda berubah setiap hari.
+
+### Ditambahkan
+
+- **Modul Partikel** (`/[level]/partikel`): 18 partikel N5 (は が を に で へ の と
+  も か から まで や ね よ より ほど だけ) dengan fungsi, penjelasan, contoh
+  berpelafalan, 6 kartu **pasangan yang sering tertukar** (は/が, に/で, に/へ,
+  は/も, を/が, と/や), dan 4 **jebakan khusus** (好き・分かる memakai が,
+  keberadaan memakai に, meninggalkan tempat memakai を, に/へ saling
+  menggantikan).
+- **Latihan Partikel** (`/[level]/partikel/latihan`) dengan lima mode yang bisa
+  dikombinasikan: isi celah, ketik jawaban, cocokkan fungsi, bedakan pasangan,
+  dan lengkapi teks. Bank soal **186 item** dibangkitkan dari data partikel,
+  lengkap dengan alasan jawaban benar dan alasan pilihan lain salah.
+- **Kunci sesi**: selama latihan atau ujian berjalan, navigasi aplikasi
+  disembunyikan dan pengguna tidak bisa pindah menu. Keluar hanya lewat dialog
+  konfirmasi — *selesaikan sesi*, *lanjut mengerjakan*, atau *keluar & buang
+  jawaban*. Menutup tab atau memuat ulang memunculkan konfirmasi browser.
+- **Tombol layar hasil**: *Selesai* (kembali ke layar penyiapan untuk ganti
+  soal/mode), *Ulangi*, *Kembali ke modul*, dan *Ke dasbor*.
+- **Kartu hari ini** di beranda kini berganti setiap hari: satu item
+  deterministik dari tanggal (kanji, kosakata, tata bahasa, atau kana), stabil
+  sepanjang hari, dengan tombol acak dan tautan ke modul asalnya.
+- **Menu navigasi beranda di layar kecil**, yang sebelumnya hilang di mobile.
+- Partikel muncul di navigasi samping, hub level, dasbor, dan layar penyiapan
+  Latihan.
+
+### Diubah
+
+- Kontras teks sekunder (`--fg-subtle`) dinaikkan agar memenuhi ambang WCAG
+  4.5:1: tema terang dari 3.04:1 menjadi 4.72:1, tema gelap dari 3.78:1 menjadi
+  4.72:1. Seluruh pasangan warna level N5–N1 sudah lolos tanpa perubahan.
+- Versi proyek naik ke `2.2.0`.
+
 ## [2.1.0] — 2026-11-06
 
 Rilis ini membuat bentuk jawaban latihan bisa dipilih, tidak lagi selalu

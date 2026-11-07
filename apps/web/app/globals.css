@@ -27,7 +27,9 @@
 
     --fg: 26 24 21;
     --fg-muted: 110 104 92;
-    --fg-subtle: 148 143 130;
+    /* Digelapkan dari 148 143 130: kontras pada kertas hanya 3.04:1, di bawah
+       ambang WCAG 4.5:1. Nilai ini menghasilkan 4.72:1 (kertas) dan 5.01:1. */
+    --fg-subtle: 116 111 98;
 
     /* ---- Aksen brand (rose) ---- */
     --accent: 176 74 107;
@@ -80,7 +82,9 @@
 
     --fg: 242 239 233;
     --fg-muted: 168 162 150;
-    --fg-subtle: 122 116 102;
+    /* Diterangkan dari 122 116 102: kontras pada surface hanya 3.78:1.
+       Nilai ini menghasilkan 5.07:1 (kertas) dan 4.72:1 (surface). */
+    --fg-subtle: 138 132 118;
 
     --accent: 232 139 169;
     --accent-strong: 241 167 191;

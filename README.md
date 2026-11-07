@@ -54,6 +54,8 @@ Menambah level baru otomatis menambah rute (lihat **Level & kurikulum** di bawah
 | `/[level]/vocab` | 708 kosakata N5 + sesi SRS + re-queue otomatis saat "Lupa" |
 | `/[level]/kanji` | 111 kanji N5: bacaan, radikal, goresan, mnemonic, kuis |
 | `/[level]/grammar` | 48 pola tata bahasa N5 dengan contoh + latihan 文の組み立て |
+| `/[level]/partikel` | 18 partikel N5: fungsi, contoh, pasangan tertukar, jebakan khusus |
+| `/[level]/partikel/latihan` | Latihan partikel 5 mode (isi celah, ketik, fungsi, pasangan, lengkapi teks) |
 | `/[level]/listening` | 12 dialog, 3 kecepatan, toggle kana & terjemahan |
 | `/[level]/reading` | 10 bacaan berfurigana + pertanyaan pemahaman |
 | `/[level]/quiz` | Latihan: pilih mode dan bentuk jawaban + pembahasan + shortcut 1–4 & Enter |
@@ -247,7 +249,7 @@ ganti browser, atau `localhost` vs `127.0.0.1` akan dianggap sesi berbeda.
 
 ## Dokumen
 
-- [Changelog](CHANGELOG.md) — riwayat rilis per versi (versi terbaru: 2.1.0)
+- [Changelog](CHANGELOG.md) — riwayat rilis per versi (versi terbaru: 2.2.0)
 - [Design system](docs/DESIGN-SYSTEM.md) — arah visual, token, tipografi, aturan mobile
 - [Supabase](supabase/README.md) — langkah mengaktifkan backend
 

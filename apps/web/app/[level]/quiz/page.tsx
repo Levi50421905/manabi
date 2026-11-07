@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   Badge,
@@ -14,7 +14,8 @@ import {
   cn,
 } from "@manabi/ui";
 import { grammarByLevel, kana, kanjiByLevel, levelHref, levelMeta, vocabByLevel } from "@manabi/content";
-import { QuizRunner } from "@/components/quiz-runner";
+import { QuizRunner, type QuizRunnerHandle } from "@/components/quiz-runner";
+import { SessionExitDialog } from "@/components/session-exit-dialog";
 import {
   ANSWER_TYPE_HINT,
   ANSWER_TYPE_LABEL,
@@ -27,6 +28,7 @@ import {
   type Question,
 } from "@/lib/quiz";
 import { useActiveLevel } from "@/lib/level";
+import { setSessionActive, useBeforeUnloadGuard } from "@/lib/session-guard";
 
 type QuizMode = "campuran" | "kosakata" | "kana" | "kanji" | "tata-bahasa";
 
@@ -95,6 +97,10 @@ export default function QuizPage() {
   const [count, setCount] = useState(10);
   const [label, setLabel] = useState("");
   const [questions, setQuestions] = useState<Question[] | null>(null);
+  /** Sesi sedang dikerjakan (bukan layar hasil). */
+  const [running, setRunning] = useState(false);
+  const [exitOpen, setExitOpen] = useState(false);
+  const runnerRef = useRef<QuizRunnerHandle>(null);
   /** Bentuk jawaban yang diminta untuk soal kosakata dan kanji. */
   const [answerType, setAnswerType] = useState<AnswerType>("meaning");
 
@@ -171,13 +177,30 @@ export default function QuizPage() {
         : `Latihan ${info.title} · ${level}`,
     );
     setQuestions(buildQuestions(mode, count));
+    setRunning(true);
+    setExitOpen(false);
     window.scrollTo({ top: 0 });
   }
+
+  // Selama sesi berjalan kerangka aplikasi (rail/top bar/bottom nav) dikunci.
+  useEffect(() => {
+    if (!running) return;
+    setSessionActive(true, label ? `Latihan · ${label}` : `Latihan · ${meta.name}`);
+    return () => setSessionActive(false);
+  }, [running, label, meta.name]);
+
+  useBeforeUnloadGuard(running);
 
   /* ---------------- sesi latihan ---------------- */
   if (questions) {
     return (
       <div className="space-y-6 pb-8">
+        <p role="status" aria-live="polite" className="sr-only">
+          {running
+            ? "Sesi latihan berjalan. Navigasi ke menu lain dikunci sampai sesi selesai."
+            : "Sesi latihan selesai. Navigasi terbuka kembali."}
+        </p>
+
         <PageHeader
           eyebrow={
             <div className="flex flex-wrap items-center gap-2">
@@ -191,16 +214,41 @@ export default function QuizPage() {
           japanese="練習"
           description={label}
           actions={
-            <Button variant="ghost" onClick={() => setQuestions(null)}>
-              Ubah pilihan
-            </Button>
+            running ? (
+              <Button variant="outline" onClick={() => setExitOpen(true)}>
+                Keluar
+              </Button>
+            ) : undefined
           }
         />
         <QuizRunner
+          ref={runnerRef}
           questions={questions}
           label={label}
           onRestart={start}
           restartLabel="Soal baru"
+          onRequestExit={() => setExitOpen(true)}
+          onFinished={() => setRunning(false)}
+          onDone={() => {
+            setQuestions(null);
+            setRunning(false);
+            window.scrollTo({ top: 0 });
+          }}
+        />
+        <SessionExitDialog
+          open={exitOpen}
+          title="Selesaikan latihan ini?"
+          onCancel={() => setExitOpen(false)}
+          onFinish={() => {
+            setExitOpen(false);
+            runnerRef.current?.finish();
+          }}
+          onDiscard={() => {
+            setExitOpen(false);
+            setRunning(false);
+            setQuestions(null);
+            window.scrollTo({ top: 0 });
+          }}
         />
       </div>
     );
@@ -389,6 +437,22 @@ export default function QuizPage() {
         <span className="tnum font-semibold text-fg">Enter</span> untuk memeriksa dan lanjut. Umpan
         balik dan pembahasan muncul langsung setelah jawaban diperiksa.
       </Callout>
+
+      <Card variant="muted">
+        <CardBody className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
+            <p className="label-micro">Latihan khusus</p>
+            <p className="mt-1.5 text-body font-semibold text-fg">Partikel (助詞)</p>
+            <p className="mt-0.5 text-caption text-fg-muted">
+              Lima bentuk soal khusus partikel: isi celah, ketik, cocokkan fungsi, bedakan pasangan,
+              dan lengkapi teks.
+            </p>
+          </div>
+          <Link href={levelHref(level, "partikel/latihan")} className="shrink-0">
+            <Button variant="outline">Buka latihan partikel</Button>
+          </Link>
+        </CardBody>
+      </Card>
     </div>
   );
 }
