@@ -6,6 +6,40 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/) dan
 versi mengikuti [Semantic Versioning](https://semver.org/lang/id/). Catatan
 pembaruan lintas project tidak tinggal di sini — itu ada di situs pribadi.
 
+## [2.4.0] — 2026-11-07
+
+Rilis ini menambahkan **Konteks & Etiket (敬語とマナー)** — tiga kelompok materi yang biasanya
+tidak masuk buku tata bahasa, padahal justru paling sering bikin pembelajar terdengar canggung.
+
+### Ditambahkan
+
+- **A · Menyesuaikan ucapan dengan lawan bicara.** Tiga situasi (menanyakan nama, menawarkan
+  makanan, menanyakan jam) ditampilkan pada empat tingkat: akrab/keluarga, teman, atasan/klien,
+  dan orang baru dikenal — masing-masing dengan kalimat, terjemahan, dan catatan kapan dipakai.
+- **B · Tiga lapis kesopanan (敬語).** Sepuluh kata kerja disajikan dalam tiga bentuk:
+  丁寧 (sopan), 尊敬 (untuk orang lain), dan 謙譲 (untuk diri sendiri) — termasuk 行く, 来る, いる,
+  言う, 見る, 食べる, する, 会う, 聞く, dan 知る.
+- **C1 · Biasa bagi orang Jepang, asing bagi kita.** Tujuh kartu: ragam tawa (はは・ふふ・ぐふふ・
+  w・草), いってきます／いってらっしゃい, ただいま／おかえりなさい, いただきます／ごちそうさま,
+  すみません yang bermakna tiga, はい yang belum tentu setuju, もしもし di telepon, serta aturan
+  awalan お／ご.
+- **C2 · Hal unik yang membingungkan.** Lima kartu: nama kanji yang tak terduga, 大丈夫 sebagai
+  penolakan halus, 空気を読む／そろえる, お疲れ様です sebagai sapaan kerja, dan onomatope seperti
+  ぽかぽか, ドキドキ, きらきら.
+- **Latihan konteks** (`/[level]/konteks/latihan`) dengan dua mode: *pilih tingkat bicara* dan
+  *pilih bentuk sopan*, dilengkapi kunci sesi seperti modul lain.
+- Modul konteks muncul di navigasi, hub level, dan dasbor.
+
+### Catatan kejujuran materi
+
+Setiap kartu diberi label **"Berlaku umum"** atau **"Tergantung situasi"**. Yang bertanda
+*tergantung situasi* (mis. 大丈夫 sebagai penolakan, そろえる, aturan お／ご) memang berbeda menurut
+daerah, hubungan, atau kebiasaan setempat — disajikan sebagai kecenderungan, bukan hukum mutlak.
+
+### Diubah
+
+- Versi proyek naik ke `2.4.0`.
+
 ## [2.3.0] — 2026-11-07
 
 Rilis ini menjawab pertanyaan yang paling sering muncul di awal belajar: **kenapa bacaan kanji

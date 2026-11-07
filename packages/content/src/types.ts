@@ -271,3 +271,61 @@ export interface ReadingQuizItem {
   /** Kata atau kanji yang diuji, untuk statistik. */
   target: string;
 }
+
+/* ------------------------------------------------------------------ *
+ * Konteks & etiket (敬語とマナー)
+ * ------------------------------------------------------------------ */
+
+/** Siapa yang diajak bicara. */
+export type Audience = "akrab" | "teman" | "atasan" | "asing";
+
+export interface RegisterLine {
+  audience: Audience;
+  /** Kalimat Jepang. */
+  jp: string;
+  /** Terjemahan dan nuansa. */
+  id: string;
+  note?: string;
+}
+
+/** Satu situasi, dibandingkan pada empat tingkat lawan bicara. */
+export interface RegisterScenario {
+  id: string;
+  title: string;
+  situation: string;
+  lines: RegisterLine[];
+}
+
+/**
+ * Tiga lapis kesopanan untuk satu kata kerja:
+ * 丁寧 (bentuk ます), 尊敬 (untuk orang lain), 謙譲 (untuk diri sendiri).
+ */
+export interface KeigoVerb {
+  id: string;
+  /** Bentuk kamus, mis. 行く. */
+  dictionary: string;
+  meaning: string;
+  teinei: string;
+  sonkeigo: string;
+  kenjougo: string;
+  note?: string;
+}
+
+export type ContextCategory = "kebiasaan" | "unik";
+
+export interface ContextCard {
+  id: string;
+  category: ContextCategory;
+  title: string;
+  /** Bentuk Jepang yang dibahas. */
+  japanese: string;
+  romaji?: string;
+  summary: string;
+  points: string[];
+  /**
+   * "kuat" = berlaku umum; "tergantung-situasi" = berbeda menurut daerah,
+   * hubungan, atau sumber. Materi wajib jujur soal ini.
+   */
+  confidence: "kuat" | "tergantung-situasi";
+  caution?: string;
+}

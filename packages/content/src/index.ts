@@ -1,8 +1,12 @@
 import type {
+  Audience,
+  ContextCard,
+  ContextCategory,
   GrammarPoint,
   JlptLevel,
   Kana,
   Kanji,
+  KeigoVerb,
   ListeningTrack,
   Particle,
   ParticleComparison,
@@ -11,6 +15,7 @@ import type {
   ReadingEntry,
   ReadingPassage,
   ReadingRule,
+  RegisterScenario,
   Vocab,
 } from "./types";
 import { hiragana, kana, kanaRowLabels, kanaRows, katakana } from "./data/kana";
@@ -39,6 +44,7 @@ import {
   particlesN5,
 } from "./data/particles-n5";
 import { readingEntriesN5, readingRulesN5 } from "./data/reading-changes-n5";
+import { contextCardsN5, keigoVerbsN5, registerScenariosN5 } from "./data/context-n5";
 
 export * from "./types";
 export {
@@ -85,6 +91,11 @@ export {
   particlesN5,
 } from "./data/particles-n5";
 export { readingEntriesN5, readingRulesN5 } from "./data/reading-changes-n5";
+export {
+  contextCardsN5,
+  keigoVerbsN5,
+  registerScenariosN5,
+} from "./data/context-n5";
 
 /**
  * Kumpulan materi. Saat menambah level baru (N4, N3, …), cukup import
@@ -250,6 +261,40 @@ export function readingEntriesByLevel(level: JlptLevel): ReadingEntry[] {
   if (level !== "N5") return [];
   return readingEntriesN5;
 }
+
+/* ------------------------------------------------------------------ *
+ * Konteks & etiket
+ * ------------------------------------------------------------------ */
+
+export function registerScenariosByLevel(level: JlptLevel): RegisterScenario[] {
+  if (level !== "N5") return [];
+  return registerScenariosN5;
+}
+
+export function keigoVerbsByLevel(level: JlptLevel): KeigoVerb[] {
+  if (level !== "N5") return [];
+  return keigoVerbsN5;
+}
+
+export function contextCardsByLevel(level: JlptLevel): ContextCard[] {
+  if (level !== "N5") return [];
+  return contextCardsN5;
+}
+
+export function contextCardsByCategory(
+  level: JlptLevel,
+  category: ContextCategory,
+): ContextCard[] {
+  return contextCardsByLevel(level).filter((card) => card.category === category);
+}
+
+/** Label singkat untuk tingkat lawan bicara, dipakai tabel register. */
+export const AUDIENCE_LABEL: Record<Audience, string> = {
+  akrab: "Akrab / keluarga",
+  teman: "Teman",
+  atasan: "Atasan / klien",
+  asing: "Orang asing / baru dikenal",
+};
 
 export interface SearchHit {
   kind: "kosakata" | "kanji" | "tata-bahasa" | "bacaan";

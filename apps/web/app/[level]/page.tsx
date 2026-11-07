@@ -174,6 +174,12 @@ export default function LevelHubPage() {
       },
     },
     {
+      path: "konteks",
+      glyph: "敬",
+      title: "Konteks & Etiket",
+      description: "敬語 — tingkat bicara, bentuk sopan, dan kebiasaan Jepang.",
+    },
+    {
       path: "quiz",
       glyph: "問",
       title: "Latihan",

@@ -169,6 +169,15 @@ export default function DashboardPage() {
       due: 0,
     },
     {
+      path: "konteks",
+      glyph: "敬",
+      title: "Konteks & Etiket",
+      detail: "Bentuk sopan dan kebiasaan sehari-hari",
+      value: null,
+      caption: "tingkat bicara",
+      due: 0,
+    },
+    {
       path: "reading",
       glyph: "読",
       title: "Membaca",
