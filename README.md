@@ -60,6 +60,7 @@ Menambah level baru otomatis menambah rute (lihat **Level & kurikulum** di bawah
 | `/[level]/partikel/latihan` | Latihan partikel 5 mode (isi celah, ketik, fungsi, pasangan, lengkapi teks) |
 | `/[level]/konteks` | Konteks & etiket: tingkat bicara, 敬語 tiga lapis, kebiasaan, hal unik |
 | `/[level]/konteks/latihan` | Latihan memilih tingkat bicara dan bentuk sopan |
+| `/[level]/ulasan` | Ulasan SRS berbasis konteks: bacaan, partikel, situasi |
 | `/[level]/listening` | 12 dialog, 3 kecepatan, toggle kana & terjemahan |
 | `/[level]/reading` | 10 bacaan berfurigana + pertanyaan pemahaman |
 | `/[level]/quiz` | Latihan: pilih mode dan bentuk jawaban + pembahasan + shortcut 1–4 & Enter |
@@ -253,7 +254,7 @@ ganti browser, atau `localhost` vs `127.0.0.1` akan dianggap sesi berbeda.
 
 ## Dokumen
 
-- [Changelog](CHANGELOG.md) — riwayat rilis per versi (versi terbaru: 2.4.0)
+- [Changelog](CHANGELOG.md) — riwayat rilis per versi (versi terbaru: 2.5.0)
 - [Design system](docs/DESIGN-SYSTEM.md) — arah visual, token, tipografi, aturan mobile
 - [Supabase](supabase/README.md) — langkah mengaktifkan backend
 

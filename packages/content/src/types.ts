@@ -321,7 +321,7 @@ export interface KeigoVerb {
   note?: string;
 }
 
-export type ContextCategory = "kebiasaan" | "unik";
+export type ContextCategory = "kebiasaan" | "unik" | "praktis";
 
 export interface ContextCard {
   id: string;

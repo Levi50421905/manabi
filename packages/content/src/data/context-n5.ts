@@ -389,4 +389,104 @@ export const contextCardsN5: ContextCard[] = [
     ],
     confidence: "kuat",
   },
+
+  /* ---------------- praktis ---------------- */
+  {
+    id: "praktis:gomi",
+    category: "praktis",
+    title: "Membuang sampah: dipilah, dan ada jadwalnya",
+    japanese: "ゴミの分別 / ゴミの日",
+    summary:
+      "Sampah tidak dibuang sembarangan. Jenisnya dipisah, dan tiap jenis hanya diambil pada hari tertentu.",
+    points: [
+      "燃えるゴミ — sampah mudah terbakar (sisa makanan, kertas kotor).",
+      "燃えないゴミ — sampah tidak terbakar (logam, kaca, keramik).",
+      "資源ゴミ — sampah yang bisa didaur ulang (plastik, kaleng, botol PET).",
+      "Jadwal dan jenisnya berbeda per kota bahkan per distrik. Biasanya ada kalender sampah dari balai kota.",
+      "Sampah diletakkan di ゴミ置き場 (tempat sampah bersama) pada pagi hari pengambilan, bukan malam sebelumnya.",
+      "Barang besar (粗大ゴミ) harus didaftarkan dan dibayar dulu, tidak boleh ditaruh begitu saja.",
+    ],
+    confidence: "kuat",
+    caution:
+      "Menaruh sampah pada hari yang salah bisa dikembalikan dengan catatan. Aturan tiap daerah berbeda, jadi ikuti kalender setempat.",
+  },
+  {
+    id: "praktis:kenbaiki",
+    category: "praktis",
+    title: "Memesan makan di 券売機",
+    japanese: "食券 / 券売機",
+    summary:
+      "Banyak restoran murah memakai mesin tiket: bayar dulu, baru duduk, lalu serahkan tiket.",
+    points: [
+      "Pilih menu di 券売機, masukkan uang, ambil 食券 (tiket).",
+      "Banyak mesin masih hanya menerima uang tunai; sebagian sudah bisa kartu IC.",
+      "Serahkan tiket ke staf setelah duduk; tiket sekaligus bukti pesanan.",
+      "Ungkapan berguna: 「すみません、これお願いします」 saat menyerahkan tiket.",
+      "Kalau bingung, staf biasanya membantu: 「押していただけますか」.",
+    ],
+    confidence: "kuat",
+  },
+  {
+    id: "praktis:mochikaeri",
+    category: "praktis",
+    title: "店内 atau お持ち帰り",
+    japanese: "店内でお召し上がりですか / お持ち帰りですか",
+    summary:
+      "Di kedai cepat saji, kasir hampir selalu menanyakan ini. Menjawab salah membuat pesanan dianggap beda.",
+    points: [
+      "店内で — makan di tempat.",
+      "お持ち帰りで — dibungkus untuk dibawa pulang.",
+      "Di minimarket, 「お弁当温めますか」 berarti “mau dipanaskan?”.",
+      "レジ袋はご入用ですか — “perlu kantong plastik?”; kantong biasanya berbayar.",
+    ],
+    confidence: "kuat",
+  },
+  {
+    id: "praktis:jihanki",
+    category: "praktis",
+    title: "Membeli minum di 自販機",
+    japanese: "自販機",
+    summary:
+      "Mesin penjual otomatis ada di hampir setiap sudut. Bayar dengan uang tunai atau kartu IC.",
+    points: [
+      "Uang kertas yang diterima umumnya 1000 yen; koin 10/50/100/500.",
+      "Tombol つめた〜い = dingin, あたたか〜い = hangat (musim dingin).",
+      "Kartu IC (Suica, PASMO) bisa ditempelkan di sebagian mesin.",
+      "Setelah menekan tombol, minuman keluar dari bawah — jangan lupa mengambilnya.",
+    ],
+    confidence: "kuat",
+  },
+  {
+    id: "praktis:jishin",
+    category: "praktis",
+    title: "Saat gempa: tiga hal pertama",
+    japanese: "地震 / 安全確保",
+    summary:
+      "Jepang sering gempa. Yang paling menentukan keselamatan adalah reaksi dalam beberapa detik pertama.",
+    points: [
+      "安全確保 — lindungi kepala, masuk bawah meja, jangan berlari keluar.",
+      "Jauhi jendela dan rak tinggi; jangan pakai lift.",
+      "Setelah guncangan berhenti: pastikan 火の元 (sumber api) mati, buka pintu agar tidak terjepit.",
+      "非常口 — pintu darurat; cari jalur evakuasi di bangunan atau stasiun.",
+      "Ikuti informasi resmi. Peringatan dini muncul di ponsel dan TV dengan teks bergerak.",
+    ],
+    confidence: "kuat",
+    caution:
+      "Jangan langsung percaya kabar di media sosial. Ikuti pengumuman pemerintah daerah atau 気象庁 untuk informasi resmi.",
+  },
+  {
+    id: "praktis:hinan",
+    category: "praktis",
+    title: "Setelah gempa: evakuasi dan peringatan tsunami",
+    japanese: "避難所 / 津波",
+    summary:
+      "Bila guncangan besar terjadi di dekat pantai, langkah berikutnya bukan menunggu, melainkan menuju tempat tinggi.",
+    points: [
+      "避難所 — tempat evakuasi; biasanya sekolah atau balai warga.",
+      "津波警報 — peringatan tsunami. Segera menuju tempat tinggi, jangan menunggu melihat air.",
+      "Guncangan kuat dan lama di dekat pantai adalah tanda bahaya tsunami.",
+      "Di stasiun, ikuti arahan staf; jangan memaksa naik kereta yang berhenti.",
+    ],
+    confidence: "kuat",
+  },
 ];

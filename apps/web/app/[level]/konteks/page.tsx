@@ -153,6 +153,7 @@ export default function KonteksPage() {
   const verbs = keigoVerbsByLevel(level);
   const habits = contextCardsByCategory(level, "kebiasaan");
   const uniques = contextCardsByCategory(level, "unik");
+  const practical = contextCardsByCategory(level, "praktis");
 
   const header = (
     <PageHeader
@@ -250,6 +251,18 @@ export default function KonteksPage() {
       >
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {uniques.map((card) => (
+            <ContextCardView key={card.id} card={card} />
+          ))}
+        </div>
+      </Section>
+
+      <Section
+        title="D · Praktis untuk hidup di Jepang"
+        glyph="暮"
+        description="Sampah, memesan makan, dan gempa — hal yang harus dilakukan dengan benar, bukan hanya dipahami."
+      >
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {practical.map((card) => (
             <ContextCardView key={card.id} card={card} />
           ))}
         </div>

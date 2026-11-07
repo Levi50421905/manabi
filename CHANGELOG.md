@@ -6,6 +6,35 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/) dan
 versi mengikuti [Semantic Versioning](https://semver.org/lang/id/). Catatan
 pembaruan lintas project tidak tinggal di sini — itu ada di situs pribadi.
 
+## [2.5.0] — 2026-11-07
+
+Rilis ini melengkapi Konteks & Etiket dengan **kategori praktis** dan menambahkan **ulasan berbasis
+konteks** — dua hal yang sebelumnya hanya direncanakan.
+
+### Ditambahkan
+
+- **D · Praktis untuk hidup di Jepang**, enam kartu yang memang harus dilakukan dengan benar:
+  - **Sampah** — 燃える／燃えない／資源ゴミ, jadwal per daerah, ゴミ置き場, 粗大ゴミ
+  - **Memesan makan** — 券売機 dan 食券, 「これお願いします」
+  - **店内 atau お持ち帰り** — pertanyaan kasir yang harus dijawab tepat
+  - **自販機** — uang tunai, kartu IC, つめた〜い／あたたか〜い
+  - **Gempa** — 安全確保, 非常口, matikan api, ikuti informasi resmi
+  - **Evakuasi** — 避難所, 津波警報, tanda bahaya di dekat pantai
+- **Ulasan Konteks** (`/[level]/ulasan`) — kartu ulangan SRS yang menyimpan **pola konteks**,
+  bukan arti lepas. Tiga jenis kartu:
+  - *Bacaan*: depan 「何で」 → belakang 「なんで — kenapa」
+  - *Partikel*: depan makna ("juga") → belakang partikel + contoh kalimat
+  - *Situasi*: depan situasi + lawan bicara → belakang kalimat yang pas
+- Ulasan memakai penjadwalan SRS yang sudah ada: kartu jatuh tempo, kartu baru, dan tombol nilai
+  Lupa／Sulit／Bagus／Mudah. Total 54 kartu untuk N5.
+
+### Diubah
+
+- Halaman Konteks & Etiket kini punya empat bagian: A (tingkat bicara), B (keigo tiga lapis),
+  C (kebiasaan & hal unik), dan D (praktis).
+- Menu **Ulasan** ditambahkan ke navigasi bagian Latihan.
+- Versi proyek naik ke `2.5.0`.
+
 ## [2.4.2] — 2026-11-07
 
 Melanjutkan perbaikan 2.4.1. Pendekatan sebelumnya — menyebut fungsi partikel di instruksi — memang

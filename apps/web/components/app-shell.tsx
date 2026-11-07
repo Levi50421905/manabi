@@ -52,6 +52,7 @@ const NAV_SECTIONS: NavSection[] = [
     title: "Latihan",
     items: [
       { label: "Latihan", glyph: "問", path: "quiz" },
+      { label: "Ulasan", glyph: "復", path: "ulasan" },
       { label: "Ujian", glyph: "試", path: "ujian" },
     ],
   },
