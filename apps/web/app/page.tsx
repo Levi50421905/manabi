@@ -170,41 +170,10 @@ export default function HomePage() {
       <main>
         {/* ---------- Hero ---------- */}
         <section className="hero-backdrop relative overflow-hidden border-b border-border">
-          {/* Kanji latar yang mengambang pelan — dekoratif, tidak terbaca pembaca layar */}
-          <div aria-hidden="true" className="pointer-events-none absolute inset-0 select-none">
-            <span
-              lang="ja"
-              className="jp-serif animate-drift absolute left-[4%] top-[16%] text-[7rem] font-semibold leading-none text-fg/[0.035]"
-            >
-              学
-            </span>
-            <span
-              lang="ja"
-              className="jp-serif animate-drift absolute right-[8%] top-[10%] text-[5.5rem] font-semibold leading-none text-accent/[0.05]"
-              style={{ animationDelay: "-3.5s" }}
-            >
-              日
-            </span>
-            <span
-              lang="ja"
-              className="jp-serif animate-drift absolute bottom-[12%] left-[38%] text-[6.5rem] font-semibold leading-none text-fg/[0.03]"
-              style={{ animationDelay: "-7s" }}
-            >
-              本
-            </span>
-            <span
-              lang="ja"
-              className="jp-serif animate-drift absolute right-[26%] bottom-[8%] text-[4.5rem] font-semibold leading-none text-accent/[0.04]"
-              style={{ animationDelay: "-9s" }}
-            >
-              語
-            </span>
-          </div>
-
           <div className="relative mx-auto grid w-full max-w-[1120px] items-center gap-12 px-5 py-16 sm:px-8 sm:py-24 lg:grid-cols-[1.25fr_0.75fr]">
             <div className="animate-fade-up">
               <p className="label-micro">JLPT N5 → N1 · belajar terstruktur</p>
-              <h1 className="mt-4 break-words font-display text-[clamp(1.85rem,7.2vw,3.5rem)] font-semibold leading-[1.1] text-fg">
+              <h1 className="animate-ink mt-4 break-words font-display text-[clamp(1.85rem,7.2vw,3.5rem)] font-semibold leading-[1.1] text-fg">
                 Belajar bahasa Jepang,
                 <br />
                 <span className="text-accent">satu halaman setiap hari.</span>
