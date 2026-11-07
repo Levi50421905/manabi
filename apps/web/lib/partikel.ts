@@ -38,6 +38,15 @@ export interface ParticleQuizItem {
   mode: ParticleQuizMode;
   /** Kalimat/pertanyaan; "___" menandai tempat kosong. */
   prompt: string;
+  /**
+   * Instruksi spesifik: fungsi partikel yang dicari.
+   *
+   * Ini yang membuat soal tidak ambigu. Contoh: 「わたし ___ 学生です。」 bisa
+   * diisi は maupun も, jadi soalnya harus berbunyi "Pilih partikel yang berarti
+   * “juga”" agar hanya も yang benar.
+   */
+  ask: string;
+  /** Terjemahan kalimat — ditampilkan sebagai pengunci maksud soal. */
   promptId?: string;
   answer: string;
   /** Kosong untuk mode ketik (jawaban ditulis pengguna). */
@@ -48,6 +57,40 @@ export interface ParticleQuizItem {
   blanks?: Array<{ answer: string; options: string[] }>;
   /** Partikel yang dilibatkan, untuk statistik “sering tertukar”. */
   particles: string[];
+}
+
+/**
+ * Terjemahan fungsi partikel menjadi instruksi soal.
+ *
+ * Dipakai untuk SEMUA soal yang jawabannya partikel, termasuk soal yang
+ * dibangkitkan otomatis, supaya maksud soal selalu jelas dan tidak ada jawaban
+ * lain yang sebenarnya sah secara tata bahasa.
+ */
+const ROLE_ASK: Record<string, string> = {
+  "penanda topik": "yang menandai topik kalimat",
+  "penanda subjek": "yang menandai subjek",
+  "penanda objek langsung": "yang menandai objek langsung dari kata kerja",
+  "waktu, tujuan, keberadaan": "yang menandai waktu, tujuan, atau keberadaan",
+  "tempat aktivitas, alat": "yang menandai tempat berlangsungnya aktivitas atau alat yang dipakai",
+  "arah tujuan": "yang menandai arah tujuan",
+  "kepemilikan & penghubung": "yang menyatakan kepemilikan atau menghubungkan dua kata benda",
+  "dan, bersama": "yang berarti “dan” atau “bersama”",
+  juga: "yang berarti “juga”",
+  "pertanyaan & pilihan": "yang membentuk pertanyaan atau menyatakan pilihan",
+  "dari, karena": "yang berarti “dari” atau “karena”",
+  sampai: "yang berarti “sampai”",
+  "dan (antara lain)": "yang menyebutkan beberapa contoh dengan nuansa “antara lain”",
+  "meminta persetujuan": "yang meminta persetujuan pendengar",
+  "penegasan & informasi baru": "yang menegaskan atau memberi informasi baru",
+  perbandingan: "yang menyatakan perbandingan",
+  "sebatas, sejauh": "yang menyatakan “sebatas” atau “sejauh”",
+  hanya: "yang berarti “hanya”",
+};
+
+/** Instruksi soal untuk satu partikel. */
+export function askForParticle(particle: Particle): string {
+  const phrase = ROLE_ASK[particle.role] ?? `yang berfungsi sebagai ${particle.role}`;
+  return `Pilih partikel ${phrase}.`;
 }
 
 /* ------------------------------------------------------------------ *
@@ -123,6 +166,7 @@ function buildFromExamples(
       items.push({
         id: `partikel:${mode}:${particle.id}:${index}`,
         mode,
+        ask: askForParticle(particle),
         prompt,
         promptId: example.id,
         answer: particle.char,
@@ -155,6 +199,7 @@ function buildFungsiQuestions(pool: Particle[]): ParticleQuizItem[] {
     items.push({
       id: `partikel:fungsi:a:${particle.id}`,
       mode: "fungsi",
+      ask: "Pilih fungsi partikel berikut.",
       prompt: `Partikel ${particle.char} (${particle.romaji}) berfungsi sebagai…`,
       promptId: example ? `${example.jp} — ${example.id}` : undefined,
       answer: particle.role,
@@ -170,6 +215,7 @@ function buildFungsiQuestions(pool: Particle[]): ParticleQuizItem[] {
         items.push({
           id: `partikel:fungsi:b:${particle.id}`,
           mode: "fungsi",
+          ask: askForParticle(particle),
           prompt,
           promptId: example.id,
           answer: particle.char,
@@ -209,6 +255,7 @@ function buildPasanganQuestions(
         items.push({
           id: `partikel:pasangan:${pair.id}:${side.char}:${index}`,
           mode: "pasangan",
+          ask: "Pilih partikel yang sesuai dengan terjemahan kalimat ini.",
           prompt,
           promptId: example.id,
           answer: side.char,
@@ -295,6 +342,7 @@ function buildLengkapiTeks(pool: Particle[]): ParticleQuizItem[] {
     mode: "lengkapi-teks" as const,
     prompt: sentence.jp,
     promptId: sentence.id,
+    ask: "Pilih partikel yang tepat untuk setiap celah, sesuai fungsinya.",
     answer: sentence.blanks.map((blank) => blank.answer).join(" · "),
     options: [],
     explanation: `Jawaban berurutan: ${sentence.blanks.map((blank) => blank.answer).join(", ")}.`,
@@ -315,12 +363,25 @@ export function allParticleQuestions(level: JlptLevel): ParticleQuizItem[] {
   const pool = particlesByLevel(level);
   if (pool.length === 0) return [];
 
+  const byChar = new Map(pool.map((item) => [item.char, item]));
+
   const curated: ParticleQuizItem[] = particleQuestionsN5
     .filter((question) => question.mode === "isi-celah")
-    .map((question) => ({
-      ...question,
-      particles: [question.answer],
-    }));
+    .map((question) => {
+      const particle = byChar.get(question.answer);
+      return {
+        ...question,
+        // Instruksi menyebut fungsi partikel jawabannya, supaya tidak ada
+        // partikel lain yang sebenarnya sah secara tata bahasa. Soal boleh
+        // menimpa instruksi ini bila fungsinya khusus (mis. を untuk 出ます).
+        ask:
+          question.ask ??
+          (particle
+            ? askForParticle(particle)
+            : "Pilih partikel yang tepat untuk melengkapi kalimat."),
+        particles: [question.answer],
+      };
+    });
 
   return [
     ...curated,

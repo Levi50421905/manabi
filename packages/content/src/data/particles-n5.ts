@@ -707,6 +707,7 @@ export const particleQuestionsN5: ParticleQuestion[] = [
     mode: "isi-celah",
     prompt: "七時に家 ___ 出ます。",
     promptId: "Keluar rumah jam tujuh.",
+    ask: "Pilih partikel yang menandai tempat yang ditinggalkan.",
     answer: "を",
     options: ["を", "から", "に"],
     explanation: "Kata kerja 出ます (meninggalkan tempat) memakai を.",

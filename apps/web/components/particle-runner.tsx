@@ -412,7 +412,9 @@ export function ParticleRunner({
               else handleCheck();
             }}
           >
-            <p className="label-micro">{PARTICLE_MODE_HINT[current.mode]}</p>
+            <p className="text-caption font-medium leading-relaxed text-fg">
+              {current.ask}
+            </p>
 
             {current.mode === "lengkapi-teks" ? (
               <p
@@ -477,6 +479,12 @@ export function ParticleRunner({
                 {current.prompt}
               </p>
             )}
+
+            {current.promptId ? (
+              <p className="mt-2 text-caption leading-relaxed text-fg-muted">
+                Artinya: {current.promptId}
+              </p>
+            ) : null}
 
             {isChoiceMode(current.mode) ? (
               <div className="mt-6 space-y-2" role="group" aria-label="Pilihan jawaban">

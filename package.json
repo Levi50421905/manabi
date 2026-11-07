@@ -1,6 +1,6 @@
 {
   "name": "manabi",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "private": true,
   "packageManager": "pnpm@11.28.5",
   "engines": {
@@ -14,3 +14,4 @@
     "clean": "node -e \"require('node:fs').rmSync('apps/web/.next',{recursive:true,force:true});console.log('build cache dibersihkan')\""
   }
 }
+

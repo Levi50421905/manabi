@@ -179,6 +179,8 @@ export interface ParticleQuestion {
   mode: ParticleQuizMode;
   /** Kalimat soal; gunakan "___" sebagai tempat kosong. */
   prompt: string;
+  /** Instruksi khusus; bila kosong dipakai instruksi dari peran partikel. */
+  ask?: string;
   /** Terjemahan kalimat, untuk pembahasan. */
   promptId?: string;
   /** Jawaban benar. */

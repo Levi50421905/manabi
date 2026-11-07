@@ -146,7 +146,7 @@ export function buildKanjiQuestions(
       // menjawab bacaan, info itu tidak relevan sehingga diganti pertanyaan.
       subPrompt:
         answerType === "meaning"
-          ? `${item.strokes} goresan · radikal ${item.radical}`
+          ? `${item.strokes} goresan · radikal ${item.radical} — apa arti kanji ini?`
           : subPromptFor(answerType, "kanji"),
       options,
       answer,
@@ -166,7 +166,9 @@ export function buildGrammarQuestions(pool: GrammarPoint[], count = 6): Question
       id: `grammar:${item.id}:${index}`,
       kind: "tata-bahasa",
       prompt: example?.jp ?? item.pattern,
-      subPrompt: "Pola tata bahasa mana yang dipakai kalimat ini?",
+      subPrompt: example?.id
+        ? `“${example.id}” — pola tata bahasa mana yang dipakai kalimat ini?`
+        : "Pola tata bahasa mana yang dipakai kalimat ini?",
       options,
       answer,
       explanation: `${item.title} — ${item.explanation}`,

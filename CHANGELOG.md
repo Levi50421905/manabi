@@ -6,6 +6,26 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/) dan
 versi mengikuti [Semantic Versioning](https://semver.org/lang/id/). Catatan
 pembaruan lintas project tidak tinggal di sini — itu ada di situs pribadi.
 
+## [2.4.1] — 2026-11-07
+
+Perbaikan penting: beberapa soal latihan punya lebih dari satu jawaban yang sah, sehingga jawaban
+benar terasa dipaksakan.
+
+### Diperbaiki
+
+- **Soal partikel kini menyebut fungsi yang dicari.** Contoh kasus: 「わたし ___ 学生です。」 bisa
+  diisi は maupun も. Sekarang soalnya berbunyi *"Pilih partikel yang berarti “juga”."* untuk
+  jawaban も, dan *"Pilih partikel yang menandai topik kalimat."* untuk jawaban は — sehingga hanya
+  satu jawaban yang benar-benar tepat.
+- **Terjemahan kalimat ditampilkan** pada semua soal partikel sebagai pengunci maksud soal.
+- **Soal 家を出ます** memakai instruksi khusus ("menandai tempat yang ditinggalkan"), karena を di
+  sana bukan penanda objek langsung.
+- **Soal tata bahasa menampilkan terjemahan** kalimat contoh agar pola yang dimaksud jelas.
+- **Soal kanji** menyatakan pertanyaannya secara eksplisit ("… — apa arti kanji ini?").
+
+Aturan baru untuk kontributor: soal baru **wajib** menyatakan apa yang dicari, bukan hanya
+menampilkan kalimat rumpang.
+
 ## [2.4.0] — 2026-11-07
 
 Rilis ini menambahkan **Konteks & Etiket (敬語とマナー)** — tiga kelompok materi yang biasanya
