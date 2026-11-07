@@ -15,6 +15,7 @@ import {
 import { dailyCards, dayKey } from "@/lib/daily-card";
 import { SiteMenu } from "@/components/site-menu";
 import { TodayCard } from "@/components/today-card";
+import { ScrollReveal } from "@/components/scroll-reveal";
 
 export const metadata: Metadata = {
   title: "Manabi — Belajar bahasa Jepang terstruktur",
@@ -119,7 +120,8 @@ export default function HomePage() {
   const todayCards = dailyCards(dayKey(), 4);
 
   return (
-    <div className="min-h-screen bg-paper">
+    <div className="grain min-h-screen bg-paper">
+      <ScrollReveal />
       {/* ---------- Nav atas ---------- */}
       <header className="sticky top-0 z-40 border-b border-border bg-paper/85 backdrop-blur">
         <div className="mx-auto flex h-16 w-full max-w-[1120px] items-center justify-between gap-4 px-5 sm:px-8">
