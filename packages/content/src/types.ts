@@ -179,7 +179,15 @@ export interface ParticleQuestion {
   mode: ParticleQuizMode;
   /** Kalimat soal; gunakan "___" sebagai tempat kosong. */
   prompt: string;
-  /** Instruksi khusus; bila kosong dipakai instruksi dari peran partikel. */
+  /**
+   * Kalimat/kalimat pengantar yang membuat jawaban tidak ambigu.
+   * Contoh untuk も: "田中さんは学生です。" sehingga 「わたし ___ 学生です。」
+   * hanya bisa diisi も, bukan は.
+   */
+  contextBefore?: string;
+  /** Penanda pembicara bila soal berbentuk dialog, mis. ["A", "B"]. */
+  contextSpeakers?: { a: string; b: string };
+  /** Instruksi khusus; bila kosong dipakai instruksi netral. */
   ask?: string;
   /** Terjemahan kalimat, untuk pembahasan. */
   promptId?: string;

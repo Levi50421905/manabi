@@ -48,6 +48,8 @@ export interface ParticleQuizItem {
   ask: string;
   /** Terjemahan kalimat — ditampilkan sebagai pengunci maksud soal. */
   promptId?: string;
+  /** Kalimat pengantar yang membuat jawaban tidak ambigu. */
+  contextBefore?: string;
   answer: string;
   /** Kosong untuk mode ketik (jawaban ditulis pengguna). */
   options: string[];
@@ -151,6 +153,16 @@ function partnerChars(pool: Particle[], char: string): string[] {
  * Soal yang dibangkitkan dari data partikel
  * ------------------------------------------------------------------ */
 
+/**
+ * Partikel yang boleh dipakai untuk soal isi celah otomatis.
+ *
+ * Hanya partikel yang memang dipaksa oleh struktur kalimatnya. Partikel seperti
+ * は, が, も, と, や, に, で, へ sering punya lebih dari satu jawaban yang sah
+ * bila kalimatnya berdiri sendiri, jadi soal-soalnya harus memakai kalimat
+ * pengantar (contextBefore) — bukan instruksi yang membocorkan jawaban.
+ */
+const SAFE_FOR_CLOZE = new Set(["を", "の", "だけ", "ほど", "より", "か"]);
+
 function buildFromExamples(
   pool: Particle[],
   mode: "isi-celah" | "ketik",
@@ -158,6 +170,7 @@ function buildFromExamples(
   const items: ParticleQuizItem[] = [];
 
   for (const particle of pool) {
+    if (!SAFE_FOR_CLOZE.has(particle.char)) continue;
     particle.examples.forEach((example, index) => {
       const prompt = blankExample(example);
       if (!prompt) return;
@@ -166,7 +179,7 @@ function buildFromExamples(
       items.push({
         id: `partikel:${mode}:${particle.id}:${index}`,
         mode,
-        ask: askForParticle(particle),
+        ask: mode === "ketik" ? "Tulis partikel yang tepat." : "Lengkapi kalimat berikut.",
         prompt,
         promptId: example.id,
         answer: particle.char,
@@ -255,7 +268,7 @@ function buildPasanganQuestions(
         items.push({
           id: `partikel:pasangan:${pair.id}:${side.char}:${index}`,
           mode: "pasangan",
-          ask: "Pilih partikel yang sesuai dengan terjemahan kalimat ini.",
+          ask: "Pilih partikel yang sesuai dengan konteks kalimat.",
           prompt,
           promptId: example.id,
           answer: side.char,
@@ -342,7 +355,7 @@ function buildLengkapiTeks(pool: Particle[]): ParticleQuizItem[] {
     mode: "lengkapi-teks" as const,
     prompt: sentence.jp,
     promptId: sentence.id,
-    ask: "Pilih partikel yang tepat untuk setiap celah, sesuai fungsinya.",
+    ask: "Lengkapi semua celah pada kalimat berikut.",
     answer: sentence.blanks.map((blank) => blank.answer).join(" · "),
     options: [],
     explanation: `Jawaban berurutan: ${sentence.blanks.map((blank) => blank.answer).join(", ")}.`,
@@ -368,17 +381,9 @@ export function allParticleQuestions(level: JlptLevel): ParticleQuizItem[] {
   const curated: ParticleQuizItem[] = particleQuestionsN5
     .filter((question) => question.mode === "isi-celah")
     .map((question) => {
-      const particle = byChar.get(question.answer);
       return {
         ...question,
-        // Instruksi menyebut fungsi partikel jawabannya, supaya tidak ada
-        // partikel lain yang sebenarnya sah secara tata bahasa. Soal boleh
-        // menimpa instruksi ini bila fungsinya khusus (mis. を untuk 出ます).
-        ask:
-          question.ask ??
-          (particle
-            ? askForParticle(particle)
-            : "Pilih partikel yang tepat untuk melengkapi kalimat."),
+        ask: question.ask ?? "Lengkapi kalimat berikut.",
         particles: [question.answer],
       };
     });

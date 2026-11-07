@@ -6,6 +6,34 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/) dan
 versi mengikuti [Semantic Versioning](https://semver.org/lang/id/). Catatan
 pembaruan lintas project tidak tinggal di sini — itu ada di situs pribadi.
 
+## [2.4.2] — 2026-11-07
+
+Melanjutkan perbaikan 2.4.1. Pendekatan sebelumnya — menyebut fungsi partikel di instruksi — memang
+menghilangkan ambiguitas, tetapi **membocorkan jawabannya**: kalau soal berbunyi *"pilih partikel
+yang berarti juga"*, jawabannya tinggal dicari, bukan dipahami.
+
+### Diubah
+
+- **Soal partikel kini memakai kalimat pengantar (konteks), bukan petunjuk.** Contoh:
+  > 授業は九時に始まります。
+  > 九時 ___ 勉強します。
+
+  Konteks itulah yang memaksa jawaban から, sehingga まで tidak lagi mungkin — tanpa memberi tahu
+  fungsi partikelnya.
+- **Instruksi dibuat netral**: "Lengkapi kalimat berikut." / "Tulis partikel yang tepat."
+  Petunjuk yang menyebut fungsi partikel dihapus.
+- **Terjemahan tidak lagi ditampilkan saat menjawab** — hanya muncul setelah jawaban diperiksa,
+  sebagai bagian dari pembahasan.
+- **Soal isi celah otomatis dibatasi** pada partikel yang memang dipaksa struktur kalimatnya
+  (を, の, だけ, ほど, より, か). Partikel seperti は, が, も, と, や, に, で, へ tidak lagi
+  dibangkitkan otomatis karena kalimat tunggalnya bisa punya lebih dari satu jawaban sah.
+- **Soal 家を出ます diganti** karena を dan から sama-sama sah untuk 出ます.
+
+### Catatan
+
+Jumlah soal turun dari 186 menjadi **114** — ini disengaja: soal yang ambigu lebih buruk daripada
+bank soal yang lebih kecil tetapi setiap jawabannya benar-benar tunggal.
+
 ## [2.4.1] — 2026-11-07
 
 Perbaikan penting: beberapa soal latihan punya lebih dari satu jawaban yang sah, sehingga jawaban

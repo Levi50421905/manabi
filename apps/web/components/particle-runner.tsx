@@ -416,6 +416,15 @@ export function ParticleRunner({
               {current.ask}
             </p>
 
+            {current.contextBefore ? (
+              <p
+                lang="ja"
+                className="mt-3 rounded-lg border border-border bg-surface-muted px-3 py-2 text-body leading-relaxed text-fg"
+              >
+                {current.contextBefore}
+              </p>
+            ) : null}
+
             {current.mode === "lengkapi-teks" ? (
               <p
                 lang="ja"
@@ -480,7 +489,7 @@ export function ParticleRunner({
               </p>
             )}
 
-            {current.promptId ? (
+            {checked && current.promptId ? (
               <p className="mt-2 text-caption leading-relaxed text-fg-muted">
                 Artinya: {current.promptId}
               </p>
