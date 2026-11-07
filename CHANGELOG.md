@@ -6,6 +6,22 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/) dan
 versi mengikuti [Semantic Versioning](https://semver.org/lang/id/). Catatan
 pembaruan lintas project tidak tinggal di sini — itu ada di situs pribadi.
 
+## [2.5.1] — 2026-11-07
+
+Perapian tampilan: navigasi samping dan halaman utama.
+
+### Diubah
+
+- **Sidebar lebih ringkas dan rapi.** Baris navigasi dipadatkan (32px), item aktif ditandai batang
+  tipis di kiri alih-alih blok warna penuh, dan bagian Referensi disusun dua kolom. Seluruh menu
+  kini muat tanpa scroll pada layar 720p ke atas — sebelumnya daftar 15 item memaksa scroll.
+- **Halaman utama lebih mengarahkan ke belajar.** Tombol utama menjadi **"Mulai Belajar →"** menuju
+  hub level, dengan **"Lihat progres"** sebagai aksi sekunder. Tombol di bilah atas juga berubah
+  dari "Buka dasbor" menjadi "Mulai Belajar →".
+- **Dua pintu masuk cepat** di hero untuk pengunjung baru: "Belum kenal huruf? → Kana" dan
+  "Sudah bisa kana? → Kosakata".
+- Judul hero memakai ukuran adaptif agar tidak meluap di layar sempit.
+
 ## [2.5.0] — 2026-11-07
 
 Rilis ini melengkapi Konteks & Etiket dengan **kategori praktis** dan menambahkan **ulasan berbasis

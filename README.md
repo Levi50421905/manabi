@@ -254,7 +254,7 @@ ganti browser, atau `localhost` vs `127.0.0.1` akan dianggap sesi berbeda.
 
 ## Dokumen
 
-- [Changelog](CHANGELOG.md) — riwayat rilis per versi (versi terbaru: 2.5.0)
+- [Changelog](CHANGELOG.md) — riwayat rilis per versi (versi terbaru: 2.5.1)
 - [Design system](docs/DESIGN-SYSTEM.md) — arah visual, token, tipografi, aturan mobile
 - [Supabase](supabase/README.md) — langkah mengaktifkan backend
 

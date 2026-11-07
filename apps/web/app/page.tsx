@@ -156,9 +156,10 @@ export default function HomePage() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <Link href="/dashboard" className="hidden md:block">
-              <Button variant="outline" size="sm">
-                Buka dasbor
+            <Link href="/n5" className="hidden md:block">
+              <Button size="sm" className="gap-1.5">
+                Mulai Belajar
+                <span aria-hidden="true">→</span>
               </Button>
             </Link>
             <SiteMenu />
@@ -172,7 +173,7 @@ export default function HomePage() {
           <div className="mx-auto grid w-full max-w-[1120px] items-center gap-12 px-5 py-16 sm:px-8 sm:py-24 lg:grid-cols-[1.25fr_0.75fr]">
             <div className="animate-fade-up">
               <p className="label-micro">JLPT N5 → N1 · belajar terstruktur</p>
-              <h1 className="mt-4 font-display text-display font-semibold text-fg">
+              <h1 className="mt-4 break-words font-display text-[clamp(1.85rem,7.2vw,3.5rem)] font-semibold leading-[1.1] text-fg">
                 Belajar bahasa Jepang,
                 <br />
                 <span className="text-accent">satu halaman setiap hari.</span>
@@ -184,13 +185,43 @@ export default function HomePage() {
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Link href={levelHref("N5", "vocab")}>
-                  <Button size="lg">Mulai dari kosakata N5</Button>
+                <Link href="/n5">
+                  <Button size="lg" className="gap-2 px-6">
+                    Mulai Belajar
+                    <span aria-hidden="true">→</span>
+                  </Button>
                 </Link>
                 <Link href="/dashboard">
-                  <Button size="lg" variant="outline">
-                    Lihat dasbor
+                  <Button size="lg" variant="ghost">
+                    Lihat progres
                   </Button>
+                </Link>
+              </div>
+
+              <div className="mt-7 grid max-w-[560px] gap-2 sm:grid-cols-2">
+                <Link
+                  href={levelHref("N5", "kana")}
+                  className="group flex items-center justify-between gap-3 rounded-lg border border-border bg-surface/70 px-3.5 py-2.5 text-sm transition-colors hover:border-level/40 hover:bg-surface"
+                >
+                  <span className="min-w-0">
+                    <span className="block font-medium text-fg">Belum kenal huruf?</span>
+                    <span className="block text-caption text-fg-muted">Mulai dari kana</span>
+                  </span>
+                  <span aria-hidden="true" className="text-fg-subtle transition-transform group-hover:translate-x-0.5">
+                    →
+                  </span>
+                </Link>
+                <Link
+                  href={levelHref("N5", "vocab")}
+                  className="group flex items-center justify-between gap-3 rounded-lg border border-border bg-surface/70 px-3.5 py-2.5 text-sm transition-colors hover:border-level/40 hover:bg-surface"
+                >
+                  <span className="min-w-0">
+                    <span className="block font-medium text-fg">Sudah bisa kana?</span>
+                    <span className="block text-caption text-fg-muted">Lanjut ke kosakata</span>
+                  </span>
+                  <span aria-hidden="true" className="text-fg-subtle transition-transform group-hover:translate-x-0.5">
+                    →
+                  </span>
                 </Link>
               </div>
 

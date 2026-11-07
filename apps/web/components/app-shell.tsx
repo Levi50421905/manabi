@@ -260,76 +260,43 @@ function DesktopRail({ pathname, level }: { pathname: string; level: JlptLevel }
       </div>
 
       <nav
-        className="mt-5 flex min-h-0 flex-1 flex-col overflow-y-auto pr-1 [scrollbar-width:thin]"
+        className="mt-4 flex min-h-0 flex-1 flex-col overflow-y-auto pr-1 [scrollbar-width:thin]"
         aria-label="Navigasi utama"
       >
-        <Link
-          href="/dashboard"
-          aria-current={isActive(pathname, "/dashboard") ? "page" : undefined}
-          className={cn(
-            "mb-1 flex items-center gap-2.5 rounded-lg px-2 py-2 text-sm font-medium transition-colors",
-            isActive(pathname, "/dashboard")
-              ? "bg-level-soft text-level"
-              : "text-fg-muted hover:bg-surface-muted hover:text-fg",
-          )}
-        >
-          <Glyph active={isActive(pathname, "/dashboard")}>学</Glyph>
-          Dasbor
-        </Link>
+        <RailLink href="/dashboard" glyph="学" label="Dasbor" pathname={pathname} />
 
         {NAV_SECTIONS.map((section) => (
-          <div key={section.title} className="mt-4 first:mt-2">
-            <p className="label-micro px-2 pb-1.5">{section.title}</p>
-            <ul className="space-y-0.5">
-              {section.items.map((item) => {
-                const href = hrefFor(level, item.path);
-                const active = isActive(pathname, href);
-                return (
-                  <li key={item.path}>
-                    <Link
-                      href={href}
-                      aria-current={active ? "page" : undefined}
-                      className={cn(
-                        "flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm transition-colors",
-                        active
-                          ? "bg-level-soft font-medium text-level"
-                          : "text-fg-muted hover:bg-surface-muted hover:text-fg",
-                      )}
-                    >
-                      <Glyph active={active}>{item.glyph}</Glyph>
-                      <span className="truncate">{item.label}</span>
-                    </Link>
-                  </li>
-                );
-              })}
+          <div key={section.title} className="mt-3.5 first:mt-2">
+            <p className="label-micro px-1.5 pb-1">{section.title}</p>
+            <ul>
+              {section.items.map((item) => (
+                <li key={item.path}>
+                  <RailLink
+                    href={hrefFor(level, item.path)}
+                    glyph={item.glyph}
+                    label={item.label}
+                    pathname={pathname}
+                  />
+                </li>
+              ))}
             </ul>
           </div>
         ))}
 
-        <div className="mt-4">
-          <p className="label-micro px-2 pb-1.5">Referensi</p>
-          <ul className="space-y-0.5">
-            {SECONDARY.map((item) => {
-              const href = hrefFor(level, item.path);
-              const active = isActive(pathname, href);
-              return (
-                <li key={item.path}>
-                  <Link
-                    href={href}
-                    aria-current={active ? "page" : undefined}
-                    className={cn(
-                      "flex items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm transition-colors",
-                      active
-                        ? "bg-level-soft font-medium text-level"
-                        : "text-fg-muted hover:bg-surface-muted hover:text-fg",
-                    )}
-                  >
-                    <Glyph active={active}>{item.glyph}</Glyph>
-                    <span className="truncate">{item.label}</span>
-                  </Link>
-                </li>
-              );
-            })}
+        <div className="mt-3.5">
+          <p className="label-micro px-1.5 pb-1">Referensi</p>
+          <ul className="grid grid-cols-2 gap-x-1">
+            {SECONDARY.map((item) => (
+              <li key={item.path}>
+                <RailLink
+                  href={hrefFor(level, item.path)}
+                  glyph={item.glyph}
+                  label={item.label}
+                  pathname={pathname}
+                  compact
+                />
+              </li>
+            ))}
           </ul>
         </div>
       </nav>
@@ -362,18 +329,71 @@ function DesktopRail({ pathname, level }: { pathname: string; level: JlptLevel }
   );
 }
 
-function Glyph({ active, children }: { active?: boolean; children: React.ReactNode }) {
+function Glyph({
+  active,
+  small,
+  children,
+}: {
+  active?: boolean;
+  small?: boolean;
+  children: React.ReactNode;
+}) {
   return (
     <span
       lang="ja"
       aria-hidden="true"
       className={cn(
-        "jp grid h-6 w-6 shrink-0 place-items-center rounded-md text-caption transition-colors",
+        "jp grid shrink-0 place-items-center rounded-md transition-colors",
+        small ? "h-5 w-5 text-[10px]" : "h-5.5 w-5.5 text-[11px]",
         active ? "bg-level text-level-contrast" : "bg-surface-muted text-fg-subtle",
       )}
     >
       {children}
     </span>
+  );
+}
+
+/**
+ * Satu baris navigasi rail.
+ *
+ * Sengaja kompak (tinggi 32px) supaya seluruh menu muat tanpa scroll pada layar
+ * 720p ke atas. Item aktif ditandai batang tipis di kiri, bukan blok warna penuh,
+ * agar daftar tetap terasa ringan.
+ */
+function RailLink({
+  href,
+  glyph,
+  label,
+  pathname,
+  compact = false,
+}: {
+  href: string;
+  glyph: string;
+  label: string;
+  pathname: string;
+  compact?: boolean;
+}) {
+  const active = isActive(pathname, href);
+  return (
+    <Link
+      href={href}
+      aria-current={active ? "page" : undefined}
+      className={cn(
+        "group relative flex h-8 items-center gap-2 rounded-md px-1.5 text-[13px] transition-colors",
+        active ? "bg-level-soft font-medium text-level" : "text-fg-muted hover:bg-surface-muted hover:text-fg",
+      )}
+    >
+      {active ? (
+        <span
+          aria-hidden="true"
+          className="absolute left-0 top-1.5 bottom-1.5 w-[2px] rounded-full bg-level"
+        />
+      ) : null}
+      <Glyph active={active} small={compact}>
+        {glyph}
+      </Glyph>
+      <span className="truncate">{label}</span>
+    </Link>
   );
 }
 
