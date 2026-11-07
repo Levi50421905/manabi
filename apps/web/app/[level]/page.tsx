@@ -123,6 +123,12 @@ export default function LevelHubPage() {
       badge: kanjiDeck.due > 0 ? `${kanjiDeck.due} ulang` : undefined,
     },
     {
+      path: "bacaan-kanji",
+      glyph: "音",
+      title: "Bacaan Kanji",
+      description: "読み方 — perubahan bacaan, rendaku, dan jukujikun.",
+    },
+    {
       path: "grammar",
       glyph: "文",
       title: "Tata Bahasa",

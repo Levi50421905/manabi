@@ -188,3 +188,86 @@ export interface ParticleQuestion {
   /** Alasan tiap pilihan salah, dipakai di pembahasan. */
   wrongNotes?: Record<string, string>;
 }
+
+/* ------------------------------------------------------------------ *
+ * Perubahan bacaan kanji (読み方)
+ * ------------------------------------------------------------------ */
+
+/**
+ * Jenis hubungan antara tulisan dan bacaannya:
+ * - standar       : bacaan biasa, apa adanya
+ * - rendaku       : konsonan awal kata kedua menjadi bersuara (は→ば, か→が, ひ→び)
+ * - onyomi        : gabungan bacaan Tionghoa (音読み)
+ * - kunyomi-gabung: gabungan bacaan Jepang asli (訓読み)
+ * - jukujikun     : bacaan khusus yang tidak mengikuti bacaan tiap kanji
+ */
+export type ReadingChangeKind =
+  | "standar"
+  | "rendaku"
+  | "onyomi"
+  | "kunyomi-gabung"
+  | "jukujikun";
+
+export interface ReadingEntry {
+  id: string;
+  /** Bentuk tertulis, mis. "今日". */
+  word: string;
+  /** Bacaan dalam kana, mis. "きょう". */
+  kana: string;
+  romaji: string;
+  meaning: string;
+  kind: ReadingChangeKind;
+  /** Kanji yang terlibat, mis. ["今", "日"]. */
+  kanji: string[];
+  /** Kenapa bacaannya begitu. */
+  note: string;
+  /** Kapan bentuk ini dipakai. */
+  context?: string;
+}
+
+export interface ReadingRuleExample {
+  word: string;
+  kana: string;
+  romaji: string;
+  meaning: string;
+  /** Pemicu perubahan, mis. "sebelum 時". */
+  context: string;
+}
+
+export interface ReadingRuleException {
+  word: string;
+  kana: string;
+  note: string;
+}
+
+export interface ReadingRule {
+  id: string;
+  /** Kanji yang dijelaskan, mis. "何". */
+  kanji: string;
+  title: string;
+  /** Aturan ringkas yang bisa langsung dihafal. */
+  rule: string;
+  /**
+   * "kuat" = hampir selalu berlaku; "kecenderungan" = ada pengecualian.
+   * Materi wajib jujur soal ini agar tidak menyesatkan pemula.
+   */
+  strength: "kuat" | "kecenderungan";
+  examples: ReadingRuleExample[];
+  exceptions?: ReadingRuleException[];
+  /** Bentuk dasar saat kanji berdiri sendiri. */
+  standalone: ReadingRuleExample;
+}
+
+export interface ReadingQuizItem {
+  id: string;
+  /** "pilih-bacaan" atau "bedakan". */
+  mode: "pilih-bacaan" | "bedakan";
+  prompt: string;
+  promptId?: string;
+  answer: string;
+  options: string[];
+  explanation: string;
+  wrongNotes?: Record<string, string>;
+  /** Kata atau kanji yang diuji, untuk statistik. */
+  target: string;
+}

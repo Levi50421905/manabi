@@ -160,6 +160,15 @@ export default function DashboardPage() {
       due: 0,
     },
     {
+      path: "bacaan-kanji",
+      glyph: "音",
+      title: "Bacaan Kanji",
+      detail: "Bacaan berubah sesuai konteks",
+      value: null,
+      caption: "aturan + jukujikun",
+      due: 0,
+    },
+    {
       path: "reading",
       glyph: "読",
       title: "Membaca",

@@ -40,6 +40,7 @@ const NAV_SECTIONS: NavSection[] = [
       { label: "Menulis", glyph: "書", path: "write" },
       { label: "Kosakata", glyph: "語", path: "vocab" },
       { label: "Kanji", glyph: "漢", path: "kanji" },
+      { label: "Bacaan Kanji", glyph: "音", path: "bacaan-kanji" },
       { label: "Tata Bahasa", glyph: "文", path: "grammar" },
       { label: "Partikel", glyph: "助", path: "partikel" },
       { label: "Mendengar", glyph: "聴", path: "listening" },

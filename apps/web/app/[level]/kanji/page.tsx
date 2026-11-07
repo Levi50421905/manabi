@@ -24,6 +24,7 @@ import type { SrsCard } from "@manabi/srs";
 import { QuizRunner } from "@/components/quiz-runner";
 import { SpeakButton } from "@/components/speak-button";
 import { buildKanjiQuestions, type Question } from "@/lib/quiz";
+import { entriesForKanji, rulesForKanji } from "@/lib/bacaan-kanji";
 import { useProgress } from "@/lib/store";
 import { useActiveLevel } from "@/lib/level";
 
@@ -487,6 +488,8 @@ function KanjiDetail({
           </ul>
         </div>
 
+        <KanjiReadingContext character={item.character} level={item.level} />
+
         <div className="mt-5 flex flex-col gap-2 border-t border-border pt-4">
           <SpeakButton
             text={item.character}
@@ -519,5 +522,87 @@ function KanjiDetail({
         </p>
       </div>
     </Card>
+  );
+}
+
+/**
+ * Bagian "Bacaan & Konteks": menjelaskan kenapa bacaan kanji berubah saat
+ * bertemu kata lain. Hanya dirender untuk kanji yang punya aturan/entri bacaan
+ * (mis. 何, 今, 日, 人).
+ */
+function KanjiReadingContext({
+  character,
+  level,
+}: {
+  character: string;
+  level: Kanji["level"];
+}) {
+  const rules = rulesForKanji(character);
+  const entries = entriesForKanji(character);
+  if (rules.length === 0 && entries.length === 0) return null;
+
+  return (
+    <div className="mt-4" id="bacaan-konteks">
+      <div className="flex items-center justify-between gap-2">
+        <p className="label-micro">Bacaan &amp; konteks</p>
+        <Link
+          href={levelHref(level, "bacaan-kanji")}
+          className="text-caption text-accent hover:underline"
+        >
+          Semua aturan →
+        </Link>
+      </div>
+
+      {rules.map((rule) => (
+        <div key={rule.id} className="mt-2 rounded-lg border border-border bg-surface-muted p-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="text-caption font-semibold text-fg">{rule.rule}</p>
+            <Badge tone={rule.strength === "kuat" ? "success" : "warning"}>
+              {rule.strength === "kuat" ? "Hampir selalu" : "Kecenderungan"}
+            </Badge>
+          </div>
+          <ul className="mt-2 space-y-1">
+            <li className="flex flex-wrap items-baseline gap-x-2">
+              <span lang="ja" className="font-jp-serif text-sm font-semibold text-fg">
+                {rule.standalone.word}
+              </span>
+              <span lang="ja" className="font-jp text-caption text-level">
+                {rule.standalone.kana}
+              </span>
+              <span className="text-caption text-fg-muted">{rule.standalone.context}</span>
+            </li>
+            {rule.examples.slice(0, 4).map((example) => (
+              <li key={example.word} className="flex flex-wrap items-baseline gap-x-2">
+                <span lang="ja" className="font-jp-serif text-sm font-semibold text-fg">
+                  {example.word}
+                </span>
+                <span lang="ja" className="font-jp text-caption text-level">
+                  {example.kana}
+                </span>
+                <span className="text-caption text-fg-muted">{example.context}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+
+      {entries.length > 0 ? (
+        <ul className="mt-2 flex flex-wrap gap-1.5">
+          {entries.map((entry) => (
+            <li
+              key={entry.id}
+              className="rounded-md border border-border bg-surface px-2 py-1 text-caption"
+            >
+              <span lang="ja" className="font-jp text-fg">
+                {entry.word}
+              </span>
+              <span lang="ja" className="font-jp ml-1.5 text-level">
+                {entry.kana}
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </div>
   );
 }

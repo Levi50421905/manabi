@@ -6,6 +6,39 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/) dan
 versi mengikuti [Semantic Versioning](https://semver.org/lang/id/). Catatan
 pembaruan lintas project tidak tinggal di sini — itu ada di situs pribadi.
 
+## [2.3.0] — 2026-11-07
+
+Rilis ini menjawab pertanyaan yang paling sering muncul di awal belajar: **kenapa bacaan kanji
+berubah** ketika bertemu kata lain.
+
+### Ditambahkan
+
+- **Modul Bacaan Kanji** (`/[level]/bacaan-kanji`) dengan **aturan cepat** untuk empat kanji yang
+  bacaannya paling sering membingungkan:
+  - 何 — なに saat berdiri sendiri, なん di depan bunyi d/t/n dan kata satuan (何時, 何日, 何歳)
+  - 今 — いま sendiri, こん dalam gabungan, dengan 今日 (きょう) dan 今年 (ことし) sebagai pengecualian
+  - 日 — ひ, にち, か, dan び tergantung konteks (日曜日, 二日, 誕生日)
+  - 人 — ひと, じん, にん, dengan 一人 (ひとり) dan 二人 (ふたり) sebagai jukujikun
+- **24 entri perubahan bacaan** berlabel jenisnya: jukujikun (今日, 明日, 一人, 大人, 眼鏡),
+  rendaku (花火, 手袋, 心配, 誕生日), gabungan on'yomi (学校, 電車, 日本), dan gabungan kun'yomi
+  (手紙, 花見, 食べ物).
+- **Latihan membaca** (`/[level]/bacaan-kanji/latihan`) dengan dua mode — *pilih bacaan* dan
+  *bedakan bacaan* — sebanyak **59 soal**, lengkap dengan alasan dan catatan pengecualian.
+- **Bagian "Bacaan & Konteks"** pada detail kanji di halaman Kanji, sehingga 何/今/日/人 langsung
+  menampilkan aturan dan contohnya.
+- Modul bacaan kanji muncul di navigasi, hub level, dan dasbor.
+
+### Catatan kejujuran materi
+
+Aturan bacaan diberi label **"hampir selalu"** atau **"kecenderungan"**, dan setiap aturan
+menyertakan pengecualiannya — misalnya 何色 (なにいろ) dan 何語 (なにご) yang tidak mengikuti pola
+"なん di depan bunyi tertentu", serta 何で yang bisa dibaca なんで (kenapa) atau なにで (dengan apa).
+Materi disusun sebagai pegangan belajar, bukan hukum mutlak.
+
+### Diubah
+
+- Versi proyek naik ke `2.3.0`.
+
 ## [2.2.0] — 2026-11-07
 
 Rilis ini menambah modul **partikel (助詞)**, mengunci sesi latihan/ujian,

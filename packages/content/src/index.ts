@@ -7,7 +7,10 @@ import type {
   Particle,
   ParticleComparison,
   ParticleTier,
+  ReadingChangeKind,
+  ReadingEntry,
   ReadingPassage,
+  ReadingRule,
   Vocab,
 } from "./types";
 import { hiragana, kana, kanaRowLabels, kanaRows, katakana } from "./data/kana";
@@ -35,6 +38,7 @@ import {
   particleQuestionsN5,
   particlesN5,
 } from "./data/particles-n5";
+import { readingEntriesN5, readingRulesN5 } from "./data/reading-changes-n5";
 
 export * from "./types";
 export {
@@ -80,6 +84,7 @@ export {
   particleQuestionsN5,
   particlesN5,
 } from "./data/particles-n5";
+export { readingEntriesN5, readingRulesN5 } from "./data/reading-changes-n5";
 
 /**
  * Kumpulan materi. Saat menambah level baru (N4, N3, …), cukup import
@@ -214,6 +219,36 @@ export function particleComparisonsByLevel(level: JlptLevel): ParticleComparison
   return particleComparisonsN5.filter(
     (pair) => chars.has(pair.left.particleId) && chars.has(pair.right.particleId),
   );
+}
+
+/* ------------------------------------------------------------------ *
+ * Perubahan bacaan kanji
+ * ------------------------------------------------------------------ */
+
+/** Aturan bacaan yang membahas kanji tertentu, mis. "何". */
+export function readingRulesForKanji(character: string): ReadingRule[] {
+  return readingRulesN5.filter((rule) => rule.kanji === character);
+}
+
+/** Kata-kata yang memuat kanji tertentu beserta cara bacanya. */
+export function readingEntriesForKanji(character: string): ReadingEntry[] {
+  return readingEntriesN5.filter((entry) => entry.kanji.includes(character));
+}
+
+/** Kata-kata dengan jenis perubahan bacaan tertentu. */
+export function readingEntriesByKind(kind: ReadingChangeKind): ReadingEntry[] {
+  return readingEntriesN5.filter((entry) => entry.kind === kind);
+}
+
+/** Aturan bacaan yang tersedia untuk sebuah level (saat ini hanya N5). */
+export function readingRulesByLevel(level: JlptLevel): ReadingRule[] {
+  if (level !== "N5") return [];
+  return readingRulesN5;
+}
+
+export function readingEntriesByLevel(level: JlptLevel): ReadingEntry[] {
+  if (level !== "N5") return [];
+  return readingEntriesN5;
 }
 
 export interface SearchHit {

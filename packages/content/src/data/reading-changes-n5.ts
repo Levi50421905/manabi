@@ -1,0 +1,390 @@
+import type { ReadingEntry, ReadingRule } from "../types";
+
+/**
+ * Perubahan bacaan kanji untuk JLPT N5.
+ *
+ * Inti materi ini: bacaan sebuah kanji TIDAK tetap. Ia berubah tergantung kanji
+ * atau kata yang menyertainya. Setiap entri wajib menjelaskan KENAPA bacaannya
+ * begitu, bukan sekadar daftar.
+ *
+ * Catatan kejujuran: aturan seperti "何 dibaca なん di depan bunyi d/t/n" adalah
+ * kecenderungan, bukan hukum. Setiap aturan diberi label `strength` dan
+ * `exceptions` supaya pengguna tahu batasnya.
+ */
+
+export const readingRulesN5: ReadingRule[] = [
+  {
+    id: "aturan:何",
+    kanji: "何",
+    title: "何 — なに atau なん?",
+    rule:
+      "なん dipakai sebelum kata yang diawali bunyi d, t, n, dan sebelum kata satuan (時, 日, 歳, 回, 年, 人, 個). なに dipakai saat berdiri sendiri atau sebelum partikel を, が, は.",
+    strength: "kecenderungan",
+    standalone: {
+      word: "何",
+      kana: "なに",
+      romaji: "nani",
+      meaning: "apa",
+      context: "berdiri sendiri, atau sebelum partikel を / が / は",
+    },
+    examples: [
+      { word: "何時", kana: "なんじ", romaji: "nanji", meaning: "jam berapa", context: "sebelum 時" },
+      { word: "何日", kana: "なんにち", romaji: "nannichi", meaning: "tanggal berapa", context: "sebelum 日" },
+      { word: "何歳", kana: "なんさい", romaji: "nansai", meaning: "berapa umur", context: "sebelum 歳" },
+      { word: "何年", kana: "なんねん", romaji: "nannen", meaning: "tahun berapa / berapa tahun", context: "sebelum 年" },
+      { word: "何回", kana: "なんかい", romaji: "nankai", meaning: "berapa kali", context: "sebelum 回" },
+      { word: "何人", kana: "なんにん", romaji: "nannin", meaning: "berapa orang", context: "sebelum 人" },
+      { word: "何で", kana: "なんで", romaji: "nande", meaning: "kenapa", context: "sebelum で" },
+    ],
+    exceptions: [
+      {
+        word: "何色",
+        kana: "なにいろ",
+        note: "Umumnya dibaca なにいろ (warna apa), bukan なんしょく, meski di depan bunyi selain d/t/n. なんしょく juga ada tetapi terasa teknis.",
+      },
+      {
+        word: "何語",
+        kana: "なにご",
+        note: "Dibaca なにご (bahasa apa) walaupun di depan ご.",
+      },
+      {
+        word: "何で",
+        kana: "なにで",
+        note: "Bisa juga なにで = “dengan apa”. Jadi 何で punya dua bacaan tergantung makna: なんで = kenapa, なにで = dengan apa.",
+      },
+    ],
+  },
+  {
+    id: "aturan:今",
+    kanji: "今",
+    title: "今 — いま, こん, atau ことし?",
+    rule:
+      "いま saat berdiri sendiri. こん saat bergabung dengan kata ber-onyomi (今月, 今週, 今晩). Ada dua gabungan yang dibaca khusus: 今日 (きょう) dan 今年 (ことし).",
+    strength: "kuat",
+    standalone: {
+      word: "今",
+      kana: "いま",
+      romaji: "ima",
+      meaning: "sekarang",
+      context: "berdiri sendiri",
+    },
+    examples: [
+      { word: "今月", kana: "こんげつ", romaji: "kongetsu", meaning: "bulan ini", context: "gabungan dengan 月" },
+      { word: "今週", kana: "こんしゅう", romaji: "konshuu", meaning: "minggu ini", context: "gabungan dengan 週" },
+      { word: "今晩", kana: "こんばん", romaji: "konban", meaning: "malam ini", context: "gabungan dengan 晩" },
+      { word: "今回", kana: "こんかい", romaji: "konkai", meaning: "kali ini", context: "gabungan dengan 回" },
+      { word: "今度", kana: "こんど", romaji: "kondo", meaning: "lain kali / kali ini", context: "gabungan dengan 度" },
+    ],
+    exceptions: [
+      { word: "今日", kana: "きょう", note: "Jukujikun — sama sekali tidak memakai いま maupun こん." },
+      { word: "今年", kana: "ことし", note: "Jukujikun — bukan いまとし maupun こんねん." },
+      { word: "今朝", kana: "けさ", note: "Jukujikun — bukan いまあさ." },
+    ],
+  },
+  {
+    id: "aturan:日",
+    kanji: "日",
+    title: "日 — ひ, にち, か, atau び?",
+    rule:
+      "にち untuk nama hari dan istilah (日曜日, 毎日). か untuk tanggal 2–10 dan beberapa hitungan (ふつか, とおか) — tanggal 1 memakai ついたち. び muncul karena rendaku (誕生日 たんじょうび).",
+    strength: "kecenderungan",
+    standalone: {
+      word: "日",
+      kana: "ひ",
+      romaji: "hi",
+      meaning: "hari / matahari",
+      context: "berdiri sendiri",
+    },
+    examples: [
+      { word: "日曜日", kana: "にちようび", romaji: "nichiyoubi", meaning: "hari Minggu", context: "nama hari" },
+      { word: "毎日", kana: "まいにち", romaji: "mainichi", meaning: "setiap hari", context: "istilah + rendaku ひ→び" },
+      { word: "二日", kana: "ふつか", romaji: "futsuka", meaning: "tanggal 2 / dua hari", context: "hitungan tanggal" },
+      { word: "十日", kana: "とおか", romaji: "tooka", meaning: "tanggal 10 / sepuluh hari", context: "hitungan tanggal" },
+      { word: "誕生日", kana: "たんじょうび", romaji: "tanjoubi", meaning: "hari ulang tahun", context: "rendaku ひ→び" },
+    ],
+    exceptions: [
+      { word: "一日", kana: "ついたち", note: "Sebagai “tanggal 1” dibaca ついたち (jukujikun). Tapi 一日中 (いちにちじゅう) tetap いちにち." },
+      { word: "日", kana: "か", note: "Dalam 二日/三日, unsur 日 berubah jadi か — bukan bacaan ひ atau にち." },
+    ],
+  },
+  {
+    id: "aturan:人",
+    kanji: "人",
+    title: "人 — ひと, にん, atau じん?",
+    rule:
+      "ひと saat berdiri sendiri. じん untuk kebangsaan atau “orang dari …”. にん untuk menghitung orang (さんにん). Tapi 一人 dan 二人 dibaca khusus: ひとり, ふたり.",
+    strength: "kecenderungan",
+    standalone: {
+      word: "人",
+      kana: "ひと",
+      romaji: "hito",
+      meaning: "orang",
+      context: "berdiri sendiri",
+    },
+    examples: [
+      { word: "日本人", kana: "にほんじん", romaji: "nihonjin", meaning: "orang Jepang", context: "kebangsaan → じん" },
+      { word: "三人", kana: "さんにん", romaji: "sannin", meaning: "tiga orang", context: "menghitung orang → にん" },
+      { word: "五人", kana: "ごにん", romaji: "gonin", meaning: "lima orang", context: "menghitung orang → にん" },
+    ],
+    exceptions: [
+      { word: "一人", kana: "ひとり", note: "Jukujikun. Bukan いちにん." },
+      { word: "二人", kana: "ふたり", note: "Jukujikun. Bukan ににん." },
+      { word: "大人", kana: "おとな", note: "Jukujikun. Bukan だいじん / おおひと." },
+    ],
+  },
+];
+
+/**
+ * Kata yang bacaannya tidak bisa ditebak dari bacaan tiap kanji, beserta jenis
+ * perubahannya.
+ */
+export const readingEntriesN5: ReadingEntry[] = [
+  /* ---- jukujikun ---- */
+  {
+    id: "bacaan:kyou",
+    word: "今日",
+    kana: "きょう",
+    romaji: "kyou",
+    meaning: "hari ini",
+    kind: "jukujikun",
+    kanji: ["今", "日"],
+    note: "Bukan いま + ひ, juga bukan こんにち dalam percakapan sehari-hari.",
+    context: "Percakapan dan tulisan sehari-hari",
+  },
+  {
+    id: "bacaan:ashita",
+    word: "明日",
+    kana: "あした",
+    romaji: "ashita",
+    meaning: "besok",
+    kind: "jukujikun",
+    kanji: ["明", "日"],
+    note: "Tidak ada hubungan langsung dengan あか + ひ. Bentuk formalnya あす.",
+  },
+  {
+    id: "bacaan:kinou",
+    word: "昨日",
+    kana: "きのう",
+    romaji: "kinou",
+    meaning: "kemarin",
+    kind: "jukujikun",
+    kanji: ["昨", "日"],
+    note: "Bukan さく + ひ.",
+  },
+  {
+    id: "bacaan:kesa",
+    word: "今朝",
+    kana: "けさ",
+    romaji: "kesa",
+    meaning: "tadi pagi",
+    kind: "jukujikun",
+    kanji: ["今", "朝"],
+    note: "Bukan いま + あさ.",
+  },
+  {
+    id: "bacaan:kotoshi",
+    word: "今年",
+    kana: "ことし",
+    romaji: "kotoshi",
+    meaning: "tahun ini",
+    kind: "jukujikun",
+    kanji: ["今", "年"],
+    note: "Bukan いま + とし.",
+  },
+  {
+    id: "bacaan:hitori",
+    word: "一人",
+    kana: "ひとり",
+    romaji: "hitori",
+    meaning: "satu orang / sendirian",
+    kind: "jukujikun",
+    kanji: ["一", "人"],
+    note: "Bukan いち + にん.",
+  },
+  {
+    id: "bacaan:futari",
+    word: "二人",
+    kana: "ふたり",
+    romaji: "futari",
+    meaning: "dua orang",
+    kind: "jukujikun",
+    kanji: ["二", "人"],
+    note: "Bukan に + にん.",
+  },
+  {
+    id: "bacaan:otona",
+    word: "大人",
+    kana: "おとな",
+    romaji: "otona",
+    meaning: "orang dewasa",
+    kind: "jukujikun",
+    kanji: ["大", "人"],
+    note: "Bukan だい + じん.",
+  },
+  {
+    id: "bacaan:jouzu",
+    word: "上手",
+    kana: "じょうず",
+    romaji: "jouzu",
+    meaning: "pandai / mahir",
+    kind: "jukujikun",
+    kanji: ["上", "手"],
+    note: "Bukan うえ + て. Pasangannya 下手 (へた) juga jukujikun.",
+  },
+  {
+    id: "bacaan:heta",
+    word: "下手",
+    kana: "へた",
+    romaji: "heta",
+    meaning: "tidak mahir",
+    kind: "jukujikun",
+    kanji: ["下", "手"],
+    note: "Bukan した + て.",
+  },
+  {
+    id: "bacaan:kudamono",
+    word: "果物",
+    kana: "くだもの",
+    romaji: "kudamono",
+    meaning: "buah",
+    kind: "jukujikun",
+    kanji: ["果", "物"],
+    note: "Bukan か + ぶつ.",
+  },
+  {
+    id: "bacaan:megane",
+    word: "眼鏡",
+    kana: "めがね",
+    romaji: "megane",
+    meaning: "kacamata",
+    kind: "jukujikun",
+    kanji: ["眼", "鏡"],
+    note: "Bukan がん + きょう. Bentuk ini sangat tidak terduga dari bacaan kanjinya.",
+  },
+  {
+    id: "bacaan:miyage",
+    word: "土産",
+    kana: "みやげ",
+    romaji: "miyage",
+    meaning: "oleh-oleh",
+    kind: "jukujikun",
+    kanji: ["土", "産"],
+    note: "Bukan ど + さん.",
+  },
+
+  /* ---- rendaku ---- */
+  {
+    id: "bacaan:hanabi",
+    word: "花火",
+    kana: "はなび",
+    romaji: "hanabi",
+    meaning: "kembang api",
+    kind: "rendaku",
+    kanji: ["花", "火"],
+    note: "火 sendirian dibaca ひ, tetapi setelah 花 berubah menjadi び (rendaku: h → b).",
+  },
+  {
+    id: "bacaan:tebukuro",
+    word: "手袋",
+    kana: "てぶくろ",
+    romaji: "tebukuro",
+    meaning: "sarung tangan",
+    kind: "rendaku",
+    kanji: ["手", "袋"],
+    note: "袋 sendirian ふくろ, setelah 手 berubah menjadi ぶくろ.",
+  },
+  {
+    id: "bacaan:shinpai",
+    word: "心配",
+    kana: "しんぱい",
+    romaji: "shinpai",
+    meaning: "khawatir",
+    kind: "rendaku",
+    kanji: ["心", "配"],
+    note: "配 berubah はい → ぱい (rendaku pada bunyi h).",
+  },
+  {
+    id: "bacaan:tanjoubi",
+    word: "誕生日",
+    kana: "たんじょうび",
+    romaji: "tanjoubi",
+    meaning: "hari ulang tahun",
+    kind: "rendaku",
+    kanji: ["誕", "生", "日"],
+    note: "日 sendirian ひ, di sini menjadi び.",
+  },
+
+  /* ---- onyomi ---- */
+  {
+    id: "bacaan:gakkou",
+    word: "学校",
+    kana: "がっこう",
+    romaji: "gakkou",
+    meaning: "sekolah",
+    kind: "onyomi",
+    kanji: ["学", "校"],
+    note: "学 がく + 校 こう → がっこう. Bunyi く menyusut menjadi っ (sokuon).",
+  },
+  {
+    id: "bacaan:gakusei",
+    word: "学生",
+    kana: "がくせい",
+    romaji: "gakusei",
+    meaning: "pelajar",
+    kind: "onyomi",
+    kanji: ["学", "生"],
+    note: "Gabungan dua onyomi tanpa perubahan: がく + せい.",
+  },
+  {
+    id: "bacaan:densha",
+    word: "電車",
+    kana: "でんしゃ",
+    romaji: "densha",
+    meaning: "kereta",
+    kind: "onyomi",
+    kanji: ["電", "車"],
+    note: "でん + しゃ. 車 sendirian dibaca くるま, tetapi dalam gabungan memakai onyomi しゃ.",
+  },
+  {
+    id: "bacaan:nihon",
+    word: "日本",
+    kana: "にほん",
+    romaji: "nihon",
+    meaning: "Jepang",
+    kind: "onyomi",
+    kanji: ["日", "本"],
+    note: "日 di sini にち → に. Bentuk lain: にっぽん untuk penekanan resmi.",
+  },
+
+  /* ---- kunyomi gabungan ---- */
+  {
+    id: "bacaan:tegami",
+    word: "手紙",
+    kana: "てがみ",
+    romaji: "tegami",
+    meaning: "surat",
+    kind: "kunyomi-gabung",
+    kanji: ["手", "紙"],
+    note: "て + かみ, tanpa rendaku. Dua kunyomi digabung apa adanya.",
+  },
+  {
+    id: "bacaan:hanami",
+    word: "花見",
+    kana: "はなみ",
+    romaji: "hanami",
+    meaning: "melihat bunga (sakura)",
+    kind: "kunyomi-gabung",
+    kanji: ["花", "見"],
+    note: "はな + み, tanpa perubahan bunyi.",
+  },
+  {
+    id: "bacaan:tabemono",
+    word: "食べ物",
+    kana: "たべもの",
+    romaji: "tabemono",
+    meaning: "makanan",
+    kind: "kunyomi-gabung",
+    kanji: ["食", "物"],
+    note: "たべる berubah ke bentuk たべ, lalu digabung dengan もの.",
+  },
+];
