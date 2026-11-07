@@ -169,8 +169,39 @@ export default function HomePage() {
 
       <main>
         {/* ---------- Hero ---------- */}
-        <section className="hero-backdrop border-b border-border">
-          <div className="mx-auto grid w-full max-w-[1120px] items-center gap-12 px-5 py-16 sm:px-8 sm:py-24 lg:grid-cols-[1.25fr_0.75fr]">
+        <section className="hero-backdrop relative overflow-hidden border-b border-border">
+          {/* Kanji latar yang mengambang pelan — dekoratif, tidak terbaca pembaca layar */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 select-none">
+            <span
+              lang="ja"
+              className="jp-serif animate-drift absolute left-[4%] top-[16%] text-[7rem] font-semibold leading-none text-fg/[0.035]"
+            >
+              学
+            </span>
+            <span
+              lang="ja"
+              className="jp-serif animate-drift absolute right-[8%] top-[10%] text-[5.5rem] font-semibold leading-none text-accent/[0.05]"
+              style={{ animationDelay: "-3.5s" }}
+            >
+              日
+            </span>
+            <span
+              lang="ja"
+              className="jp-serif animate-drift absolute bottom-[12%] left-[38%] text-[6.5rem] font-semibold leading-none text-fg/[0.03]"
+              style={{ animationDelay: "-7s" }}
+            >
+              本
+            </span>
+            <span
+              lang="ja"
+              className="jp-serif animate-drift absolute right-[26%] bottom-[8%] text-[4.5rem] font-semibold leading-none text-accent/[0.04]"
+              style={{ animationDelay: "-9s" }}
+            >
+              語
+            </span>
+          </div>
+
+          <div className="relative mx-auto grid w-full max-w-[1120px] items-center gap-12 px-5 py-16 sm:px-8 sm:py-24 lg:grid-cols-[1.25fr_0.75fr]">
             <div className="animate-fade-up">
               <p className="label-micro">JLPT N5 → N1 · belajar terstruktur</p>
               <h1 className="mt-4 break-words font-display text-[clamp(1.85rem,7.2vw,3.5rem)] font-semibold leading-[1.1] text-fg">
@@ -178,6 +209,11 @@ export default function HomePage() {
                 <br />
                 <span className="text-accent">satu halaman setiap hari.</span>
               </h1>
+              <div
+                aria-hidden="true"
+                className="animate-line-grow mt-5 h-px w-16 bg-accent/50"
+                style={{ animationDelay: "300ms" }}
+              />
               <p className="mt-5 max-w-[52ch] text-body leading-relaxed text-fg-muted">
                 <strong className="font-semibold text-fg">Manabi（学び）</strong> menyusun huruf,
                 kosakata, kanji, dan tata bahasa dalam satu jalur per level JLPT. Materi diulang
@@ -186,7 +222,7 @@ export default function HomePage() {
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link href="/n5">
-                  <Button size="lg" className="gap-2 px-6">
+                  <Button size="lg" className="animate-sheen gap-2 px-6">
                     Mulai Belajar
                     <span aria-hidden="true">→</span>
                   </Button>
@@ -231,7 +267,10 @@ export default function HomePage() {
             </div>
 
             {/* Ornamen: teks vertikal + kartu contoh */}
-            <div className="relative mx-auto w-full max-w-[360px] pl-0 sm:pl-12">
+            <div
+              className="animate-fade-up relative mx-auto w-full max-w-[360px] pl-0 sm:pl-12"
+              style={{ animationDelay: "160ms" }}
+            >
               <div className="pointer-events-none absolute inset-y-0 left-0 hidden select-none items-center sm:flex">
                 <span
                   lang="ja"
