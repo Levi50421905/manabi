@@ -6,6 +6,51 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/) dan
 versi mengikuti [Semantic Versioning](https://semver.org/lang/id/). Catatan
 pembaruan lintas project tidak tinggal di sini — itu ada di situs pribadi.
 
+## [2.7.0] — 2026-11-08
+
+Rilis ini menambahkan **bank soal terkurasi (beta)** dan memperbarui ujian.
+
+### Ditambahkan
+
+- **Bank soal** (`/[level]/bank`) — butir soal tetap dengan pembahasan berlapis, paket N5 dan
+  JFT-Basic. Berbeda dari latihan acak, butir di sini tidak dibangkitkan ulang setiap sesi.
+- **Skor ujian 2026** — pembobotan dan ambang kelulusan mengikuti format terbaru.
+- Perintah `pnpm validate:bank` untuk memeriksa berkas bank soal.
+- Dokumen skema: `docs/BLUEPRINT-BANK-SOAL.md`, `docs/bank-soal/skema-butir-soal.json`, matriks
+  kurikulum, dan SQL pendukung.
+- Tambahan materi konteks & etiket beserta data romaji.
+
+### Diubah
+
+- **Latihan** kini punya 9 mode: campuran, variasi, kosakata, kana, kanji, tata bahasa, membaca,
+  mendengar, dan susun.
+- Navigasi, layar hasil, dan halaman ujian diperbarui mengikuti bank soal.
+
+## [2.6.1] — 2026-11-07
+
+### Ditambahkan
+
+- **Fade-up saat scroll** — bagian setelah hero muncul halus ketika masuk viewport
+  (IntersectionObserver, dipasang sekali untuk seluruh halaman utama).
+- **Tekstur grain** halus di halaman utama agar latar tidak terasa kosong.
+- **Efek tekan** pada tombol dan tautan sebagai umpan balik saat diklik.
+
+Semua animasi dinonaktifkan otomatis oleh `prefers-reduced-motion`.
+
+## [2.6.0] — 2026-11-07
+
+### Diubah
+
+- **Judul hero memakai ink reveal** (sumi-e): muncul seperti disapu kuas dari kiri.
+- **Latar kanji mengambang dihapus** — sesuai arah desain yang tenang, tidak ada gerakan latar.
+
+## [2.5.2] — 2026-11-07
+
+### Ditambahkan
+
+- Animasi pertama halaman utama: latar kanji mengambang, garis aksen tumbuh, kilau tombol utama,
+  dan kartu harian masuk bertahap.
+
 ## [2.5.1] — 2026-11-07
 
 Perapian tampilan: navigasi samping dan halaman utama.
