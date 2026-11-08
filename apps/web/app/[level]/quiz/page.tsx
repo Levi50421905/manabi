@@ -13,7 +13,17 @@ import {
   SegmentedControl,
   cn,
 } from "@manabi/ui";
-import { grammarByLevel, kana, kanjiByLevel, levelHref, levelMeta, vocabByLevel } from "@manabi/content";
+import {
+  examListeningN5,
+  grammarByLevel,
+  kana,
+  kanjiByLevel,
+  levelHref,
+  levelMeta,
+  readingByLevel,
+  sentenceOrderN5,
+  vocabByLevel,
+} from "@manabi/content";
 import { QuizRunner, type QuizRunnerHandle } from "@/components/quiz-runner";
 import { SessionExitDialog } from "@/components/session-exit-dialog";
 import {
@@ -22,6 +32,10 @@ import {
   buildGrammarQuestions,
   buildKanaQuestions,
   buildKanjiQuestions,
+  buildListeningQuizQuestions,
+  buildReadingQuizQuestions,
+  buildSentenceOrderQuestions,
+  buildVarietyQuestions,
   buildVocabQuestions,
   shuffle,
   type AnswerType,
@@ -30,7 +44,16 @@ import {
 import { useActiveLevel } from "@/lib/level";
 import { setSessionActive, useBeforeUnloadGuard } from "@/lib/session-guard";
 
-type QuizMode = "campuran" | "kosakata" | "kana" | "kanji" | "tata-bahasa";
+type QuizMode =
+  | "campuran"
+  | "variasi"
+  | "kosakata"
+  | "kana"
+  | "kanji"
+  | "tata-bahasa"
+  | "membaca"
+  | "mendengar"
+  | "susun";
 
 interface ModeOption {
   key: QuizMode;
@@ -47,6 +70,13 @@ const MODES: ModeOption[] = [
     japanese: "混合",
     glyph: "問",
     description: "Kana, kosakata, kanji, dan tata bahasa dalam satu sesi.",
+  },
+  {
+    key: "variasi",
+    title: "Variasi",
+    japanese: "変化",
+    glyph: "変",
+    description: "Tujuh jenis soal diacak: kana, kata, kanji, grammar, bacaan, listening, susun.",
   },
   {
     key: "kosakata",
@@ -76,6 +106,27 @@ const MODES: ModeOption[] = [
     glyph: "文",
     description: "Pilih pola yang dipakai pada kalimat contoh.",
   },
+  {
+    key: "membaca",
+    title: "Membaca",
+    japanese: "読解",
+    glyph: "読",
+    description: "Baca teks pendek, lalu jawab pertanyaan pemahaman.",
+  },
+  {
+    key: "mendengar",
+    title: "Mendengar",
+    japanese: "聴解",
+    glyph: "聴",
+    description: "Dengarkan dialog, lalu jawab pertanyaan. Bisa diputar ulang.",
+  },
+  {
+    key: "susun",
+    title: "Susun Kalimat",
+    japanese: "組み立て",
+    glyph: "組",
+    description: "Pilih fragmen yang tepat untuk celah bertanda ★.",
+  },
 ];
 
 const COUNTS = [10, 20, 30];
@@ -92,6 +143,15 @@ export default function QuizPage() {
   const vocabPool = useMemo(() => vocabByLevel(level), [level]);
   const kanjiPool = useMemo(() => kanjiByLevel(level), [level]);
   const grammarPool = useMemo(() => grammarByLevel(level), [level]);
+  const readingPool = useMemo(() => readingByLevel(level), [level]);
+  const listeningPool = useMemo(
+    () => examListeningN5.filter((item) => item.level === level),
+    [level],
+  );
+  const sentencePool = useMemo(
+    () => sentenceOrderN5.filter((item) => item.level === level),
+    [level],
+  );
 
   const [mode, setMode] = useState<QuizMode>("campuran");
   const [count, setCount] = useState(10);
@@ -107,7 +167,8 @@ export default function QuizPage() {
   const modeInfo = MODES.find((item) => item.key === mode) ?? MODES[0]!;
 
   /** Mode yang soalnya bisa memakai bentuk jawaban pilihan. */
-  const isTyped = mode === "kosakata" || mode === "kanji" || mode === "campuran";
+  const isTyped =
+    mode === "kosakata" || mode === "kanji" || mode === "campuran" || mode === "variasi";
 
   const preview = useMemo(() => {
     if (!isTyped) return null;
@@ -135,9 +196,26 @@ export default function QuizPage() {
         return kanjiPool.length;
       case "tata-bahasa":
         return grammarPool.length;
+      case "membaca":
+        return readingPool.reduce((sum, passage) => sum + passage.questions.length, 0);
+      case "mendengar":
+        return listeningPool.length;
+      case "susun":
+        return sentencePool.length;
+      case "variasi":
+        return (
+          vocabPool.length +
+          kanjiPool.length +
+          grammarPool.length +
+          readingPool.reduce((sum, passage) => sum + passage.questions.length, 0) +
+          listeningPool.length +
+          sentencePool.length
+        );
       case "campuran":
         // Kana tidak terikat level; campuran tetap butuh materi level ini.
         return vocabPool.length + kanjiPool.length + grammarPool.length;
+      default:
+        return 0;
     }
   }
 
@@ -151,6 +229,22 @@ export default function QuizPage() {
         return buildKanjiQuestions(kanjiPool, amount, answerType);
       case "tata-bahasa":
         return buildGrammarQuestions(grammarPool, amount);
+      case "membaca":
+        return buildReadingQuizQuestions(readingPool, amount);
+      case "mendengar":
+        return buildListeningQuizQuestions(listeningPool, amount);
+      case "susun":
+        return buildSentenceOrderQuestions(amount, sentencePool);
+      case "variasi":
+        return buildVarietyQuestions(amount, {
+          answerType,
+          vocabPool,
+          kanjiPool,
+          grammarPool,
+          readingPool,
+          listeningPool,
+          sentencePool,
+        });
       case "campuran": {
         const kanaCount = Math.min(2, kana.length, amount);
         const rest = Math.max(0, amount - kanaCount);
@@ -165,6 +259,8 @@ export default function QuizPage() {
           ...buildGrammarQuestions(grammarPool, grammarCount),
         ]);
       }
+      default:
+        return [];
     }
   }
 

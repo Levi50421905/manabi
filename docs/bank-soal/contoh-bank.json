@@ -1,0 +1,4945 @@
+{
+  "schema_version": "1.0.0",
+  "bank_version": "2026.11.0",
+  "generated_at": "2026-11-08",
+  "locale_default": "id",
+  "taxonomy": {
+    "version": "2026.11",
+    "notes": "Taksonomi kanonik. Menambah level/tipe cukup menambah baris; jangan mengubah arti kode.",
+    "item_types": [
+      {
+        "code": "MG.KR",
+        "exam_family": "jlpt",
+        "section": "moji-goi",
+        "label_jp": "漢字読み",
+        "label_id": "Cara baca kanji",
+        "option_count": 4,
+        "levels": [
+          "N5",
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ],
+        "jft_equiv": [
+          "SV.KR"
+        ],
+        "active": true
+      },
+      {
+        "code": "MG.OR",
+        "exam_family": "jlpt",
+        "section": "moji-goi",
+        "label_jp": "表記",
+        "label_id": "Penulisan kanji",
+        "option_count": 4,
+        "levels": [
+          "N5",
+          "N4",
+          "N3",
+          "N2"
+        ],
+        "jft_equiv": [
+          "SV.KMU"
+        ],
+        "active": true
+      },
+      {
+        "code": "MG.CD",
+        "exam_family": "jlpt",
+        "section": "moji-goi",
+        "label_jp": "文脈規定",
+        "label_id": "Kata sesuai konteks",
+        "option_count": 4,
+        "levels": [
+          "N5",
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ],
+        "jft_equiv": [
+          "SV.WM",
+          "SV.WU"
+        ],
+        "active": true
+      },
+      {
+        "code": "MG.PP",
+        "exam_family": "jlpt",
+        "section": "moji-goi",
+        "label_jp": "言い換え類義",
+        "label_id": "Parafrasa",
+        "option_count": 4,
+        "levels": [
+          "N5",
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ],
+        "jft_equiv": [
+          "SV.WM"
+        ],
+        "active": true
+      },
+      {
+        "code": "MG.US",
+        "exam_family": "jlpt",
+        "section": "moji-goi",
+        "label_jp": "用法",
+        "label_id": "Penggunaan kata",
+        "option_count": 4,
+        "levels": [
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ],
+        "jft_equiv": [
+          "SV.WU"
+        ],
+        "active": true
+      },
+      {
+        "code": "B.GF",
+        "exam_family": "jlpt",
+        "section": "bunpou",
+        "label_jp": "文法形式の判断",
+        "label_id": "Pilih bentuk grammar",
+        "option_count": 4,
+        "levels": [
+          "N5",
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ],
+        "jft_equiv": [
+          "CE.GR"
+        ],
+        "active": true
+      },
+      {
+        "code": "B.SC",
+        "exam_family": "jlpt",
+        "section": "bunpou",
+        "label_jp": "文の組み立て",
+        "label_id": "Susun kalimat",
+        "option_count": 4,
+        "levels": [
+          "N5",
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ],
+        "jft_equiv": [],
+        "active": true
+      },
+      {
+        "code": "B.TG",
+        "exam_family": "jlpt",
+        "section": "bunpou",
+        "label_jp": "文章の文法",
+        "label_id": "Grammar dalam teks",
+        "option_count": 4,
+        "levels": [
+          "N5",
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ],
+        "jft_equiv": [
+          "CE.GR"
+        ],
+        "active": true
+      },
+      {
+        "code": "R.SH",
+        "exam_family": "jlpt",
+        "section": "dokkai",
+        "label_jp": "内容理解（短文）",
+        "label_id": "Pemahaman bacaan pendek",
+        "option_count": 4,
+        "levels": [
+          "N5",
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ],
+        "jft_equiv": [
+          "R.CT"
+        ],
+        "active": true
+      },
+      {
+        "code": "R.MD",
+        "exam_family": "jlpt",
+        "section": "dokkai",
+        "label_jp": "内容理解（中文）",
+        "label_id": "Pemahaman bacaan menengah",
+        "option_count": 4,
+        "levels": [
+          "N5",
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ],
+        "jft_equiv": [
+          "R.CT"
+        ],
+        "active": true
+      },
+      {
+        "code": "R.IR",
+        "exam_family": "jlpt",
+        "section": "dokkai",
+        "label_jp": "情報検索",
+        "label_id": "Pencarian informasi",
+        "option_count": 4,
+        "levels": [
+          "N5",
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ],
+        "jft_equiv": [
+          "R.IS"
+        ],
+        "active": true
+      },
+      {
+        "code": "L.TB",
+        "exam_family": "jlpt",
+        "section": "choukai",
+        "label_jp": "課題理解",
+        "label_id": "Pemahaman tugas",
+        "option_count": 4,
+        "levels": [
+          "N5",
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ],
+        "jft_equiv": [
+          "L.CV",
+          "L.SH",
+          "L.AN"
+        ],
+        "active": true
+      },
+      {
+        "code": "L.KP",
+        "exam_family": "jlpt",
+        "section": "choukai",
+        "label_jp": "ポイント理解",
+        "label_id": "Pemahaman poin",
+        "option_count": 4,
+        "levels": [
+          "N5",
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ],
+        "jft_equiv": [
+          "L.CV",
+          "L.SH",
+          "L.AN"
+        ],
+        "active": true
+      },
+      {
+        "code": "L.VE",
+        "exam_family": "jlpt",
+        "section": "choukai",
+        "label_jp": "発話表現",
+        "label_id": "Ungkapan yang tepat",
+        "option_count": 3,
+        "levels": [
+          "N5",
+          "N4",
+          "N3"
+        ],
+        "jft_equiv": [
+          "CE.EX"
+        ],
+        "active": true
+      },
+      {
+        "code": "L.QR",
+        "exam_family": "jlpt",
+        "section": "choukai",
+        "label_jp": "即時応答",
+        "label_id": "Respons cepat",
+        "option_count": 3,
+        "levels": [
+          "N5",
+          "N4",
+          "N3",
+          "N2",
+          "N1"
+        ],
+        "jft_equiv": [
+          "CE.EX"
+        ],
+        "active": true
+      },
+      {
+        "code": "SV.WM",
+        "exam_family": "jft",
+        "section": "script-vocab",
+        "label_jp": "語の意味",
+        "label_id": "Arti kata",
+        "option_count": 3,
+        "levels": [],
+        "active": true
+      },
+      {
+        "code": "SV.WU",
+        "exam_family": "jft",
+        "section": "script-vocab",
+        "label_jp": "語の用法",
+        "label_id": "Penggunaan kata",
+        "option_count": 3,
+        "levels": [],
+        "active": true
+      },
+      {
+        "code": "SV.KR",
+        "exam_family": "jft",
+        "section": "script-vocab",
+        "label_jp": "漢字の読み",
+        "label_id": "Cara baca kanji",
+        "option_count": 3,
+        "levels": [],
+        "active": true
+      },
+      {
+        "code": "SV.KMU",
+        "exam_family": "jft",
+        "section": "script-vocab",
+        "label_jp": "漢字の意味・用法",
+        "label_id": "Makna dan penggunaan kanji",
+        "option_count": 3,
+        "levels": [],
+        "active": true
+      },
+      {
+        "code": "CE.GR",
+        "exam_family": "jft",
+        "section": "conversation-expression",
+        "label_jp": "文法",
+        "label_id": "Grammar",
+        "option_count": 3,
+        "levels": [],
+        "active": true
+      },
+      {
+        "code": "CE.EX",
+        "exam_family": "jft",
+        "section": "conversation-expression",
+        "label_jp": "表現",
+        "label_id": "Ungkapan",
+        "option_count": 3,
+        "levels": [],
+        "active": true
+      },
+      {
+        "code": "L.CV",
+        "exam_family": "jft",
+        "section": "listening",
+        "label_jp": "会話の内容理解",
+        "label_id": "Pemahaman percakapan",
+        "option_count": 3,
+        "levels": [],
+        "active": true
+      },
+      {
+        "code": "L.SH",
+        "exam_family": "jft",
+        "section": "listening",
+        "label_jp": "店・公共施設での内容理解",
+        "label_id": "Pemahaman di toko/fasilitas umum",
+        "option_count": 3,
+        "levels": [],
+        "active": true
+      },
+      {
+        "code": "L.AN",
+        "exam_family": "jft",
+        "section": "listening",
+        "label_jp": "お知らせ・指示の内容理解",
+        "label_id": "Pemahaman pengumuman/instruksi",
+        "option_count": 3,
+        "levels": [],
+        "active": true
+      },
+      {
+        "code": "R.CT",
+        "exam_family": "jft",
+        "section": "reading",
+        "label_jp": "内容理解",
+        "label_id": "Pemahaman isi",
+        "option_count": 3,
+        "levels": [],
+        "active": true
+      },
+      {
+        "code": "R.IS",
+        "exam_family": "jft",
+        "section": "reading",
+        "label_jp": "情報検索",
+        "label_id": "Pencarian informasi",
+        "option_count": 3,
+        "levels": [],
+        "active": true
+      }
+    ]
+  },
+  "scoring_profiles": [
+    {
+      "code": "JLPT-N5-2026",
+      "exam_family": "jlpt",
+      "effective_from": "2026-07-05",
+      "config": {
+        "max_total": 180,
+        "overall_pass": 80,
+        "sections": [
+          {
+            "key": "language-reading",
+            "max": 120,
+            "min_pass": 38
+          },
+          {
+            "key": "listening",
+            "max": 60,
+            "min_pass": 19
+          }
+        ],
+        "note": "JLPT N5 2026: ambang seksi 38 (120) dan 19 (60)."
+      }
+    },
+    {
+      "code": "JLPT-N4-2026",
+      "exam_family": "jlpt",
+      "effective_from": "2026-07-05",
+      "config": {
+        "max_total": 180,
+        "overall_pass": 90,
+        "sections": [
+          {
+            "key": "language-reading",
+            "max": 120,
+            "min_pass": 38
+          },
+          {
+            "key": "listening",
+            "max": 60,
+            "min_pass": 19
+          }
+        ],
+        "note": "JLPT N4 2026: ambang seksi 38 (120) dan 19 (60)."
+      }
+    },
+    {
+      "code": "JLPT-N3-2026",
+      "exam_family": "jlpt",
+      "effective_from": "2026-07-05",
+      "config": {
+        "max_total": 180,
+        "overall_pass": 95,
+        "sections": [
+          {
+            "key": "language",
+            "max": 60,
+            "min_pass": 19
+          },
+          {
+            "key": "reading",
+            "max": 60,
+            "min_pass": 19
+          },
+          {
+            "key": "listening",
+            "max": 60,
+            "min_pass": 19
+          }
+        ],
+        "note": "N3 memakai 3 seksi penilaian; contoh profil untuk ekspansi."
+      }
+    },
+    {
+      "code": "JFT-2026",
+      "exam_family": "jft",
+      "effective_from": "2026-08-01",
+      "config": {
+        "max_total": 250,
+        "overall_pass": null,
+        "sections": [],
+        "bands": [
+          {
+            "label": "A1",
+            "min": 145,
+            "max": 174
+          },
+          {
+            "label": "A2.1",
+            "min": 175,
+            "max": 199
+          },
+          {
+            "label": "A2.2",
+            "min": 200,
+            "max": 250
+          }
+        ],
+        "note": "Skor resmi memakai equating 10-250; Manabi hanya menampilkan estimasi pita."
+      }
+    }
+  ],
+  "stimuli": [
+    {
+      "id": "ST-N5-RD-0001",
+      "kind": "passage",
+      "level": "N5",
+      "title": "京都への小旅行",
+      "body": "きのう、マリアさんは 友だちと 京都へ 行きました。電車で 行きました。京都で お寺を 見て、写真を たくさん 撮りました。天気は あまり よくなかったですが、とても 楽しかったです。",
+      "translation": {
+        "id": "Kemarin Maria pergi ke Kyoto bersama teman. Ia pergi dengan kereta. Di Kyoto ia melihat kuil dan mengambil banyak foto. Cuacanya tidak terlalu bagus, tetapi sangat menyenangkan."
+      }
+    },
+    {
+      "id": "ST-N5-TG-0001",
+      "kind": "passage",
+      "level": "N5",
+      "title": "Keluarga saya",
+      "body": "わたしの 家族は 四人です。父と 母と 妹と わたしです。父は 会社員で、母は 先生です。妹は 中学生 ___、ピアノを 習っています。",
+      "translation": {
+        "id": "Keluarga saya empat orang: ayah, ibu, adik perempuan, dan saya. Ayah seorang pegawai, ibu seorang guru. Adik saya seorang siswa SMP, dan ia belajar piano."
+      }
+    },
+    {
+      "id": "ST-N5-LS-0001",
+      "kind": "dialogue",
+      "level": "N5",
+      "title": "Di toko roti",
+      "script": [
+        {
+          "speaker": "男の人",
+          "jp": "すみません、この パンは いくらですか。",
+          "id": "l1"
+        },
+        {
+          "speaker": "店員",
+          "jp": "120円です。",
+          "id": "l2"
+        },
+        {
+          "speaker": "男の人",
+          "jp": "じゃあ、これを 二つ ください。あと、コーヒーも 一つ お願いします。",
+          "id": "l3"
+        },
+        {
+          "speaker": "店員",
+          "jp": "はい、410円です。",
+          "id": "l4"
+        }
+      ],
+      "translation": {
+        "id": "A: Permisi, roti ini berapa harganya? B: 120 yen. A: Kalau begitu, saya ambil dua. Ditambah satu kopi juga. B: Baik, 410 yen."
+      },
+      "audio": {
+        "url": null,
+        "duration_sec": 28,
+        "play_limit": 1,
+        "speed": "slow",
+        "voice": "ja-JP-A"
+      }
+    },
+    {
+      "id": "ST-N5-LS-0002",
+      "kind": "dialogue",
+      "level": "N5",
+      "title": "Rapat kecil",
+      "script": [
+        {
+          "speaker": "男の人",
+          "jp": "あしたの パーティーは 何時からですか。",
+          "id": "l1"
+        },
+        {
+          "speaker": "女の人",
+          "jp": "6時からです。でも、5時半に 来てください。準備が ありますから。",
+          "id": "l2"
+        },
+        {
+          "speaker": "男の人",
+          "jp": "わかりました。じゃあ、5時半に 行きます。",
+          "id": "l3"
+        }
+      ],
+      "translation": {
+        "id": "A: Pesta besok mulai jam berapa? B: Mulai jam 6. Tetapi tolong datang jam 5.30 karena ada persiapan. A: Mengerti. Kalau begitu saya pergi jam 5.30."
+      },
+      "audio": {
+        "url": null,
+        "duration_sec": 30,
+        "play_limit": 1,
+        "speed": "slow",
+        "voice": "ja-JP-B"
+      }
+    },
+    {
+      "id": "ST-N5-LS-0003",
+      "kind": "utterance",
+      "level": "N5",
+      "title": "Ajakan makan siang",
+      "script": [
+        {
+          "speaker": "女の人",
+          "jp": "いっしょに 昼ごはんを 食べませんか。",
+          "id": "l1"
+        }
+      ],
+      "translation": {
+        "id": "Mau makan siang bersama?"
+      },
+      "audio": {
+        "url": null,
+        "duration_sec": 6,
+        "play_limit": 1,
+        "speed": "slow",
+        "voice": "ja-JP-B"
+      }
+    },
+    {
+      "id": "ST-N5-LS-0004",
+      "kind": "utterance",
+      "level": "N5",
+      "title": "Sebelum makan",
+      "script": [
+        {
+          "speaker": "ナレーター",
+          "jp": "友だちの 家で、ごはんを 食べる 前に 言います。",
+          "id": "l1"
+        }
+      ],
+      "translation": {
+        "id": "Di rumah teman, sebelum makan, Anda mengatakan ..."
+      },
+      "audio": {
+        "url": null,
+        "duration_sec": 7,
+        "play_limit": 1,
+        "speed": "slow",
+        "voice": "ja-JP-A"
+      }
+    },
+    {
+      "id": "ST-N4-RD-0001",
+      "kind": "passage",
+      "level": "N4",
+      "title": "Perubahan rute bus",
+      "body": "わたしの 町では、来月から バスの 路線が 変わります。これまでは 駅の 前から 出ていた バスが、来月からは 駅の 東口から 出ます。東口には 新しい バス停が できました。また、病院へ 行く バスは 今まで 30分に 一本でしたが、来月から 15分に 一本に なります。市の ホームページで 詳しい 時刻表を 見ることが できます。",
+      "translation": {
+        "id": "Di kota saya, rute bus berubah mulai bulan depan. Bus yang selama ini berangkat dari depan stasiun akan berangkat dari pintu timur stasiun mulai bulan depan. Di pintu timur telah dibuat halte baru. Selain itu, bus ke rumah sakit yang tadinya satu kali per 30 menit akan menjadi satu kali per 15 menit. Jadwal lengkap dapat dilihat di situs web kota."
+      }
+    },
+    {
+      "id": "ST-N4-RD-0002",
+      "kind": "notice",
+      "level": "N4",
+      "title": "Panduan kolam renang kota",
+      "body": "市民プール 利用案内\n大人 500円 / 中学生以下 200円\n日曜日は 大人 600円\n時間 9:00〜17:00（最終入場 16:30）\n休み 月曜日（祝日の場合は 開きます）\n※ 日曜日の 午後は 混みます。",
+      "translation": {
+        "id": "Panduan penggunaan kolam renang kota. Dewasa 500 yen; siswa SMP ke bawah 200 yen. Hari Minggu dewasa 600 yen. Jam 9.00-17.00 (masuk terakhir 16.30). Tutup Senin (buka jika hari libur nasional). Minggu sore ramai."
+      }
+    },
+    {
+      "id": "ST-N4-TG-0001",
+      "kind": "passage",
+      "level": "N4",
+      "title": "朝礼 di kantor",
+      "body": "わたしの 会社では、毎朝 9時から 朝礼が あります。朝礼では、その日の 予定を 確認します。急な 用事が ___、朝礼の 前に 課長に 伝えてください。",
+      "translation": {
+        "id": "Di kantor saya, setiap pagi jam 9 ada rapat pagi. Dalam rapat pagi, kami memeriksa rencana hari itu. Jika ada urusan mendadak, tolong sampaikan kepada kepala seksi sebelum rapat pagi."
+      }
+    },
+    {
+      "id": "ST-N4-LS-0001",
+      "kind": "dialogue",
+      "level": "N4",
+      "title": "Waktu rapat berubah",
+      "script": [
+        {
+          "speaker": "男の人",
+          "jp": "明日の 会議は 10時からですよね。",
+          "id": "l1"
+        },
+        {
+          "speaker": "女の人",
+          "jp": "それが、部長が 出張で、11時に 変わりました。",
+          "id": "l2"
+        },
+        {
+          "speaker": "男の人",
+          "jp": "じゃあ、資料は 10時までに 準備すれば いいですか。",
+          "id": "l3"
+        },
+        {
+          "speaker": "女の人",
+          "jp": "10時半までに お願いします。会議の 前に 部長に 見せたいので。",
+          "id": "l4"
+        }
+      ],
+      "translation": {
+        "id": "A: Rapat besok mulai jam 10, kan? B: Sebenarnya, karena manajer sedang dinas luar, jadi berubah ke jam 11. A: Kalau begitu, materi cukup disiapkan sebelum jam 10? B: Tolong sebelum jam 10.30, karena saya ingin menunjukkannya kepada manajer sebelum rapat."
+      },
+      "audio": {
+        "url": null,
+        "duration_sec": 38,
+        "play_limit": 1,
+        "speed": "slow",
+        "voice": "ja-JP-A"
+      }
+    },
+    {
+      "id": "ST-JFT-LS-0001",
+      "kind": "dialogue",
+      "level": "JFT",
+      "title": "Membeli apel",
+      "script": [
+        {
+          "speaker": "店員",
+          "jp": "いらっしゃいませ。この りんごは 今日 100円です。",
+          "id": "l1"
+        },
+        {
+          "speaker": "お客さん",
+          "jp": "じゃあ、りんごを 三つ ください。",
+          "id": "l2"
+        },
+        {
+          "speaker": "店員",
+          "jp": "はい、300円です。",
+          "id": "l3"
+        }
+      ],
+      "translation": {
+        "id": "Pegawai: Selamat datang. Apel ini hari ini 100 yen. Pelanggan: Kalau begitu, saya ambil tiga apel. Pegawai: Baik, 300 yen."
+      },
+      "audio": {
+        "url": null,
+        "duration_sec": 18,
+        "play_limit": 2,
+        "speed": "slow",
+        "voice": "ja-JP-C"
+      }
+    },
+    {
+      "id": "ST-JFT-LS-0002",
+      "kind": "announcement",
+      "level": "JFT",
+      "title": "Pengumuman di stasiun",
+      "script": [
+        {
+          "speaker": "アナウンス",
+          "jp": "まもなく、2番線に 電車が 来ます。この 電車は 東京駅に 止まります。新宿駅には 止まりません。お乗りの 方は お気を つけてください。",
+          "id": "l1"
+        }
+      ],
+      "translation": {
+        "id": "Sebentar lagi kereta akan datang di jalur 2. Kereta ini berhenti di Stasiun Tokyo. Tidak berhenti di Stasiun Shinjuku. Penumpang yang akan naik, harap berhati-hati."
+      },
+      "audio": {
+        "url": null,
+        "duration_sec": 22,
+        "play_limit": 2,
+        "speed": "natural",
+        "voice": "ja-JP-D"
+      }
+    },
+    {
+      "id": "ST-JFT-LS-0003",
+      "kind": "dialogue",
+      "level": "JFT",
+      "title": "Konfirmasi shift",
+      "script": [
+        {
+          "speaker": "男の人",
+          "jp": "すみません、明日の シフトは 何時からですか。",
+          "id": "l1"
+        },
+        {
+          "speaker": "女の人",
+          "jp": "明日は 8時から 3時までです。",
+          "id": "l2"
+        },
+        {
+          "speaker": "男の人",
+          "jp": "わかりました。じゃあ、7時半に 来ます。",
+          "id": "l3"
+        }
+      ],
+      "translation": {
+        "id": "A: Permisi, shift besok mulai jam berapa? B: Besok dari jam 8 sampai jam 3. A: Mengerti. Kalau begitu saya datang jam 7.30."
+      },
+      "audio": {
+        "url": null,
+        "duration_sec": 20,
+        "play_limit": 2,
+        "speed": "slow",
+        "voice": "ja-JP-B"
+      }
+    },
+    {
+      "id": "ST-JFT-RD-0001",
+      "kind": "email",
+      "level": "JFT",
+      "title": "Pesan dari atasan",
+      "body": "明日の 朝は、8時に 工場の 前で 集まってください。作業服は 家から 着て 来てください。昼ごはんは 会社が 準備します。雨の 場合は、食堂で 集まります。",
+      "translation": {
+        "id": "Besok pagi, berkumpullah di depan pabrik jam 8. Pakaian kerja harap dipakai dari rumah. Makan siang disiapkan perusahaan. Jika hujan, berkumpul di kantin."
+      }
+    },
+    {
+      "id": "ST-JFT-RD-0002",
+      "kind": "table",
+      "level": "JFT",
+      "title": "Jam kantin",
+      "body": "社員食堂の ご案内",
+      "table": {
+        "headers": [
+          "時間",
+          "内容"
+        ],
+        "rows": [
+          [
+            "7:00〜9:00",
+            "朝ごはん"
+          ],
+          [
+            "11:30〜14:00",
+            "昼ごはん"
+          ],
+          [
+            "17:00〜20:00",
+            "夜ごはん"
+          ]
+        ]
+      },
+      "translation": {
+        "id": "Panduan kantin karyawan. 7.00-9.00 sarapan; 11.30-14.00 makan siang; 17.00-20.00 makan malam."
+      }
+    }
+  ],
+  "items": [
+    {
+      "id": "MR-N5-MG-KR-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N5",
+      "test_section": "moji-goi",
+      "scoring_section": "language-reading",
+      "item_type": "MG.KR",
+      "instruction": {
+        "id": "Pilih cara baca kata di dalam 「 」.",
+        "en": "Choose the correct reading for the word in 「 」."
+      },
+      "stem": "わたしは 毎朝、「学校」の 近くの パン屋で パンを 買います。",
+      "options": [
+        {
+          "key": "a",
+          "text": "がっこう",
+          "is_correct": true,
+          "rationale": "学校 = がっこう; 学 (がく) + 校 (こう)."
+        },
+        {
+          "key": "b",
+          "text": "がこう",
+          "is_correct": false,
+          "rationale": "Menghilangkan 小さいっ; bukan bacaan 学校."
+        },
+        {
+          "key": "c",
+          "text": "かっこう",
+          "is_correct": false,
+          "rationale": "Konsonan awal berubah; かっこう bukan bacaan 学校."
+        },
+        {
+          "key": "d",
+          "text": "がっこ",
+          "is_correct": false,
+          "rationale": "Vokal akhir hilang; こう menjadi こ."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "学校 dibaca がっこう (sekolah).",
+        "rule": "学 = がく, 校 = こう; gabungan menjadi がっこう.",
+        "contrast": "がこう kehilangan っ; かっこう mengubah konsonan awal; がっこ menghilangkan vokal akhir.",
+        "transfer": "Pola yang sama muncul di 高校 (こうこう) dan 小学校 (しょうがっこう).",
+        "refs": [
+          "kanji:n5:gaku",
+          "kanji:n5:kou",
+          "vocab:n5:gakkou"
+        ]
+      },
+      "stimulus_refs": [],
+      "knowledge_tags": [
+        {
+          "type": "vocab",
+          "id": "vocab:n5:gakkou"
+        },
+        {
+          "type": "kanji",
+          "id": "kanji:n5:gaku"
+        }
+      ],
+      "skill_tags": [
+        "kanji-reading",
+        "small-tsu",
+        "long-vowel"
+      ],
+      "scenario": [
+        "daily-life"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 1,
+          "syntax_depth": 0,
+          "inference": 0,
+          "distractor_similarity": 2,
+          "processing": 0,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 25,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00"
+    },
+    {
+      "id": "MR-N5-MG-OR-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N5",
+      "test_section": "moji-goi",
+      "scoring_section": "language-reading",
+      "item_type": "MG.OR",
+      "instruction": {
+        "id": "Pilih kanji yang tepat untuk kata di dalam 「 」.",
+        "en": "Choose the correct kanji for the word in 「 」."
+      },
+      "stem": "あしたは「がっこう」が 休みです。",
+      "options": [
+        {
+          "key": "a",
+          "text": "学校",
+          "is_correct": true,
+          "rationale": "がっこう = 学校; 学 + 校."
+        },
+        {
+          "key": "b",
+          "text": "学行",
+          "is_correct": false,
+          "rationale": "学行 bukan kata untuk がっこう."
+        },
+        {
+          "key": "c",
+          "text": "各校",
+          "is_correct": false,
+          "rationale": "各校 dibaca かくこう, bukan がっこう."
+        },
+        {
+          "key": "d",
+          "text": "学交",
+          "is_correct": false,
+          "rationale": "学交 bukan kata yang tepat."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "がっこう ditulis 学校.",
+        "rule": "Kata 学校 terdiri dari 学 (belajar) dan 校 (sekolah).",
+        "contrast": "各校 adalah kata lain (かくこう); 学行/学交 tidak membentuk kata yang dimaksud.",
+        "transfer": "Latih pasangan kanji yang sering tertukar: 学校, 高校, 小学校.",
+        "refs": [
+          "vocab:n5:gakkou",
+          "kanji:n5:gaku"
+        ]
+      },
+      "stimulus_refs": [],
+      "knowledge_tags": [
+        {
+          "type": "vocab",
+          "id": "vocab:n5:gakkou"
+        },
+        {
+          "type": "kanji",
+          "id": "kanji:n5:gaku"
+        }
+      ],
+      "skill_tags": [
+        "kanji-writing",
+        "homophone"
+      ],
+      "scenario": [
+        "daily-life"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 1,
+          "syntax_depth": 0,
+          "inference": 0,
+          "distractor_similarity": 2,
+          "processing": 0,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 25,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00"
+    },
+    {
+      "id": "MR-N5-MG-CD-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N5",
+      "test_section": "moji-goi",
+      "scoring_section": "language-reading",
+      "item_type": "MG.CD",
+      "instruction": {
+        "id": "Pilih kata yang tepat untuk mengisi ＿＿.",
+        "en": "Choose the word that best fills ＿＿."
+      },
+      "stem": "あついですね。まどを ＿＿ ください。",
+      "options": [
+        {
+          "key": "a",
+          "text": "あけて",
+          "is_correct": true,
+          "rationale": "Cuaca panas, jadi membuka jendela adalah tindakan yang masuk akal."
+        },
+        {
+          "key": "b",
+          "text": "しめて",
+          "is_correct": false,
+          "rationale": "しめる = menutup; bertentangan dengan konteks panas."
+        },
+        {
+          "key": "c",
+          "text": "つけて",
+          "is_correct": false,
+          "rationale": "つける = menyalakan (TV/lampu), tidak cocok untuk まど."
+        },
+        {
+          "key": "d",
+          "text": "けして",
+          "is_correct": false,
+          "rationale": "けす = mematikan; tidak cocok untuk まど."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "Jawaban: あけて (buka).",
+        "rule": "Kata kerja あける dipakai untuk まど/ドア: まどをあける.",
+        "contrast": "しめる menutup; つける/けす dipakai untuk alat listrik, bukan jendela.",
+        "transfer": "Latih pasangan あける/しめる dan つける/けす.",
+        "refs": [
+          "vocab:n5:akeru",
+          "grammar:n5:te-kudasai"
+        ]
+      },
+      "stimulus_refs": [],
+      "knowledge_tags": [
+        {
+          "type": "vocab",
+          "id": "vocab:n5:akeru"
+        },
+        {
+          "type": "grammar",
+          "id": "grammar:n5:te-kudasai"
+        }
+      ],
+      "skill_tags": [
+        "collocation",
+        "verb-pair"
+      ],
+      "scenario": [
+        "daily-life"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 0,
+          "syntax_depth": 1,
+          "inference": 1,
+          "distractor_similarity": 2,
+          "processing": 1,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 25,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00"
+    },
+    {
+      "id": "MR-N5-MG-PP-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N5",
+      "test_section": "moji-goi",
+      "scoring_section": "language-reading",
+      "item_type": "MG.PP",
+      "instruction": {
+        "id": "Pilih kalimat yang maknanya paling dekat dengan kata di dalam 「 」.",
+        "en": "Choose the sentence closest in meaning to the word in 「 」."
+      },
+      "stem": "わたしは「すぐに」行きます。",
+      "options": [
+        {
+          "key": "a",
+          "text": "今から 行きます。",
+          "is_correct": true,
+          "rationale": "すぐに = segera; 今から paling dekat maknanya."
+        },
+        {
+          "key": "b",
+          "text": "あとで 行きます。",
+          "is_correct": false,
+          "rationale": "あとで = nanti, tidak segera."
+        },
+        {
+          "key": "c",
+          "text": "ゆっくり 行きます。",
+          "is_correct": false,
+          "rationale": "ゆっくり = pelan, bukan segera."
+        },
+        {
+          "key": "d",
+          "text": "行きません。",
+          "is_correct": false,
+          "rationale": "Berlawanan: tidak pergi."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "すぐに = segera / tanpa menunggu lama.",
+        "rule": "すぐに menekankan jarak waktu yang sangat dekat dari saat berbicara.",
+        "contrast": "あとで adalah kebalikannya; ゆっくり menjelaskan cara, bukan waktu.",
+        "transfer": "Bandingkan すぐに, もうすぐ, dan あとで.",
+        "refs": [
+          "vocab:n5:sugu",
+          "function:time"
+        ]
+      },
+      "stimulus_refs": [],
+      "knowledge_tags": [
+        {
+          "type": "vocab",
+          "id": "vocab:n5:sugu"
+        },
+        {
+          "type": "function",
+          "id": "function:immediate"
+        }
+      ],
+      "skill_tags": [
+        "paraphrase",
+        "time-adverb"
+      ],
+      "scenario": [
+        "daily-life"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 2,
+          "kanji_load": 0,
+          "syntax_depth": 1,
+          "inference": 1,
+          "distractor_similarity": 1,
+          "processing": 1,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 25,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00"
+    },
+    {
+      "id": "MR-N5-B-GF-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N5",
+      "test_section": "bunpou",
+      "scoring_section": "language-reading",
+      "item_type": "B.GF",
+      "instruction": {
+        "id": "Pilih bentuk yang tepat untuk mengisi ＿＿.",
+        "en": "Choose the correct form for ＿＿."
+      },
+      "stem": "あさごはんを ＿＿、学校へ 行きます。",
+      "options": [
+        {
+          "key": "a",
+          "text": "食べて",
+          "is_correct": true,
+          "rationale": "Dua tindakan berurutan; bentuk て menghubungkan 食べる dan 行く."
+        },
+        {
+          "key": "b",
+          "text": "食べる",
+          "is_correct": false,
+          "rationale": "Bentuk kamus tidak bisa langsung menghubungkan dua tindakan."
+        },
+        {
+          "key": "c",
+          "text": "食べた",
+          "is_correct": false,
+          "rationale": "Bentuk lampau tidak cocok untuk urutan ini."
+        },
+        {
+          "key": "d",
+          "text": "食べます",
+          "is_correct": false,
+          "rationale": "Bentuk ます tidak bisa menghubungkan dua tindakan dalam satu kalimat."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "Jawaban: 食べて.",
+        "rule": "Pola ～て、～ menghubungkan dua tindakan yang berurutan.",
+        "contrast": "食べる/食べた/食べます tidak dapat menjadi penghubung di tengah kalimat seperti ini.",
+        "transfer": "Latih urutan: 起きて、顔を洗って、朝ごはんを食べます.",
+        "refs": [
+          "grammar:n5:te-form"
+        ]
+      },
+      "stimulus_refs": [],
+      "knowledge_tags": [
+        {
+          "type": "grammar",
+          "id": "grammar:n5:te-form"
+        }
+      ],
+      "skill_tags": [
+        "te-form",
+        "sentence-connection"
+      ],
+      "scenario": [
+        "daily-life"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 0,
+          "kanji_load": 0,
+          "syntax_depth": 1,
+          "inference": 0,
+          "distractor_similarity": 3,
+          "processing": 0,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 20,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00"
+    },
+    {
+      "id": "MR-N5-B-SC-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N5",
+      "test_section": "bunpou",
+      "scoring_section": "language-reading",
+      "item_type": "B.SC",
+      "instruction": {
+        "id": "Pilih fragmen yang masuk ke ★ (celah ketiga).",
+        "en": "Choose the fragment that goes in ★ (the third blank)."
+      },
+      "stem": "きのう わたしは ＿＿ ＿＿ ★ ＿＿ ＿＿。",
+      "options": [
+        {
+          "key": "a",
+          "text": "スーパーで",
+          "is_correct": false,
+          "rationale": "Urutan benar menempatkan スーパーで di celah kedua."
+        },
+        {
+          "key": "b",
+          "text": "買いました",
+          "is_correct": false,
+          "rationale": "買いました adalah predikat di celah keempat."
+        },
+        {
+          "key": "c",
+          "text": "友だちと",
+          "is_correct": false,
+          "rationale": "友だちと berada di celah pertama."
+        },
+        {
+          "key": "d",
+          "text": "牛乳を",
+          "is_correct": true,
+          "rationale": "Urutan: 友だちと スーパーで 牛乳を 買いました; ★ = 牛乳を."
+        }
+      ],
+      "answer_key": [
+        "d"
+      ],
+      "explanation": {
+        "short": "★ diisi 牛乳を.",
+        "rule": "Urutan yang benar: 友だちと → スーパーで → 牛乳を → 買いました.",
+        "contrast": "友だちと menandai teman; スーパーで menandai tempat; 牛乳を adalah objek.",
+        "transfer": "Latih pola tempat + objek + kata kerja: 駅で 切符を 買います.",
+        "refs": [
+          "grammar:n5:sentence-order"
+        ]
+      },
+      "stimulus_refs": [],
+      "knowledge_tags": [
+        {
+          "type": "grammar",
+          "id": "grammar:n5:sentence-order"
+        }
+      ],
+      "skill_tags": [
+        "sentence-order",
+        "particle"
+      ],
+      "scenario": [
+        "daily-life"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 0,
+          "syntax_depth": 2,
+          "inference": 1,
+          "distractor_similarity": 2,
+          "processing": 1,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 35,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00"
+    },
+    {
+      "id": "MR-N5-B-TG-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N5",
+      "test_section": "bunpou",
+      "scoring_section": "language-reading",
+      "item_type": "B.TG",
+      "instruction": {
+        "id": "Pilih kata yang tepat untuk mengisi ＿＿.",
+        "en": "Choose the word that best fills ＿＿."
+      },
+      "stem": "＿＿ に入る ものは どれですか。",
+      "options": [
+        {
+          "key": "a",
+          "text": "で",
+          "is_correct": true,
+          "rationale": "中学生で、ピアノを習っています: で menghubungkan dua klausa."
+        },
+        {
+          "key": "b",
+          "text": "に",
+          "is_correct": false,
+          "rationale": "に tidak menghubungkan klausa seperti ini."
+        },
+        {
+          "key": "c",
+          "text": "を",
+          "is_correct": false,
+          "rationale": "を menandai objek; tidak cocok di sini."
+        },
+        {
+          "key": "d",
+          "text": "が",
+          "is_correct": false,
+          "rationale": "が akan membuat struktur subjek ganda yang tidak tepat."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "Jawaban: で.",
+        "rule": "Bentuk です/だ berubah menjadi で untuk menghubungkan dua klausa.",
+        "contrast": "に/を/が tidak dapat menggantikan で sebagai penghubung.",
+        "transfer": "Pola: 妹は中学生で、ピアノを習っています.",
+        "refs": [
+          "grammar:n5:te-form",
+          "grammar:n5:desu"
+        ]
+      },
+      "stimulus_refs": [
+        "ST-N5-TG-0001"
+      ],
+      "knowledge_tags": [
+        {
+          "type": "grammar",
+          "id": "grammar:n5:te-form"
+        }
+      ],
+      "skill_tags": [
+        "text-grammar",
+        "clause-connection"
+      ],
+      "scenario": [
+        "family"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 0,
+          "syntax_depth": 2,
+          "inference": 1,
+          "distractor_similarity": 2,
+          "processing": 1,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 30,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00",
+      "blank_index": 1
+    },
+    {
+      "id": "MR-N5-R-SH-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N5",
+      "test_section": "dokkai",
+      "scoring_section": "language-reading",
+      "item_type": "R.SH",
+      "instruction": {
+        "id": "Baca teks berikut, lalu pilih jawaban yang tepat.",
+        "en": "Read the text and choose the best answer."
+      },
+      "stem": "マリアさんは 京都で 何を しましたか。",
+      "options": [
+        {
+          "key": "a",
+          "text": "お寺を 見て、写真を 撮りました。",
+          "is_correct": true,
+          "rationale": "Teks menyebut お寺を見て、写真をたくさん撮りました."
+        },
+        {
+          "key": "b",
+          "text": "友だちと 電車を 作りました。",
+          "is_correct": false,
+          "rationale": "電車は kendaraan, bukan objek yang dibuat."
+        },
+        {
+          "key": "c",
+          "text": "京都で 買い物を しました。",
+          "is_correct": false,
+          "rationale": "Teks tidak menyebut belanja."
+        },
+        {
+          "key": "d",
+          "text": "天気が よかったので、さんぽを しました。",
+          "is_correct": false,
+          "rationale": "Teks justru menyebut cuaca tidak bagus."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "Maria melihat kuil dan mengambil foto.",
+        "rule": "Kalimat kunci: 京都で お寺を 見て、写真を たくさん 撮りました.",
+        "contrast": "Belanja dan berjalan-jalan tidak disebut; cuaca disebut tidak bagus.",
+        "transfer": "Saat membaca, tandai kata kerja utama: 見て、撮りました.",
+        "refs": [
+          "vocab:n5:otera",
+          "grammar:n5:te-form"
+        ]
+      },
+      "stimulus_refs": [
+        "ST-N5-RD-0001"
+      ],
+      "knowledge_tags": [
+        {
+          "type": "vocab",
+          "id": "vocab:n5:otera"
+        },
+        {
+          "type": "grammar",
+          "id": "grammar:n5:te-form"
+        }
+      ],
+      "skill_tags": [
+        "reading-comprehension",
+        "detail"
+      ],
+      "scenario": [
+        "travel"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 0,
+          "syntax_depth": 1,
+          "inference": 1,
+          "distractor_similarity": 2,
+          "processing": 1,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 45,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00"
+    },
+    {
+      "id": "MR-N5-L-TB-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N5",
+      "test_section": "choukai",
+      "scoring_section": "listening",
+      "item_type": "L.TB",
+      "instruction": {
+        "id": "Dengarkan audio, lalu pilih jawaban yang tepat.",
+        "en": "Listen and choose the best answer."
+      },
+      "stem": "男の人は 何を 買いますか。",
+      "options": [
+        {
+          "key": "a",
+          "text": "パンを 二つと コーヒーを 一つ",
+          "is_correct": true,
+          "rationale": "Audio: パンを二つ、コーヒーを一つ."
+        },
+        {
+          "key": "b",
+          "text": "パンを 一つと コーヒーを 二つ",
+          "is_correct": false,
+          "rationale": "Jumlahnya terbalik."
+        },
+        {
+          "key": "c",
+          "text": "パンを 二つだけ",
+          "is_correct": false,
+          "rationale": "Kopi juga dibeli."
+        },
+        {
+          "key": "d",
+          "text": "コーヒーを 二つだけ",
+          "is_correct": false,
+          "rationale": "Roti juga dibeli."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "Pembeli membeli dua roti dan satu kopi.",
+        "rule": "Frasa kunci: これを二つください。あと、コーヒーも一つお願いします.",
+        "contrast": "Opsi lain menukar jumlah atau menghilangkan salah satu barang.",
+        "transfer": "Latih mendengar angka dan あと/も sebagai penanda tambahan.",
+        "refs": [
+          "vocab:n5:koohii",
+          "function:shopping"
+        ]
+      },
+      "stimulus_refs": [
+        "ST-N5-LS-0001"
+      ],
+      "knowledge_tags": [
+        {
+          "type": "vocab",
+          "id": "vocab:n5:koohii"
+        },
+        {
+          "type": "function",
+          "id": "function:shopping"
+        }
+      ],
+      "skill_tags": [
+        "listening-task",
+        "numbers"
+      ],
+      "scenario": [
+        "shop"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 0,
+          "syntax_depth": 1,
+          "inference": 1,
+          "distractor_similarity": 2,
+          "processing": 2,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": "男: すみません、このパンはいくらですか。店員: 120円です。男: じゃあ、これを二つください。あと、コーヒーも一つお願いします。店員: はい、410円です。",
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 35,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00"
+    },
+    {
+      "id": "MR-N5-L-KP-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N5",
+      "test_section": "choukai",
+      "scoring_section": "listening",
+      "item_type": "L.KP",
+      "instruction": {
+        "id": "Dengarkan audio, lalu pilih jawaban yang tepat.",
+        "en": "Listen and choose the best answer."
+      },
+      "stem": "男の人は 何時に 行きますか。",
+      "options": [
+        {
+          "key": "a",
+          "text": "5時",
+          "is_correct": false,
+          "rationale": "Pesta mulai jam 6, tetapi ada permintaan datang lebih awal."
+        },
+        {
+          "key": "b",
+          "text": "5時半",
+          "is_correct": true,
+          "rationale": "Audio: 5時半に来てください; 男の人は5時半に行きます."
+        },
+        {
+          "key": "c",
+          "text": "6時",
+          "is_correct": false,
+          "rationale": "Jam 6 adalah waktu pesta, bukan waktu datang yang diminta."
+        },
+        {
+          "key": "d",
+          "text": "6時半",
+          "is_correct": false,
+          "rationale": "Tidak disebut dalam audio."
+        }
+      ],
+      "answer_key": [
+        "b"
+      ],
+      "explanation": {
+        "short": "Pria akan pergi jam 5.30.",
+        "rule": "Wanita meminta datang jam 5.30 untuk persiapan; pria menyetujuinya.",
+        "contrast": "6時 adalah waktu mulai pesta; 5時/6時半 tidak sesuai instruksi.",
+        "transfer": "Latih membedakan 開始時間 dan 集合時間.",
+        "refs": [
+          "function:time",
+          "grammar:n5:te-kudasai"
+        ]
+      },
+      "stimulus_refs": [
+        "ST-N5-LS-0002"
+      ],
+      "knowledge_tags": [
+        {
+          "type": "function",
+          "id": "function:time"
+        },
+        {
+          "type": "grammar",
+          "id": "grammar:n5:te-kudasai"
+        }
+      ],
+      "skill_tags": [
+        "listening-key-point",
+        "time"
+      ],
+      "scenario": [
+        "daily-life"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 0,
+          "syntax_depth": 1,
+          "inference": 1,
+          "distractor_similarity": 2,
+          "processing": 2,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": "男: あしたのパーティーは何時からですか。女: 6時からです。でも、5時半に来てください。準備がありますから。男: わかりました。じゃあ、5時半に行きます。",
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 35,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00"
+    },
+    {
+      "id": "MR-N5-L-VE-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N5",
+      "test_section": "choukai",
+      "scoring_section": "listening",
+      "item_type": "L.VE",
+      "instruction": {
+        "id": "Dengarkan situasi, lalu pilih ungkapan yang tepat.",
+        "en": "Listen to the situation and choose the appropriate expression."
+      },
+      "stem": "何と 言いますか。",
+      "options": [
+        {
+          "key": "a",
+          "text": "いただきます。",
+          "is_correct": true,
+          "rationale": "Diucapkan sebelum makan."
+        },
+        {
+          "key": "b",
+          "text": "ごちそうさまでした。",
+          "is_correct": false,
+          "rationale": "Diucapkan setelah selesai makan."
+        },
+        {
+          "key": "c",
+          "text": "おかえりなさい。",
+          "is_correct": false,
+          "rationale": "Diucapkan kepada orang yang pulang/baru datang."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "Ungkapan sebelum makan: いただきます.",
+        "rule": "いただきます diucapkan sebelum mulai makan, sering sambil menangkupkan tangan.",
+        "contrast": "ごちそうさまでした diucapkan setelah makan; おかえりなさい untuk menyambut orang pulang.",
+        "transfer": "Latih pasangan いただきます / ごちそうさまでした.",
+        "refs": [
+          "function:greeting",
+          "context:table-manner"
+        ]
+      },
+      "stimulus_refs": [
+        "ST-N5-LS-0004"
+      ],
+      "knowledge_tags": [
+        {
+          "type": "function",
+          "id": "function:greeting"
+        }
+      ],
+      "skill_tags": [
+        "verbal-expression",
+        "greeting"
+      ],
+      "scenario": [
+        "daily-life"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 0,
+          "syntax_depth": 1,
+          "inference": 1,
+          "distractor_similarity": 2,
+          "processing": 2,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": "ナレーター: 友だちの家で、ごはんを食べる前に言います。",
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 20,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00"
+    },
+    {
+      "id": "MR-N5-L-QR-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N5",
+      "test_section": "choukai",
+      "scoring_section": "listening",
+      "item_type": "L.QR",
+      "instruction": {
+        "id": "Pilih respons yang paling tepat.",
+        "en": "Choose the most natural response."
+      },
+      "stem": "何と 言いますか。",
+      "options": [
+        {
+          "key": "a",
+          "text": "ええ、いいですね。",
+          "is_correct": true,
+          "rationale": "Respons natural untuk menerima ajakan."
+        },
+        {
+          "key": "b",
+          "text": "いいえ、食べませんでした。",
+          "is_correct": false,
+          "rationale": "Ini jawaban untuk pertanyaan lampau, bukan ajakan."
+        },
+        {
+          "key": "c",
+          "text": "ええ、昼ごはんを 食べますか。",
+          "is_correct": false,
+          "rationale": "Mengulang pertanyaan, bukan merespons."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "Respons yang tepat: ええ、いいですね。",
+        "rule": "Ajakan ～ませんか dijawab dengan penerimaan atau penolakan halus.",
+        "contrast": "Opsi b menjawab pertanyaan lampau; opsi c mengulang pertanyaan.",
+        "transfer": "Latih menerima (ぜひ/いいですね) dan menolak halus (すみません、ちょっと…).",
+        "refs": [
+          "grammar:n5:masen-ka",
+          "function:invitation"
+        ]
+      },
+      "stimulus_refs": [
+        "ST-N5-LS-0003"
+      ],
+      "knowledge_tags": [
+        {
+          "type": "grammar",
+          "id": "grammar:n5:masen-ka"
+        },
+        {
+          "type": "function",
+          "id": "function:invitation"
+        }
+      ],
+      "skill_tags": [
+        "quick-response",
+        "invitation"
+      ],
+      "scenario": [
+        "daily-life"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 0,
+          "syntax_depth": 1,
+          "inference": 1,
+          "distractor_similarity": 2,
+          "processing": 2,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": "女: いっしょに昼ごはんを食べませんか。",
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 20,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00"
+    },
+    {
+      "id": "MR-N4-MG-KR-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N4",
+      "test_section": "moji-goi",
+      "scoring_section": "language-reading",
+      "item_type": "MG.KR",
+      "instruction": {
+        "id": "Pilih cara baca kata di dalam 「 」.",
+        "en": "Choose the correct reading for the word in 「 」."
+      },
+      "stem": "この「計画」は 来週の 会議で 発表します。",
+      "options": [
+        {
+          "key": "a",
+          "text": "けいかく",
+          "is_correct": true,
+          "rationale": "計画 = けいかく."
+        },
+        {
+          "key": "b",
+          "text": "けいがく",
+          "is_correct": false,
+          "rationale": "がく bukan bacaan 画 dalam kata ini."
+        },
+        {
+          "key": "c",
+          "text": "けいこう",
+          "is_correct": false,
+          "rationale": "こう bukan bacaan 画 di sini."
+        },
+        {
+          "key": "d",
+          "text": "けいか",
+          "is_correct": false,
+          "rationale": "Vokal akhir く hilang."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "計画 dibaca けいかく (rencana).",
+        "rule": "計 = けい, 画 = かく; gabungan menjadi けいかく.",
+        "contrast": "けいがく/けいこう/けいか mengubah atau menghilangkan bunyi.",
+        "transfer": "Bandingkan 計画 (けいかく) dan 企画 (きかく).",
+        "refs": [
+          "kanji:n4:kei",
+          "kanji:n4:kaku",
+          "vocab:n4:keikaku"
+        ]
+      },
+      "stimulus_refs": [],
+      "knowledge_tags": [
+        {
+          "type": "vocab",
+          "id": "vocab:n4:keikaku"
+        },
+        {
+          "type": "kanji",
+          "id": "kanji:n4:kaku"
+        }
+      ],
+      "skill_tags": [
+        "kanji-reading",
+        "long-vowel"
+      ],
+      "scenario": [
+        "workplace"
+      ],
+      "difficulty": {
+        "band": 3,
+        "prior_logit": 0.0,
+        "features": {
+          "lexical_rarity": 2,
+          "kanji_load": 2,
+          "syntax_depth": 1,
+          "inference": 1,
+          "distractor_similarity": 2,
+          "processing": 0,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-02",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 30,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00"
+    },
+    {
+      "id": "MR-N4-MG-OR-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N4",
+      "test_section": "moji-goi",
+      "scoring_section": "language-reading",
+      "item_type": "MG.OR",
+      "instruction": {
+        "id": "Pilih kanji yang tepat untuk kata di dalam 「 」.",
+        "en": "Choose the correct kanji for the word in 「 」."
+      },
+      "stem": "来月の「けいかく」を 立てましょう。",
+      "options": [
+        {
+          "key": "a",
+          "text": "計画",
+          "is_correct": true,
+          "rationale": "けいかく = 計画."
+        },
+        {
+          "key": "b",
+          "text": "企画",
+          "is_correct": false,
+          "rationale": "企画 dibaca きかく; artinya rencana acara/proyek."
+        },
+        {
+          "key": "c",
+          "text": "計各",
+          "is_correct": false,
+          "rationale": "計各 bukan kata yang tepat."
+        },
+        {
+          "key": "d",
+          "text": "経画",
+          "is_correct": false,
+          "rationale": "経画 bukan kata yang tepat."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "けいかく ditulis 計画.",
+        "rule": "計画 = rencana; 企画 = rencana/proyek (きかく).",
+        "contrast": "企画 adalah kata nyata tetapi bacaannya berbeda; 計各/経画 bukan kata baku.",
+        "transfer": "Latih pasangan 計画/企画 dan 予定/予約.",
+        "refs": [
+          "vocab:n4:keikaku"
+        ]
+      },
+      "stimulus_refs": [],
+      "knowledge_tags": [
+        {
+          "type": "vocab",
+          "id": "vocab:n4:keikaku"
+        }
+      ],
+      "skill_tags": [
+        "kanji-writing",
+        "homophone"
+      ],
+      "scenario": [
+        "workplace"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 2,
+          "syntax_depth": 0,
+          "inference": 0,
+          "distractor_similarity": 2,
+          "processing": 0,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-02",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 30,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00"
+    },
+    {
+      "id": "MR-N4-MG-CD-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N4",
+      "test_section": "moji-goi",
+      "scoring_section": "language-reading",
+      "item_type": "MG.CD",
+      "instruction": {
+        "id": "Pilih kata yang tepat untuk mengisi ＿＿.",
+        "en": "Choose the word that best fills ＿＿."
+      },
+      "stem": "約束の 時間に 遅れないように、＿＿ 家を 出ました。",
+      "options": [
+        {
+          "key": "a",
+          "text": "早めに",
+          "is_correct": true,
+          "rationale": "早めに = lebih awal dari biasanya; sesuai tujuan tidak terlambat."
+        },
+        {
+          "key": "b",
+          "text": "急に",
+          "is_correct": false,
+          "rationale": "急に = tiba-tiba; tidak menjelaskan strategi agar tidak terlambat."
+        },
+        {
+          "key": "c",
+          "text": "ゆっくり",
+          "is_correct": false,
+          "rationale": "ゆっくり = pelan; bertentangan dengan tujuan."
+        },
+        {
+          "key": "d",
+          "text": "なかなか",
+          "is_correct": false,
+          "rationale": "なかなか biasanya dengan bentuk negatif; tidak cocok."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "Jawaban: 早めに.",
+        "rule": "早めに berarti lebih awal dari waktu biasa.",
+        "contrast": "急に menjelaskan cara tiba-tiba; ゆっくり berlawanan; なかなか tidak cocok tanpa negasi.",
+        "transfer": "Bandingkan 早めに, 早く, dan 急に.",
+        "refs": [
+          "vocab:n4:hayame",
+          "grammar:n4:you-ni"
+        ]
+      },
+      "stimulus_refs": [],
+      "knowledge_tags": [
+        {
+          "type": "vocab",
+          "id": "vocab:n4:hayame"
+        },
+        {
+          "type": "grammar",
+          "id": "grammar:n4:you-ni"
+        }
+      ],
+      "skill_tags": [
+        "context",
+        "adverb"
+      ],
+      "scenario": [
+        "daily-life"
+      ],
+      "difficulty": {
+        "band": 3,
+        "prior_logit": 0.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 1,
+          "syntax_depth": 2,
+          "inference": 2,
+          "distractor_similarity": 2,
+          "processing": 1,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-02",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 30,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00",
+      "also_valid_for": [
+        {
+          "exam_family": "jft",
+          "item_type": "SV.WM",
+          "level": null
+        }
+      ]
+    },
+    {
+      "id": "MR-N4-MG-US-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N4",
+      "test_section": "moji-goi",
+      "scoring_section": "language-reading",
+      "item_type": "MG.US",
+      "instruction": {
+        "id": "Pilih kalimat yang menggunakan kata 「遅刻」 dengan benar.",
+        "en": "Choose the sentence that uses 「遅刻」 correctly."
+      },
+      "stem": "「遅刻」の 使い方が 正しい 文は どれですか。",
+      "options": [
+        {
+          "key": "a",
+          "text": "寝坊して、会社に 遅刻しました。",
+          "is_correct": true,
+          "rationale": "遅刻する mengambil tujuan dengan に: 会社に遅刻する."
+        },
+        {
+          "key": "b",
+          "text": "寝坊して、会社を 遅刻しました。",
+          "is_correct": false,
+          "rationale": "を tidak dipakai untuk tujuan 遅刻."
+        },
+        {
+          "key": "c",
+          "text": "寝坊して、会社が 遅刻しました。",
+          "is_correct": false,
+          "rationale": "Subjeknya menjadi perusahaan, bukan pembicara."
+        },
+        {
+          "key": "d",
+          "text": "寝坊して、会社で 遅刻しました。",
+          "is_correct": false,
+          "rationale": "で menandai tempat aktivitas, bukan tujuan keterlambatan."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "Kalimat benar: 会社に 遅刻しました.",
+        "rule": "遅刻する adalah kata kerja intransitif; tujuan memakai に.",
+        "contrast": "を/で salah partikel; が mengubah subjek menjadi perusahaan.",
+        "transfer": "Pola: 学校に遅刻する, 会議に遅刻する.",
+        "refs": [
+          "vocab:n4:chikoku",
+          "grammar:n4:particle-ni"
+        ]
+      },
+      "stimulus_refs": [],
+      "knowledge_tags": [
+        {
+          "type": "vocab",
+          "id": "vocab:n4:chikoku"
+        },
+        {
+          "type": "grammar",
+          "id": "grammar:n4:particle-ni"
+        }
+      ],
+      "skill_tags": [
+        "usage",
+        "particle"
+      ],
+      "scenario": [
+        "workplace"
+      ],
+      "difficulty": {
+        "band": 3,
+        "prior_logit": 0.0,
+        "features": {
+          "lexical_rarity": 2,
+          "kanji_load": 1,
+          "syntax_depth": 2,
+          "inference": 1,
+          "distractor_similarity": 2,
+          "processing": 0,
+          "register": 1
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-02",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 45,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00"
+    },
+    {
+      "id": "MR-N4-B-GF-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N4",
+      "test_section": "bunpou",
+      "scoring_section": "language-reading",
+      "item_type": "B.GF",
+      "instruction": {
+        "id": "Pilih bentuk yang tepat untuk mengisi ＿＿.",
+        "en": "Choose the correct form for ＿＿."
+      },
+      "stem": "この 仕事は 明日の 朝 ＿＿ 終わりません。",
+      "options": [
+        {
+          "key": "a",
+          "text": "までに",
+          "is_correct": true,
+          "rationale": "までに = paling lambat sebelum batas waktu."
+        },
+        {
+          "key": "b",
+          "text": "まで",
+          "is_correct": false,
+          "rationale": "まで = sampai batas waktu, bukan 'paling lambat'."
+        },
+        {
+          "key": "c",
+          "text": "から",
+          "is_correct": false,
+          "rationale": "から = dari; tidak cocok dengan 終わりません."
+        },
+        {
+          "key": "d",
+          "text": "ごろ",
+          "is_correct": false,
+          "rationale": "ごろ = sekitar; tidak menandai batas."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "Jawaban: までに.",
+        "rule": "までに menandai batas waktu penyelesaian: 明日の朝までに.",
+        "contrast": "まで menyatakan kelanjutan sampai titik waktu; から/ごろ tidak sesuai.",
+        "transfer": "Bandingkan 5時まで待ちます dan 5時までに終わらせます.",
+        "refs": [
+          "grammar:n4:made-ni"
+        ]
+      },
+      "stimulus_refs": [],
+      "knowledge_tags": [
+        {
+          "type": "grammar",
+          "id": "grammar:n4:made-ni"
+        }
+      ],
+      "skill_tags": [
+        "time-particle",
+        "deadline"
+      ],
+      "scenario": [
+        "workplace"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 0,
+          "syntax_depth": 2,
+          "inference": 1,
+          "distractor_similarity": 2,
+          "processing": 1,
+          "register": 1
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-02",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 30,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00"
+    },
+    {
+      "id": "MR-N4-B-SC-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N4",
+      "test_section": "bunpou",
+      "scoring_section": "language-reading",
+      "item_type": "B.SC",
+      "instruction": {
+        "id": "Pilih fragmen yang masuk ke ★ (celah ketiga).",
+        "en": "Choose the fragment that goes in ★ (the third blank)."
+      },
+      "stem": "田中さんは ＿＿ ＿＿ ★ ＿＿ ＿＿。",
+      "options": [
+        {
+          "key": "a",
+          "text": "返してもらった",
+          "is_correct": false,
+          "rationale": "返してもらった adalah predikat di celah keempat."
+        },
+        {
+          "key": "b",
+          "text": "本を",
+          "is_correct": true,
+          "rationale": "Urutan: 友だちに 貸した 本を 返してもらった; ★ = 本を."
+        },
+        {
+          "key": "c",
+          "text": "友だちに",
+          "is_correct": false,
+          "rationale": "友だちに berada di celah pertama."
+        },
+        {
+          "key": "d",
+          "text": "貸した",
+          "is_correct": false,
+          "rationale": "貸した menerangkan 本 dan berada di celah kedua."
+        }
+      ],
+      "answer_key": [
+        "b"
+      ],
+      "explanation": {
+        "short": "★ diisi 本を.",
+        "rule": "Urutan benar: 友だちに → 貸した → 本を → 返してもらった.",
+        "contrast": "貸した menerangkan 本; 返してもらった adalah predikat utama.",
+        "transfer": "Latih klausa relatif: 友だちに貸した本.",
+        "refs": [
+          "grammar:n4:relative-clause",
+          "grammar:n4:te-morau"
+        ]
+      },
+      "stimulus_refs": [],
+      "knowledge_tags": [
+        {
+          "type": "grammar",
+          "id": "grammar:n4:relative-clause"
+        }
+      ],
+      "skill_tags": [
+        "sentence-order",
+        "relative-clause"
+      ],
+      "scenario": [
+        "daily-life"
+      ],
+      "difficulty": {
+        "band": 3,
+        "prior_logit": 0.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 1,
+          "syntax_depth": 3,
+          "inference": 1,
+          "distractor_similarity": 2,
+          "processing": 1,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-02",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 45,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00"
+    },
+    {
+      "id": "MR-N4-B-TG-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N4",
+      "test_section": "bunpou",
+      "scoring_section": "language-reading",
+      "item_type": "B.TG",
+      "instruction": {
+        "id": "Pilih kata yang tepat untuk mengisi ＿＿.",
+        "en": "Choose the word that best fills ＿＿."
+      },
+      "stem": "＿＿ に入る ものは どれですか。",
+      "options": [
+        {
+          "key": "a",
+          "text": "できたら",
+          "is_correct": true,
+          "rationale": "急な用事ができたら = jika ada urusan mendadak."
+        },
+        {
+          "key": "b",
+          "text": "できると",
+          "is_correct": false,
+          "rationale": "できると tidak cocok untuk permintaan setelahnya."
+        },
+        {
+          "key": "c",
+          "text": "できても",
+          "is_correct": false,
+          "rationale": "できても = bahkan jika; tidak sesuai konteks."
+        },
+        {
+          "key": "d",
+          "text": "できながら",
+          "is_correct": false,
+          "rationale": "できながら tidak gramatikal di sini."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "Jawaban: できたら.",
+        "rule": "～たら menandai kondisi hipotetis: 用事ができたら、伝えてください.",
+        "contrast": "できると/できても/できながら mengubah hubungan kondisi secara tidak tepat.",
+        "transfer": "Latih たら untuk instruksi: 雨が降ったら、中止します.",
+        "refs": [
+          "grammar:n4:tara",
+          "grammar:n4:text-grammar"
+        ]
+      },
+      "stimulus_refs": [
+        "ST-N4-TG-0001"
+      ],
+      "knowledge_tags": [
+        {
+          "type": "grammar",
+          "id": "grammar:n4:tara"
+        }
+      ],
+      "skill_tags": [
+        "text-grammar",
+        "conditional"
+      ],
+      "scenario": [
+        "workplace"
+      ],
+      "difficulty": {
+        "band": 3,
+        "prior_logit": 0.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 0,
+          "syntax_depth": 3,
+          "inference": 2,
+          "distractor_similarity": 1,
+          "processing": 1,
+          "register": 1
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-02",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 40,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00",
+      "blank_index": 1
+    },
+    {
+      "id": "MR-N4-R-MD-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N4",
+      "test_section": "dokkai",
+      "scoring_section": "language-reading",
+      "item_type": "R.MD",
+      "instruction": {
+        "id": "Baca teks berikut, lalu pilih jawaban yang tepat.",
+        "en": "Read the text and choose the best answer."
+      },
+      "stem": "来月から、バスは どこから 出ますか。",
+      "options": [
+        {
+          "key": "a",
+          "text": "駅の 東口",
+          "is_correct": true,
+          "rationale": "Teks: 来月からは 駅の東口から 出ます."
+        },
+        {
+          "key": "b",
+          "text": "駅の 前",
+          "is_correct": false,
+          "rationale": "Itu lokasi lama (これまでは)."
+        },
+        {
+          "key": "c",
+          "text": "病院の 前",
+          "is_correct": false,
+          "rationale": "Teks tidak menyebut halte di depan rumah sakit."
+        },
+        {
+          "key": "d",
+          "text": "市の ホームページ",
+          "is_correct": false,
+          "rationale": "Itu tempat melihat jadwal, bukan lokasi bus."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "Bus berangkat dari pintu timur stasiun.",
+        "rule": "Kalimat kunci: 来月からは 駅の東口から 出ます.",
+        "contrast": "駅の前 adalah lokasi lama; ホームページ adalah sumber jadwal.",
+        "transfer": "Tandai penanda waktu これまでは vs 来月から.",
+        "refs": [
+          "vocab:n4:basu",
+          "grammar:n4:kara"
+        ]
+      },
+      "stimulus_refs": [
+        "ST-N4-RD-0001"
+      ],
+      "knowledge_tags": [
+        {
+          "type": "vocab",
+          "id": "vocab:n4:basu"
+        },
+        {
+          "type": "grammar",
+          "id": "grammar:n4:made-ni"
+        }
+      ],
+      "skill_tags": [
+        "reading-comprehension",
+        "detail"
+      ],
+      "scenario": [
+        "transport"
+      ],
+      "difficulty": {
+        "band": 3,
+        "prior_logit": 0.0,
+        "features": {
+          "lexical_rarity": 2,
+          "kanji_load": 1,
+          "syntax_depth": 2,
+          "inference": 2,
+          "distractor_similarity": 2,
+          "processing": 2,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-02",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 55,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00"
+    },
+    {
+      "id": "MR-N4-R-MD-0002",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N4",
+      "test_section": "dokkai",
+      "scoring_section": "language-reading",
+      "item_type": "R.MD",
+      "instruction": {
+        "id": "Baca teks berikut, lalu pilih jawaban yang tepat.",
+        "en": "Read the text and choose the best answer."
+      },
+      "stem": "病院へ 行く バスは 来月から どう なりますか。",
+      "options": [
+        {
+          "key": "a",
+          "text": "本数が 増えます。",
+          "is_correct": true,
+          "rationale": "30分に一本 → 15分に一本 = lebih sering."
+        },
+        {
+          "key": "b",
+          "text": "本数が 減ります。",
+          "is_correct": false,
+          "rationale": "Kebalikannya: interval memendek."
+        },
+        {
+          "key": "c",
+          "text": "病院へ 行かなく なります。",
+          "is_correct": false,
+          "rationale": "Tidak disebut; rute tetap ada."
+        },
+        {
+          "key": "d",
+          "text": "料金が 高く なります。",
+          "is_correct": false,
+          "rationale": "Teks tidak menyebut perubahan tarif."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "Bus rumah sakit menjadi lebih sering.",
+        "rule": "30分に一本 menjadi 15分に一本 berarti jumlah keberangkatan bertambah.",
+        "contrast": "Tidak ada informasi tentang penghapusan rute atau kenaikan tarif.",
+        "transfer": "Latih membaca perubahan kuantitas: 30分→15分.",
+        "refs": [
+          "vocab:n4:bin",
+          "grammar:n4:ni-naru"
+        ]
+      },
+      "stimulus_refs": [
+        "ST-N4-RD-0001"
+      ],
+      "knowledge_tags": [
+        {
+          "type": "vocab",
+          "id": "vocab:n4:bin"
+        },
+        {
+          "type": "grammar",
+          "id": "grammar:n4:ni-naru"
+        }
+      ],
+      "skill_tags": [
+        "reading-comprehension",
+        "quantity"
+      ],
+      "scenario": [
+        "transport"
+      ],
+      "difficulty": {
+        "band": 3,
+        "prior_logit": 0.0,
+        "features": {
+          "lexical_rarity": 2,
+          "kanji_load": 1,
+          "syntax_depth": 2,
+          "inference": 2,
+          "distractor_similarity": 2,
+          "processing": 2,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-02",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 50,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00"
+    },
+    {
+      "id": "MR-N4-R-IR-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N4",
+      "test_section": "dokkai",
+      "scoring_section": "language-reading",
+      "item_type": "R.IR",
+      "instruction": {
+        "id": "Baca informasi berikut, lalu pilih jawaban yang tepat.",
+        "en": "Read the information and choose the best answer."
+      },
+      "stem": "日曜日に 大人 二人で 行くとき、いくら 払いますか。",
+      "options": [
+        {
+          "key": "a",
+          "text": "1,000円",
+          "is_correct": false,
+          "rationale": "Itu harga hari biasa: 500 × 2."
+        },
+        {
+          "key": "b",
+          "text": "1,200円",
+          "is_correct": true,
+          "rationale": "Hari Minggu dewasa 600円; 600 × 2 = 1,200円."
+        },
+        {
+          "key": "c",
+          "text": "1,400円",
+          "is_correct": false,
+          "rationale": "Tidak ada kombinasi harga yang menghasilkan 1,400円."
+        },
+        {
+          "key": "d",
+          "text": "600円",
+          "is_correct": false,
+          "rationale": "Itu harga satu orang dewasa hari Minggu."
+        }
+      ],
+      "answer_key": [
+        "b"
+      ],
+      "explanation": {
+        "short": "Total 1.200 yen.",
+        "rule": "Hari Minggu harga dewasa 600円; dua orang = 1.200円.",
+        "contrast": "500円 adalah harga hari biasa; 600円 hanya satu orang; 1.400円 tidak sesuai tabel.",
+        "transfer": "Latih membaca tabel dengan syarat hari dan jumlah orang.",
+        "refs": [
+          "function:information-search"
+        ]
+      },
+      "stimulus_refs": [
+        "ST-N4-RD-0002"
+      ],
+      "knowledge_tags": [
+        {
+          "type": "function",
+          "id": "function:information-search"
+        }
+      ],
+      "skill_tags": [
+        "information-retrieval",
+        "arithmetic"
+      ],
+      "scenario": [
+        "leisure"
+      ],
+      "difficulty": {
+        "band": 3,
+        "prior_logit": 0.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 1,
+          "syntax_depth": 2,
+          "inference": 2,
+          "distractor_similarity": 1,
+          "processing": 2,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-02",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 60,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00"
+    },
+    {
+      "id": "MR-N4-L-KP-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jlpt",
+      "level": "N4",
+      "test_section": "choukai",
+      "scoring_section": "listening",
+      "item_type": "L.KP",
+      "instruction": {
+        "id": "Dengarkan audio, lalu pilih jawaban yang tepat.",
+        "en": "Listen and choose the best answer."
+      },
+      "stem": "資料は 何時までに 準備しますか。",
+      "options": [
+        {
+          "key": "a",
+          "text": "10時",
+          "is_correct": false,
+          "rationale": "Itu waktu rapat yang lama, bukan tenggat materi."
+        },
+        {
+          "key": "b",
+          "text": "10時半",
+          "is_correct": true,
+          "rationale": "Audio: 10時半までにお願いします."
+        },
+        {
+          "key": "c",
+          "text": "11時",
+          "is_correct": false,
+          "rationale": "Itu waktu rapat yang baru."
+        },
+        {
+          "key": "d",
+          "text": "11時半",
+          "is_correct": false,
+          "rationale": "Tidak disebut dalam audio."
+        }
+      ],
+      "answer_key": [
+        "b"
+      ],
+      "explanation": {
+        "short": "Materi harus siap sebelum 10.30.",
+        "rule": "Wanita meminta 10時半までに準備; 11時 adalah waktu rapat baru.",
+        "contrast": "10時 adalah waktu rapat lama; 11時半 tidak disebut.",
+        "transfer": "Catat tiga waktu berbeda: rapat lama, rapat baru, tenggat materi.",
+        "refs": [
+          "function:time",
+          "grammar:n4:made-ni"
+        ]
+      },
+      "stimulus_refs": [
+        "ST-N4-LS-0001"
+      ],
+      "knowledge_tags": [
+        {
+          "type": "function",
+          "id": "function:time"
+        },
+        {
+          "type": "grammar",
+          "id": "grammar:n4:made-ni"
+        }
+      ],
+      "skill_tags": [
+        "listening-key-point",
+        "time"
+      ],
+      "scenario": [
+        "workplace"
+      ],
+      "difficulty": {
+        "band": 3,
+        "prior_logit": 0.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 0,
+          "syntax_depth": 2,
+          "inference": 2,
+          "distractor_similarity": 2,
+          "processing": 2,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": "男: 明日の会議は10時からですよね。女: それが、部長が出張で、11時に変わりました。男: じゃあ、資料は10時までに準備すればいいですか。女: 10時半までにお願いします。会議の前に部長に見せたいので。",
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-native-02",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 40,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00"
+    },
+    {
+      "id": "MR-JFT-SV-WM-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jft",
+      "level": null,
+      "test_section": "script-vocab",
+      "scoring_section": "jft-sv",
+      "item_type": "SV.WM",
+      "instruction": {
+        "id": "Pilih penjelasan yang sesuai dengan kata berikut.",
+        "en": "Choose the explanation that matches the word."
+      },
+      "stem": "つぎの ことばと 同じ 意味の ものは どれですか。\nきっぷ",
+      "options": [
+        {
+          "key": "a",
+          "text": "電車に 乗る ときに 買う もの",
+          "is_correct": true,
+          "rationale": "きっぷ = tiket; dibeli saat naik kereta."
+        },
+        {
+          "key": "b",
+          "text": "電車の 時間を 書いた もの",
+          "is_correct": false,
+          "rationale": "Itu 時刻表 (jadwal), bukan きっぷ."
+        },
+        {
+          "key": "c",
+          "text": "駅の 名前を 書いた もの",
+          "is_correct": false,
+          "rationale": "Itu papan nama stasiun, bukan tiket."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "きっぷ = tiket.",
+        "rule": "きっぷ adalah tiket yang dibeli untuk naik kereta/bus.",
+        "contrast": "時刻表 adalah jadwal; papan nama stasiun bukan tiket.",
+        "transfer": "Kata terkait: 切符 (きっぷ), 定期券 (ていきけん), 運賃 (うんちん).",
+        "refs": [
+          "vocab:jft:kippu"
+        ]
+      },
+      "stimulus_refs": [],
+      "knowledge_tags": [
+        {
+          "type": "vocab",
+          "id": "vocab:jft:kippu"
+        }
+      ],
+      "skill_tags": [
+        "word-meaning",
+        "daily-life"
+      ],
+      "scenario": [
+        "transport"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 0,
+          "syntax_depth": 1,
+          "inference": 1,
+          "distractor_similarity": 2,
+          "processing": 0,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-jft-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 25,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00",
+      "cefr": "A2"
+    },
+    {
+      "id": "MR-JFT-SV-WU-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jft",
+      "level": null,
+      "test_section": "script-vocab",
+      "scoring_section": "jft-sv",
+      "item_type": "SV.WU",
+      "instruction": {
+        "id": "Pilih kalimat yang menggunakan kata 「遅刻」 dengan benar.",
+        "en": "Choose the sentence that uses 「遅刻」 correctly."
+      },
+      "stem": "「遅刻」の 使い方が 正しい 文は どれですか。",
+      "options": [
+        {
+          "key": "a",
+          "text": "電車が 遅れて、会社に 遅刻しました。",
+          "is_correct": true,
+          "rationale": "遅刻する mengambil tujuan dengan に."
+        },
+        {
+          "key": "b",
+          "text": "電車が 遅れて、会社を 遅刻しました。",
+          "is_correct": false,
+          "rationale": "を tidak dipakai untuk tujuan 遅刻."
+        },
+        {
+          "key": "c",
+          "text": "電車が 遅れて、会社が 遅刻しました。",
+          "is_correct": false,
+          "rationale": "Subjeknya menjadi perusahaan, bukan pembicara."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "Kalimat benar: 会社に 遅刻しました.",
+        "rule": "遅刻する = datang terlambat; tujuan memakai に.",
+        "contrast": "を salah partikel; が mengubah subjek.",
+        "transfer": "Latih: 学校に遅刻する, 会議に遅刻する.",
+        "refs": [
+          "vocab:jft:chikoku",
+          "grammar:jft:particle-ni"
+        ]
+      },
+      "stimulus_refs": [],
+      "knowledge_tags": [
+        {
+          "type": "vocab",
+          "id": "vocab:jft:chikoku"
+        },
+        {
+          "type": "grammar",
+          "id": "grammar:jft:particle-ni"
+        }
+      ],
+      "skill_tags": [
+        "word-usage",
+        "particle"
+      ],
+      "scenario": [
+        "workplace"
+      ],
+      "difficulty": {
+        "band": 3,
+        "prior_logit": 0.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 1,
+          "syntax_depth": 3,
+          "inference": 1,
+          "distractor_similarity": 2,
+          "processing": 1,
+          "register": 1
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-jft-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 35,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00",
+      "cefr": "A2"
+    },
+    {
+      "id": "MR-JFT-SV-KR-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jft",
+      "level": null,
+      "test_section": "script-vocab",
+      "scoring_section": "jft-sv",
+      "item_type": "SV.KR",
+      "instruction": {
+        "id": "Pilih cara baca kata di dalam 「 」.",
+        "en": "Choose the correct reading for the word in 「 」."
+      },
+      "stem": "会社の 近くに「銀行」が あります。",
+      "options": [
+        {
+          "key": "a",
+          "text": "ぎんこう",
+          "is_correct": true,
+          "rationale": "銀行 = ぎんこう."
+        },
+        {
+          "key": "b",
+          "text": "ぎんこ",
+          "is_correct": false,
+          "rationale": "Vokal akhir hilang."
+        },
+        {
+          "key": "c",
+          "text": "きんこう",
+          "is_correct": false,
+          "rationale": "Konsonan awal salah; 銀 = ぎん."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "銀行 dibaca ぎんこう (bank).",
+        "rule": "銀 = ぎん, 行 = こう.",
+        "contrast": "ぎんこ/きんこう mengubah bunyi.",
+        "transfer": "Latih: 銀行, 病院, 会社.",
+        "refs": [
+          "vocab:jft:ginkou",
+          "kanji:jft:gin"
+        ]
+      },
+      "stimulus_refs": [],
+      "knowledge_tags": [
+        {
+          "type": "vocab",
+          "id": "vocab:jft:ginkou"
+        },
+        {
+          "type": "kanji",
+          "id": "kanji:jft:gin"
+        }
+      ],
+      "skill_tags": [
+        "kanji-reading",
+        "long-vowel"
+      ],
+      "scenario": [
+        "city-hall"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 1,
+          "syntax_depth": 0,
+          "inference": 0,
+          "distractor_similarity": 2,
+          "processing": 0,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-jft-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 20,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00",
+      "cefr": "A2"
+    },
+    {
+      "id": "MR-JFT-SV-KMU-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jft",
+      "level": null,
+      "test_section": "script-vocab",
+      "scoring_section": "jft-sv",
+      "item_type": "SV.KMU",
+      "instruction": {
+        "id": "Pilih kalimat yang menggunakan kata 「受付」 dengan benar.",
+        "en": "Choose the sentence that uses 「受付」 correctly."
+      },
+      "stem": "「受付」の 使い方が 正しい 文は どれですか。",
+      "options": [
+        {
+          "key": "a",
+          "text": "受付で 名前を 書きます。",
+          "is_correct": true,
+          "rationale": "受付 = meja penerimaan; で menandai tempat."
+        },
+        {
+          "key": "b",
+          "text": "受付を 食べます。",
+          "is_correct": false,
+          "rationale": "受付 bukan makanan."
+        },
+        {
+          "key": "c",
+          "text": "受付に 乗ります。",
+          "is_correct": false,
+          "rationale": "受付 bukan kendaraan."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "Kalimat benar: 受付で 名前を書きます.",
+        "rule": "受付 adalah tempat penerimaan tamu; partikel で menandai tempat aktivitas.",
+        "contrast": "Opsi lain memakai 受付 dengan kata kerja yang tidak masuk akal.",
+        "transfer": "Kata terkait: 受付 (resepsionis), 窓口 (loket), 担当者 (penanggung jawab).",
+        "refs": [
+          "vocab:jft:uketsuke"
+        ]
+      },
+      "stimulus_refs": [],
+      "knowledge_tags": [
+        {
+          "type": "vocab",
+          "id": "vocab:jft:uketsuke"
+        }
+      ],
+      "skill_tags": [
+        "kanji-usage",
+        "workplace"
+      ],
+      "scenario": [
+        "workplace"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 1,
+          "syntax_depth": 1,
+          "inference": 1,
+          "distractor_similarity": 2,
+          "processing": 0,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-jft-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 30,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00",
+      "cefr": "A2"
+    },
+    {
+      "id": "MR-JFT-CE-GR-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jft",
+      "level": null,
+      "test_section": "conversation-expression",
+      "scoring_section": "jft-ce",
+      "item_type": "CE.GR",
+      "instruction": {
+        "id": "Pilih kata yang tepat untuk mengisi ＿＿.",
+        "en": "Choose the word that best fills ＿＿."
+      },
+      "stem": "A: すみません、トイレは どこですか。\nB: あそこ ＿＿ ありますよ。",
+      "options": [
+        {
+          "key": "a",
+          "text": "に",
+          "is_correct": true,
+          "rationale": "あります mengambil lokasi dengan に: あそこにあります."
+        },
+        {
+          "key": "b",
+          "text": "で",
+          "is_correct": false,
+          "rationale": "で menandai tempat aktivitas, bukan keberadaan."
+        },
+        {
+          "key": "c",
+          "text": "を",
+          "is_correct": false,
+          "rationale": "を menandai objek; tidak cocok."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "Jawaban: に.",
+        "rule": "Kata kerja ある/いる menandai lokasi keberadaan dengan に.",
+        "contrast": "で dipakai untuk aktivitas; を untuk objek.",
+        "transfer": "Bandingkan あそこにあります (keberadaan) dan あそこで食べます (aktivitas).",
+        "refs": [
+          "grammar:jft:arimasu",
+          "grammar:jft:particle-ni"
+        ]
+      },
+      "stimulus_refs": [],
+      "knowledge_tags": [
+        {
+          "type": "grammar",
+          "id": "grammar:jft:arimasu"
+        }
+      ],
+      "skill_tags": [
+        "particle",
+        "existence"
+      ],
+      "scenario": [
+        "city-hall"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 0,
+          "kanji_load": 0,
+          "syntax_depth": 1,
+          "inference": 1,
+          "distractor_similarity": 2,
+          "processing": 0,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-jft-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 25,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00",
+      "cefr": "A2",
+      "also_valid_for": [
+        {
+          "exam_family": "jlpt",
+          "item_type": "B.GF",
+          "level": "N5"
+        }
+      ]
+    },
+    {
+      "id": "MR-JFT-CE-EX-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jft",
+      "level": null,
+      "test_section": "conversation-expression",
+      "scoring_section": "jft-ce",
+      "item_type": "CE.EX",
+      "instruction": {
+        "id": "Pilih ungkapan yang paling tepat untuk situasi berikut.",
+        "en": "Choose the most appropriate expression for the situation."
+      },
+      "stem": "上司に 来週の 金曜日、休みたいと 言います。何と 言いますか。",
+      "options": [
+        {
+          "key": "a",
+          "text": "「申し訳ありませんが、来週の 金曜日、休ませて いただけませんか。」",
+          "is_correct": true,
+          "rationale": "Sopan dan sesuai untuk meminta izin kepada atasan."
+        },
+        {
+          "key": "b",
+          "text": "「来週の 金曜日、休みたいです。」",
+          "is_correct": false,
+          "rationale": "Terlalu langsung untuk atasan."
+        },
+        {
+          "key": "c",
+          "text": "「来週の 金曜日、休んで ください。」",
+          "is_correct": false,
+          "rationale": "Arah permintaan terbalik; menyuruh atasan."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "Jawaban: 休ませていただけませんか.",
+        "rule": "～させていただけませんか adalah bentuk sopan untuk meminta izin.",
+        "contrast": "休みたいです terlalu langsung; 休んでください menyuruh atasan.",
+        "transfer": "Latih permintaan izin: 早退させていただけませんか.",
+        "refs": [
+          "grammar:jft:te-itadaku",
+          "function:permission"
+        ]
+      },
+      "stimulus_refs": [],
+      "knowledge_tags": [
+        {
+          "type": "grammar",
+          "id": "grammar:jft:te-itadaku"
+        },
+        {
+          "type": "function",
+          "id": "function:permission"
+        }
+      ],
+      "skill_tags": [
+        "expression",
+        "keigo"
+      ],
+      "scenario": [
+        "workplace"
+      ],
+      "difficulty": {
+        "band": 3,
+        "prior_logit": 0.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 0,
+          "syntax_depth": 2,
+          "inference": 2,
+          "distractor_similarity": 2,
+          "processing": 1,
+          "register": 2
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-jft-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 40,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00",
+      "cefr": "A2"
+    },
+    {
+      "id": "MR-JFT-L-SH-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jft",
+      "level": null,
+      "test_section": "listening",
+      "scoring_section": "jft-lc",
+      "item_type": "L.SH",
+      "instruction": {
+        "id": "Dengarkan audio, lalu pilih jawaban yang tepat.",
+        "en": "Listen and choose the best answer."
+      },
+      "stem": "お客さんは 何を 三つ 買いますか。",
+      "options": [
+        {
+          "key": "a",
+          "text": "りんご",
+          "is_correct": true,
+          "rationale": "Audio: りんごを三つください."
+        },
+        {
+          "key": "b",
+          "text": "みかん",
+          "is_correct": false,
+          "rationale": "Buah yang disebut adalah りんご."
+        },
+        {
+          "key": "c",
+          "text": "バナナ",
+          "is_correct": false,
+          "rationale": "Tidak disebut dalam audio."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "Pelanggan membeli tiga apel.",
+        "rule": "Frasa kunci: りんごを三つください.",
+        "contrast": "みかん/バナナ tidak disebut.",
+        "transfer": "Latih mendengar nama barang + jumlah.",
+        "refs": [
+          "vocab:jft:ringo",
+          "function:shopping"
+        ]
+      },
+      "stimulus_refs": [
+        "ST-JFT-LS-0001"
+      ],
+      "knowledge_tags": [
+        {
+          "type": "vocab",
+          "id": "vocab:jft:ringo"
+        },
+        {
+          "type": "function",
+          "id": "function:shopping"
+        }
+      ],
+      "skill_tags": [
+        "listening-shop",
+        "numbers"
+      ],
+      "scenario": [
+        "shop"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 0,
+          "syntax_depth": 1,
+          "inference": 1,
+          "distractor_similarity": 2,
+          "processing": 2,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": "店員: いらっしゃいませ。このりんごは今日100円です。お客さん: じゃあ、りんごを三つください。店員: はい、300円です。",
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-jft-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 30,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00",
+      "cefr": "A2"
+    },
+    {
+      "id": "MR-JFT-L-AN-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jft",
+      "level": null,
+      "test_section": "listening",
+      "scoring_section": "jft-lc",
+      "item_type": "L.AN",
+      "instruction": {
+        "id": "Dengarkan audio, lalu pilih jawaban yang tepat.",
+        "en": "Listen and choose the best answer."
+      },
+      "stem": "この 電車は どこに 止まりますか。",
+      "options": [
+        {
+          "key": "a",
+          "text": "東京駅",
+          "is_correct": true,
+          "rationale": "Audio: この電車は東京駅に止まります."
+        },
+        {
+          "key": "b",
+          "text": "新宿駅",
+          "is_correct": false,
+          "rationale": "Audio: 新宿駅には止まりません."
+        },
+        {
+          "key": "c",
+          "text": "東京駅と 新宿駅",
+          "is_correct": false,
+          "rationale": "Hanya Tokyo; Shinjuku dilewati."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "Kereta berhenti di Stasiun Tokyo.",
+        "rule": "Pengumuman menyebut 東京駅に止まります dan 新宿駅には止まりません.",
+        "contrast": "Shinjuku disebut justru sebagai stasiun yang tidak dilewati.",
+        "transfer": "Latih mendengar ～に止まります vs ～には止まりません.",
+        "refs": [
+          "function:announcement",
+          "grammar:jft:ni"
+        ]
+      },
+      "stimulus_refs": [
+        "ST-JFT-LS-0002"
+      ],
+      "knowledge_tags": [
+        {
+          "type": "function",
+          "id": "function:announcement"
+        }
+      ],
+      "skill_tags": [
+        "listening-announcement",
+        "detail"
+      ],
+      "scenario": [
+        "transport"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 0,
+          "syntax_depth": 1,
+          "inference": 2,
+          "distractor_similarity": 2,
+          "processing": 2,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": "アナウンス: まもなく、2番線に電車が来ます。この電車は東京駅に止まります。新宿駅には止まりません。お乗りの方はお気をつけてください。",
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-jft-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 30,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00",
+      "cefr": "A2"
+    },
+    {
+      "id": "MR-JFT-L-CV-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jft",
+      "level": null,
+      "test_section": "listening",
+      "scoring_section": "jft-lc",
+      "item_type": "L.CV",
+      "instruction": {
+        "id": "Dengarkan audio, lalu pilih jawaban yang tepat.",
+        "en": "Listen and choose the best answer."
+      },
+      "stem": "男の人は 明日、何時に 来ますか。",
+      "options": [
+        {
+          "key": "a",
+          "text": "7時半",
+          "is_correct": true,
+          "rationale": "Audio: 男の人は7時半に来ます."
+        },
+        {
+          "key": "b",
+          "text": "8時",
+          "is_correct": false,
+          "rationale": "Itu waktu shift mulai, bukan waktu datang."
+        },
+        {
+          "key": "c",
+          "text": "3時",
+          "is_correct": false,
+          "rationale": "Itu waktu shift selesai."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "Pria datang jam 7.30.",
+        "rule": "Shift mulai jam 8, tetapi pria memilih datang jam 7.30.",
+        "contrast": "8時 adalah mulai shift; 3時 adalah selesai shift.",
+        "transfer": "Latih membedakan waktu mulai kerja dan waktu datang.",
+        "refs": [
+          "function:workplace",
+          "vocab:jft:shifuto"
+        ]
+      },
+      "stimulus_refs": [
+        "ST-JFT-LS-0003"
+      ],
+      "knowledge_tags": [
+        {
+          "type": "function",
+          "id": "function:workplace"
+        },
+        {
+          "type": "vocab",
+          "id": "vocab:jft:shifuto"
+        }
+      ],
+      "skill_tags": [
+        "listening-conversation",
+        "time"
+      ],
+      "scenario": [
+        "workplace"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 0,
+          "syntax_depth": 1,
+          "inference": 1,
+          "distractor_similarity": 2,
+          "processing": 2,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": "男: すみません、明日のシフトは何時からですか。女: 明日は8時から3時までです。男: わかりました。じゃあ、7時半に来ます。",
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-jft-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 30,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00",
+      "cefr": "A2"
+    },
+    {
+      "id": "MR-JFT-R-CT-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jft",
+      "level": null,
+      "test_section": "reading",
+      "scoring_section": "jft-rc",
+      "item_type": "R.CT",
+      "instruction": {
+        "id": "Baca teks berikut, lalu pilih jawaban yang tepat.",
+        "en": "Read the text and choose the best answer."
+      },
+      "stem": "明日の 朝、何を して 行きますか。",
+      "options": [
+        {
+          "key": "a",
+          "text": "作業服を 着て 行きます。",
+          "is_correct": true,
+          "rationale": "Teks: 作業服は家から着て来てください."
+        },
+        {
+          "key": "b",
+          "text": "昼ごはんを 持って 行きます。",
+          "is_correct": false,
+          "rationale": "Teks: 昼ごはんは会社が準備します."
+        },
+        {
+          "key": "c",
+          "text": "食堂で 着替えます。",
+          "is_correct": false,
+          "rationale": "Teks tidak menyuruh berganti pakaian di kantin."
+        }
+      ],
+      "answer_key": [
+        "a"
+      ],
+      "explanation": {
+        "short": "Pergi dengan sudah memakai pakaian kerja.",
+        "rule": "Kalimat kunci: 作業服は家から着て来てください.",
+        "contrast": "Makan siang disiapkan perusahaan; kantin hanya tempat berkumpul jika hujan.",
+        "transfer": "Latih membaca instruksi kerja: 着て来る, 持って来る.",
+        "refs": [
+          "vocab:jft:sagyofuku",
+          "function:workplace"
+        ]
+      },
+      "stimulus_refs": [
+        "ST-JFT-RD-0001"
+      ],
+      "knowledge_tags": [
+        {
+          "type": "vocab",
+          "id": "vocab:jft:sagyofuku"
+        },
+        {
+          "type": "function",
+          "id": "function:workplace"
+        }
+      ],
+      "skill_tags": [
+        "reading-content",
+        "workplace"
+      ],
+      "scenario": [
+        "workplace"
+      ],
+      "difficulty": {
+        "band": 3,
+        "prior_logit": 0.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 1,
+          "syntax_depth": 2,
+          "inference": 2,
+          "distractor_similarity": 2,
+          "processing": 2,
+          "register": 1
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-jft-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 50,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00",
+      "cefr": "A2"
+    },
+    {
+      "id": "MR-JFT-R-IS-0001",
+      "schema_version": "1.0.0",
+      "status": "pilot",
+      "exam_family": "jft",
+      "level": null,
+      "test_section": "reading",
+      "scoring_section": "jft-rc",
+      "item_type": "R.IS",
+      "instruction": {
+        "id": "Baca informasi berikut, lalu pilih jawaban yang tepat.",
+        "en": "Read the information and choose the best answer."
+      },
+      "stem": "昼ごはんを 食べられる 時間は どれですか。",
+      "options": [
+        {
+          "key": "a",
+          "text": "7:00〜9:00",
+          "is_correct": false,
+          "rationale": "Itu waktu sarapan."
+        },
+        {
+          "key": "b",
+          "text": "11:30〜14:00",
+          "is_correct": true,
+          "rationale": "Tabel: 11:30〜14:00 adalah 昼ごはん."
+        },
+        {
+          "key": "c",
+          "text": "17:00〜20:00",
+          "is_correct": false,
+          "rationale": "Itu waktu makan malam."
+        }
+      ],
+      "answer_key": [
+        "b"
+      ],
+      "explanation": {
+        "short": "Makan siang tersedia 11.30-14.00.",
+        "rule": "Baris 昼ごはん pada tabel menunjukkan 11:30〜14:00.",
+        "contrast": "7:00-9:00 adalah sarapan; 17:00-20:00 adalah makan malam.",
+        "transfer": "Latih membaca tabel dua kolom: waktu dan isi.",
+        "refs": [
+          "function:information-search",
+          "vocab:jft:hirugohan"
+        ]
+      },
+      "stimulus_refs": [
+        "ST-JFT-RD-0002"
+      ],
+      "knowledge_tags": [
+        {
+          "type": "function",
+          "id": "function:information-search"
+        }
+      ],
+      "skill_tags": [
+        "information-retrieval",
+        "table"
+      ],
+      "scenario": [
+        "workplace"
+      ],
+      "difficulty": {
+        "band": 2,
+        "prior_logit": -1.0,
+        "features": {
+          "lexical_rarity": 1,
+          "kanji_load": 1,
+          "syntax_depth": 1,
+          "inference": 1,
+          "distractor_similarity": 1,
+          "processing": 2,
+          "register": 0
+        },
+        "calibration": {
+          "n": 0,
+          "p_value": null,
+          "b": null,
+          "a": null
+        }
+      },
+      "media": {},
+      "accessibility": {
+        "furigana_policy": "on-demand",
+        "alt_text": null,
+        "audio_transcript": null,
+        "extended_time_ok": true
+      },
+      "exposure": {
+        "form_eligible": true,
+        "max_exposure_per_user_days": 30,
+        "enemy_ids": []
+      },
+      "provenance": {
+        "author": "tim-konten-manabi",
+        "reviewer": "reviewer-jft-01",
+        "native_review": true,
+        "source": "original",
+        "license": "proprietary",
+        "ai_assisted": true,
+        "created_at": "2026-11-08"
+      },
+      "time_estimate_sec": 35,
+      "version": 1,
+      "created_at": "2026-11-08T00:00:00+07:00",
+      "updated_at": "2026-11-08T00:00:00+07:00",
+      "cefr": "A2"
+    }
+  ],
+  "form_blueprints": [
+    {
+      "id": "FORM-JLPT-N5-v1",
+      "exam_family": "jlpt",
+      "level": "N5",
+      "version": 1,
+      "minutes": 90,
+      "total_items": 75,
+      "sections": [
+        {
+          "key": "moji-goi",
+          "label": "文字・語彙",
+          "minutes": 20,
+          "items": 25,
+          "distribution": {
+            "MG.KR": 7,
+            "MG.OR": 5,
+            "MG.CD": 7,
+            "MG.PP": 6
+          }
+        },
+        {
+          "key": "bunpou-dokkai",
+          "label": "文法・読解",
+          "minutes": 40,
+          "items": 26,
+          "distribution": {
+            "B.GF": 8,
+            "B.SC": 5,
+            "B.TG": 5,
+            "R.SH": 4,
+            "R.MD": 3,
+            "R.IR": 1
+          }
+        },
+        {
+          "key": "choukai",
+          "label": "聴解",
+          "minutes": 30,
+          "items": 24,
+          "distribution": {
+            "L.TB": 6,
+            "L.KP": 6,
+            "L.VE": 5,
+            "L.QR": 7
+          }
+        }
+      ],
+      "constraints": {
+        "difficulty_mix": {
+          "1": 0.1,
+          "2": 0.3,
+          "3": 0.4,
+          "4": 0.15,
+          "5": 0.05
+        },
+        "answer_position_balance": true,
+        "max_same_position_streak": 2,
+        "max_items_per_stimulus": 3,
+        "exposure_window_days": 30,
+        "enemy_items": true,
+        "anchor_ratio": 0.12
+      },
+      "scoring": {
+        "profile": "JLPT-N5-2026",
+        "sections": [
+          {
+            "key": "language-reading",
+            "max": 120,
+            "min_pass": 38
+          },
+          {
+            "key": "listening",
+            "max": 60,
+            "min_pass": 19
+          }
+        ],
+        "overall_pass": 80
+      }
+    },
+    {
+      "id": "FORM-JLPT-N4-v1",
+      "exam_family": "jlpt",
+      "level": "N4",
+      "version": 1,
+      "minutes": 115,
+      "total_items": 98,
+      "sections": [
+        {
+          "key": "moji-goi",
+          "label": "文字・語彙",
+          "minutes": 25,
+          "items": 35,
+          "distribution": {
+            "MG.KR": 9,
+            "MG.OR": 6,
+            "MG.CD": 10,
+            "MG.PP": 5,
+            "MG.US": 5
+          }
+        },
+        {
+          "key": "bunpou-dokkai",
+          "label": "文法・読解",
+          "minutes": 55,
+          "items": 35,
+          "distribution": {
+            "B.GF": 10,
+            "B.SC": 6,
+            "B.TG": 5,
+            "R.SH": 5,
+            "R.MD": 7,
+            "R.IR": 2
+          }
+        },
+        {
+          "key": "choukai",
+          "label": "聴解",
+          "minutes": 35,
+          "items": 28,
+          "distribution": {
+            "L.TB": 8,
+            "L.KP": 8,
+            "L.VE": 6,
+            "L.QR": 6
+          }
+        }
+      ],
+      "constraints": {
+        "difficulty_mix": {
+          "1": 0.1,
+          "2": 0.3,
+          "3": 0.4,
+          "4": 0.15,
+          "5": 0.05
+        },
+        "answer_position_balance": true,
+        "max_same_position_streak": 2,
+        "max_items_per_stimulus": 3,
+        "exposure_window_days": 30,
+        "enemy_items": true,
+        "anchor_ratio": 0.12
+      },
+      "scoring": {
+        "profile": "JLPT-N4-2026",
+        "sections": [
+          {
+            "key": "language-reading",
+            "max": 120,
+            "min_pass": 38
+          },
+          {
+            "key": "listening",
+            "max": 60,
+            "min_pass": 19
+          }
+        ],
+        "overall_pass": 90
+      }
+    },
+    {
+      "id": "FORM-JFT-2026-v1",
+      "exam_family": "jft",
+      "level": null,
+      "version": 1,
+      "minutes": 60,
+      "total_items": 50,
+      "sections": [
+        {
+          "key": "script-vocab",
+          "label": "Script and Vocabulary",
+          "minutes": null,
+          "items": 13,
+          "distribution": {
+            "SV.WM": 4,
+            "SV.WU": 3,
+            "SV.KR": 3,
+            "SV.KMU": 3
+          }
+        },
+        {
+          "key": "conversation-expression",
+          "label": "Conversation and Expression",
+          "minutes": null,
+          "items": 13,
+          "distribution": {
+            "CE.GR": 7,
+            "CE.EX": 6
+          }
+        },
+        {
+          "key": "listening",
+          "label": "Listening Comprehension",
+          "minutes": null,
+          "items": 12,
+          "distribution": {
+            "L.CV": 5,
+            "L.SH": 4,
+            "L.AN": 3
+          },
+          "note": "Audio dapat diputar maksimal dua kali; tidak bisa mundur ke butir sebelumnya."
+        },
+        {
+          "key": "reading",
+          "label": "Reading Comprehension",
+          "minutes": null,
+          "items": 12,
+          "distribution": {
+            "R.CT": 9,
+            "R.IS": 3
+          }
+        }
+      ],
+      "constraints": {
+        "difficulty_mix": {
+          "1": 0.15,
+          "2": 0.35,
+          "3": 0.35,
+          "4": 0.12,
+          "5": 0.03
+        },
+        "answer_position_balance": true,
+        "max_same_position_streak": 2,
+        "max_items_per_stimulus": 3,
+        "exposure_window_days": 30,
+        "enemy_items": true,
+        "anchor_ratio": 0.12
+      },
+      "scoring": {
+        "profile": "JFT-2026",
+        "sections": [],
+        "overall_pass": null
+      }
+    }
+  ]
+}

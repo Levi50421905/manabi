@@ -11,6 +11,7 @@
     "build": "pnpm --filter @manabi/web build",
     "start": "pnpm --filter @manabi/web start",
     "typecheck": "pnpm -r exec tsc --noEmit",
+    "validate:bank": "node tools/validate-bank.mjs docs/bank-soal/contoh-bank.json",
     "clean": "node -e \"require('node:fs').rmSync('apps/web/.next',{recursive:true,force:true});console.log('build cache dibersihkan')\""
   }
 }

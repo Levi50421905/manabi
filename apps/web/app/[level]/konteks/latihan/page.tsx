@@ -63,6 +63,18 @@ function shuffle<T>(input: T[]): T[] {
   return list;
 }
 
+/**
+ * Opsi unik dengan kunci selalu disertakan. Mencegah dua pilihan berteks sama
+ * (mis. 何時？ dari dua tingkat lawan bicara) yang membuat jawaban benar
+ * tampak salah.
+ */
+function uniqueOptions(answer: string, candidates: string[]): string[] {
+  const values = Array.from(
+    new Set([answer, ...candidates].map((value) => value.trim()).filter(Boolean)),
+  );
+  return shuffle(values);
+}
+
 export default function LatihanKonteksPage() {
   const { level } = useActiveLevel();
   const meta = levelMeta(level);
@@ -79,32 +91,53 @@ export default function LatihanKonteksPage() {
         prompt: `${scenario.title} — lawan bicara: ${AUDIENCE_LABEL[line.audience]}`,
         promptId: scenario.situation,
         answer: line.jp,
-        options: shuffle(scenario.lines.map((entry) => entry.jp)),
+        options: uniqueOptions(
+          line.jp,
+          scenario.lines.map((entry) => entry.jp),
+        ),
         explanation: line.note
           ? `${line.jp} — ${line.id}. ${line.note}`
           : `${line.jp} — ${line.id}`,
       })),
     );
 
-    const sonkeigoItems: Item[] = verbs.map((verb) => ({
-      id: `konteks:sopan:son:${verb.id}`,
-      mode: "sopan" as const,
-      prompt: `${verb.dictionary} (${verb.meaning}) — bentuk 尊敬 (untuk orang lain)`,
-      answer: verb.sonkeigo,
-      options: shuffle([verb.sonkeigo, verb.teinei, verb.kenjougo].map((form) => form.split(" / ")[0] as string)),
-      explanation: `${verb.dictionary} → 尊敬: ${verb.sonkeigo}${verb.note ? `. ${verb.note}` : ""}`,
-    }));
+    const sonkeigoItems: Item[] = verbs.map((verb) => {
+      const answer = verb.sonkeigo.split(" / ")[0] as string;
+      return {
+        id: `konteks:sopan:son:${verb.id}`,
+        mode: "sopan" as const,
+        prompt: `${verb.dictionary} (${verb.meaning}) — bentuk 尊敬 (untuk orang lain)`,
+        answer,
+        options: uniqueOptions(
+          answer,
+          [verb.sonkeigo, verb.teinei, verb.kenjougo].map(
+            (form) => form.split(" / ")[0] as string,
+          ),
+        ),
+        explanation: `${verb.dictionary} → 尊敬: ${verb.sonkeigo}${verb.note ? `. ${verb.note}` : ""}`,
+      };
+    });
 
-    const kenjougoItems: Item[] = verbs.map((verb) => ({
-      id: `konteks:sopan:ken:${verb.id}`,
-      mode: "sopan" as const,
-      prompt: `${verb.dictionary} (${verb.meaning}) — bentuk 謙譲 (untuk diri sendiri)`,
-      answer: verb.kenjougo.split(" / ")[0] as string,
-      options: shuffle([verb.sonkeigo, verb.teinei, verb.kenjougo].map((form) => form.split(" / ")[0] as string)),
-      explanation: `${verb.dictionary} → 謙譲: ${verb.kenjougo}${verb.note ? `. ${verb.note}` : ""}`,
-    }));
+    const kenjougoItems: Item[] = verbs.map((verb) => {
+      const answer = verb.kenjougo.split(" / ")[0] as string;
+      return {
+        id: `konteks:sopan:ken:${verb.id}`,
+        mode: "sopan" as const,
+        prompt: `${verb.dictionary} (${verb.meaning}) — bentuk 謙譲 (untuk diri sendiri)`,
+        answer,
+        options: uniqueOptions(
+          answer,
+          [verb.sonkeigo, verb.teinei, verb.kenjougo].map(
+            (form) => form.split(" / ")[0] as string,
+          ),
+        ),
+        explanation: `${verb.dictionary} → 謙譲: ${verb.kenjougo}${verb.note ? `. ${verb.note}` : ""}`,
+      };
+    });
 
-    return [...registerItems, ...sonkeigoItems, ...kenjougoItems];
+    return [...registerItems, ...sonkeigoItems, ...kenjougoItems].filter(
+      (item) => item.options.length >= 2,
+    );
   }, [scenarios, verbs]);
 
   const [modes, setModes] = useState<Mode[]>(["register", "sopan"]);
@@ -196,7 +229,7 @@ export default function LatihanKonteksPage() {
   /* ---------------- sesi ---------------- */
   if (running && current) {
     const correctIndex = current.options.indexOf(current.answer);
-    const isCorrect = picked === correctIndex;
+    const isCorrect = picked !== null && current.options[picked] === current.answer;
 
     return (
       <div className="mx-auto max-w-[760px] space-y-5 pb-8">

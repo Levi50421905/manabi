@@ -14,6 +14,9 @@ import {
 } from "@manabi/ui";
 import {
   AUDIENCE_LABEL,
+  CONTEXT_ROMAJI,
+  KEIGO_ROMAJI,
+  REGISTER_ROMAJI,
   contextCardsByCategory,
   keigoVerbsByLevel,
   levelHref,
@@ -49,9 +52,14 @@ function ScenarioCard({ scenario }: { scenario: RegisterScenario }) {
               </div>
               <div className="min-w-0">
                 <div className="flex items-start justify-between gap-2">
-                  <p lang="ja" className="font-jp text-body leading-relaxed text-fg">
-                    {line.jp}
-                  </p>
+                  <div className="min-w-0">
+                    <p lang="ja" className="font-jp text-body leading-relaxed text-fg">
+                      {line.jp}
+                    </p>
+                    <p className="mt-0.5 text-caption italic text-fg-subtle">
+                      {REGISTER_ROMAJI[`${scenario.id}:${line.audience}`] ?? ""}
+                    </p>
+                  </div>
                   <SpeakButton
                     text={line.jp}
                     size="sm"
@@ -73,6 +81,7 @@ function ScenarioCard({ scenario }: { scenario: RegisterScenario }) {
 }
 
 function KeigoRow({ verb }: { verb: KeigoVerb }) {
+  const romaji = KEIGO_ROMAJI[verb.id];
   return (
     <div className="border-t border-border py-3">
       <div className="flex flex-wrap items-baseline gap-2">
@@ -87,18 +96,21 @@ function KeigoRow({ verb }: { verb: KeigoVerb }) {
           <p lang="ja" className="font-jp mt-1 text-sm text-fg">
             {verb.teinei}
           </p>
+          {romaji ? <p className="mt-0.5 text-caption italic text-fg-subtle">{romaji.teinei}</p> : null}
         </div>
         <div className="rounded-lg border border-border bg-level-soft p-2.5">
           <p className="label-micro">尊敬 · untuk orang lain</p>
           <p lang="ja" className="font-jp mt-1 text-sm text-fg">
             {verb.sonkeigo}
           </p>
+          {romaji ? <p className="mt-0.5 text-caption italic text-fg-subtle">{romaji.sonkeigo}</p> : null}
         </div>
         <div className="rounded-lg border border-border bg-accent-soft p-2.5">
           <p className="label-micro">謙譲 · untuk diri sendiri</p>
           <p lang="ja" className="font-jp mt-1 text-sm text-fg">
             {verb.kenjougo}
           </p>
+          {romaji ? <p className="mt-0.5 text-caption italic text-fg-subtle">{romaji.kenjougo}</p> : null}
         </div>
       </div>
       {verb.note ? (
@@ -109,6 +121,7 @@ function KeigoRow({ verb }: { verb: KeigoVerb }) {
 }
 
 function ContextCardView({ card }: { card: ContextCard }) {
+  const romaji = card.romaji ?? CONTEXT_ROMAJI[card.id];
   return (
     <Card className="h-full">
       <CardBody className="flex h-full flex-col gap-2 p-4">
@@ -121,9 +134,7 @@ function ContextCardView({ card }: { card: ContextCard }) {
         <p lang="ja" className="font-jp-serif text-h2 font-semibold leading-tight text-level">
           {card.japanese}
         </p>
-        {card.romaji ? (
-          <p className="text-caption text-fg-subtle">{card.romaji}</p>
-        ) : null}
+        {romaji ? <p className="text-caption italic text-fg-subtle">{romaji}</p> : null}
         <p className="text-sm leading-relaxed text-fg-muted">{card.summary}</p>
         <ul className="mt-auto space-y-1 pt-1">
           {card.points.map((point) => (
@@ -135,10 +146,35 @@ function ContextCardView({ card }: { card: ContextCard }) {
             </li>
           ))}
         </ul>
+        {card.steps?.length ? (
+          <div className="rounded-md border border-border bg-surface-muted/60 p-2.5">
+            <p className="label-micro">Langkah</p>
+            <ol className="mt-1.5 space-y-1">
+              {card.steps.map((step, index) => (
+                <li key={step} className="flex gap-2 text-caption leading-relaxed text-fg-muted">
+                  <span className="tnum grid h-4 w-4 shrink-0 place-items-center rounded bg-surface text-[10px] font-semibold text-fg-subtle">
+                    {index + 1}
+                  </span>
+                  <span>{step}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        ) : null}
         {card.caution ? (
           <p className="rounded-md border border-warning/30 bg-warning-soft p-2 text-caption leading-relaxed text-fg">
             {card.caution}
           </p>
+        ) : null}
+        {card.source ? (
+          <a
+            href={card.source.url}
+            target="_blank"
+            rel="noreferrer"
+            className="text-caption leading-relaxed text-fg-subtle underline decoration-border underline-offset-2 hover:text-fg"
+          >
+            Sumber: {card.source.label}
+          </a>
         ) : null}
       </CardBody>
     </Card>
@@ -167,7 +203,7 @@ export default function KonteksPage() {
       }
       title="Konteks & Etiket"
       japanese="敬語とマナー"
-      description="Tata bahasa yang benar belum tentu pas untuk situasinya. Di sini dibahas siapa yang diajak bicara, bentuk sopan tiga lapis, dan kebiasaan yang jarang diajarkan."
+      description="Tata bahasa yang benar belum tentu pas untuk situasinya. Di sini dibahas siapa yang diajak bicara, bentuk sopan tiga lapis, dan kebiasaan yang jarang diajarkan — setiap kalimat Jepang disertai romaji."
       actions={
         <Link href={levelHref(level, "konteks/latihan")}>
           <Button>Latihan</Button>
@@ -259,7 +295,7 @@ export default function KonteksPage() {
       <Section
         title="D · Praktis untuk hidup di Jepang"
         glyph="暮"
-        description="Sampah, memesan makan, dan gempa — hal yang harus dilakukan dengan benar, bukan hanya dipahami."
+        description="SIM, rekening bank, ATM, balai kota, sewa rumah, utilitas, rumah sakit, kerja, pos, transportasi, sampah, dan gempa — hal yang harus dilakukan dengan benar, bukan hanya dipahami."
       >
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {practical.map((card) => (

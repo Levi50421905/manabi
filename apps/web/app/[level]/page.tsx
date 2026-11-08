@@ -186,6 +186,13 @@ export default function LevelHubPage() {
       description: "Kuis campuran dan per modul.",
     },
     {
+      path: "bank",
+      glyph: "題",
+      title: "Bank Soal",
+      description: "Butir terkurasi dengan pembahasan berlapis.",
+      badge: "Beta",
+    },
+    {
       path: "ujian",
       glyph: "試",
       title: "Ujian",

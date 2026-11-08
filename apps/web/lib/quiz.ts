@@ -1,5 +1,21 @@
-import { grammar, kana, kanji, sentenceOrderN5, vocab } from "@manabi/content";
-import type { GrammarPoint, Kana, Kanji, Vocab } from "@manabi/content";
+import {
+  examListeningN5,
+  grammar,
+  kana,
+  kanji,
+  reading,
+  sentenceOrderN5,
+  vocab,
+} from "@manabi/content";
+import type {
+  ExamListeningItem,
+  GrammarPoint,
+  Kana,
+  Kanji,
+  ReadingPassage,
+  SentenceOrderItem,
+  Vocab,
+} from "@manabi/content";
 
 export type QuestionKind =
   | "kana"
@@ -8,13 +24,16 @@ export type QuestionKind =
   | "tata-bahasa"
   | "susun"
   | "dengar"
-  | "bacaan";
+  | "bacaan"
+  | "ungkapan";
 
 export interface Question {
   id: string;
   kind: QuestionKind;
   prompt: string;
   subPrompt?: string;
+  /** Teks bacaan yang menyertai soal (khusus dokkai/uJian). */
+  passage?: string;
   options: string[];
   answer: number;
   explanation: string;
@@ -37,6 +56,7 @@ export const QUESTION_KIND_LABEL: Record<QuestionKind, string> = {
   susun: "文の組み立て",
   dengar: "Mendengar",
   bacaan: "Membaca",
+  ungkapan: "Ungkapan",
 };
 
 export function shuffle<T>(input: T[]): T[] {
@@ -180,8 +200,11 @@ export function buildGrammarQuestions(pool: GrammarPoint[], count = 6): Question
  * Format JLPT 文の組み立て: empat celah, celah ketiga ditandai ★.
  * Pilihan diacak setiap sesi, lalu posisi ★ dihitung ulang.
  */
-export function buildSentenceOrderQuestions(count = 5): Question[] {
-  const picks = take(sentenceOrderN5, count);
+export function buildSentenceOrderQuestions(
+  count = 5,
+  pool: SentenceOrderItem[] = sentenceOrderN5,
+): Question[] {
+  const picks = take(pool, count);
 
   return picks.map((item) => {
     const starOriginal = item.order[2];
@@ -201,6 +224,120 @@ export function buildSentenceOrderQuestions(count = 5): Question[] {
       explanation: `Urutan benar: ${correctOrder.join(" → ")}. ${item.full} (${item.translation})`,
     };
   });
+}
+
+/**
+ * Soal pemahaman bacaan untuk latihan (bukan ujian). Passage ikut dibawa
+ * agar bisa dirender bersama pertanyaan.
+ */
+export function buildReadingQuizQuestions(
+  pool: ReadingPassage[],
+  count = 6,
+): Question[] {
+  const questions: Question[] = [];
+
+  for (const passage of pool) {
+    const passageText = passage.segments.map((segment) => segment.text).join("");
+    passage.questions.forEach((question, index) => {
+      questions.push({
+        id: `read-quiz:${passage.id}:${index}`,
+        kind: "bacaan",
+        prompt: question.question,
+        subPrompt: passage.title,
+        passage: passageText,
+        options: question.options,
+        answer: question.answer,
+        explanation: `Bacaan: ${passage.title}. ${passage.translation}`,
+      });
+    });
+  }
+
+  return take(questions, count);
+}
+
+/** Soal mendengar dari dialog yang tersedia. */
+export function buildListeningQuizQuestions(
+  pool: ExamListeningItem[],
+  count = 6,
+): Question[] {
+  return take(pool, count).map((item) => {
+    const speakers = Array.from(new Set(item.script.map((line) => line.speaker)));
+    return {
+      id: `listen-quiz:${item.id}`,
+      kind: "dengar",
+      prompt: item.prompt,
+      subPrompt: "Dengarkan audio, lalu pilih jawaban yang tepat.",
+      options: item.options,
+      answer: item.answer,
+      explanation: item.explanation,
+      audioText: item.script.map((line) => line.jp).join(" "),
+      audioLines: item.script.map((line) => ({
+        jp: line.jp,
+        speakerIndex: Math.max(0, speakers.indexOf(line.speaker)),
+      })),
+      audioLabel:
+        item.type === "expression"
+          ? "Putar situasi"
+          : item.type === "response"
+            ? "Putar ucapan"
+            : "Putar dialog",
+    };
+  });
+}
+
+/**
+ * Sesi variasi: mencampur kana, kosakata, kanji, grammar, bacaan, mendengar,
+ * dan susun kalimat. Komposisinya diacak tiap sesi agar latihan tidak monoton.
+ */
+export function buildVarietyQuestions(
+  count = 12,
+  options: {
+    answerType?: AnswerType;
+    vocabPool?: Vocab[];
+    kanjiPool?: Kanji[];
+    grammarPool?: GrammarPoint[];
+    readingPool?: ReadingPassage[];
+    listeningPool?: ExamListeningItem[];
+    sentencePool?: SentenceOrderItem[];
+  } = {},
+): Question[] {
+  const answerType = options.answerType ?? "meaning";
+  const vocabPool = options.vocabPool ?? vocab;
+  const kanjiPool = options.kanjiPool ?? kanji;
+  const grammarPool = options.grammarPool ?? grammar;
+  const readingPool = options.readingPool ?? reading;
+  const listeningPool = options.listeningPool ?? examListeningN5;
+  const sentencePool = options.sentencePool ?? sentenceOrderN5;
+
+  const kanaCount = Math.min(2, Math.max(1, Math.round(count * 0.1)));
+  const kanjiCount = Math.max(1, Math.round(count * 0.15));
+  const grammarCount = Math.max(1, Math.round(count * 0.15));
+  const readingCount = Math.max(1, Math.round(count * 0.15));
+  const listeningCount = Math.max(1, Math.round(count * 0.1));
+  const susunCount = Math.max(1, Math.round(count * 0.05));
+  const vocabCount = Math.max(
+    1,
+    count - (kanaCount + kanjiCount + grammarCount + readingCount + listeningCount + susunCount),
+  );
+
+  const questions: Question[] = [
+    ...buildKanaQuestions(kana, kanaCount),
+    ...buildVocabQuestions(vocabPool, vocabCount, { answerType }),
+    ...buildKanjiQuestions(kanjiPool, kanjiCount, answerType),
+    ...buildGrammarQuestions(grammarPool, grammarCount),
+    ...buildReadingQuizQuestions(readingPool, readingCount),
+    ...buildListeningQuizQuestions(listeningPool, listeningCount),
+    ...buildSentenceOrderQuestions(susunCount, sentencePool),
+  ];
+
+  // Jika salah satu pool kosong, lengkapi dari kosakata agar jumlah soal tetap.
+  while (questions.length < count) {
+    const topUp = buildVocabQuestions(vocabPool, count - questions.length, { answerType });
+    if (topUp.length === 0) break;
+    questions.push(...topUp);
+  }
+
+  return shuffle(questions).slice(0, count);
 }
 
 /** Quiz campuran: kana + kosakata + kanji + tata bahasa (total tepat = `count`). */

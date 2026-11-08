@@ -20,11 +20,20 @@ import {
 
 export type ExamKind = "jlpt-n5" | "jft-basic";
 
+/** Pita CEFR untuk simulasi JFT-Basic (skor 10–250). */
+export interface ExamBand {
+  label: "A1" | "A2.1" | "A2.2";
+  min: number;
+  max: number;
+}
+
 export interface ExamSection {
   key: string;
   label: string;
   /** Poin maksimum seksi ini (mengikuti skala resmi). */
   maxPoints: number;
+  /** Ambang minimum seksi; kosong untuk JFT yang tidak punya ambang seksi. */
+  minPoints?: number;
   questions: Question[];
 }
 
@@ -34,8 +43,8 @@ export interface ExamSpec {
   description: string;
   minutes: number;
   passTotal: number;
-  /** Ambang minimum per seksi (JLPT mewajibkan 19/60 & 19/120-skalanya). */
-  minSectionPoints?: number;
+  /** Hanya dipakai JFT: pita estimasi CEFR, bukan skor resmi. */
+  bands?: ExamBand[];
   sections: ExamSection[];
 }
 
@@ -54,19 +63,39 @@ export interface ExamResult {
   maxTotal: number;
   sections: SectionResult[];
   passed: boolean;
+  /** Pita estimasi JFT; undefined untuk JLPT atau skor di bawah A1. */
+  band?: ExamBand;
 }
 
 const LISTENING_TYPE_ORDER: ExamListeningType[] = ["task", "point", "expression", "response"];
 
-/** Soal 聴解 N5: 4 tipe resmi, total 24 soal. */
-function buildListening(): Question[] {
+/**
+ * Kurangi jumlah opsi tanpa menghilangkan kunci. Dipakai untuk format resmi:
+ * JLPT 発話表現/即時応答 = 3 opsi; JFT = 3 opsi untuk semua tipe.
+ */
+function trimOptions(question: Question, count: number): Question {
+  if (question.options.length <= count) return question;
+  const correct = question.options[question.answer];
+  if (correct === undefined) return question;
+  const wrong = question.options
+    .filter((_, index) => index !== question.answer)
+    .slice(0, count - 1);
+  const options = shuffle([correct, ...wrong]);
+  return { ...question, options, answer: options.indexOf(correct) };
+}
+
+/** Soal 聴解: 4 tipe resmi. `perType` membatasi jumlah per tipe. */
+function buildListening(options: {
+  perType?: number;
+  forceOptionCount?: number;
+} = {}): Question[] {
   return LISTENING_TYPE_ORDER.flatMap((type) => {
     const items = examListeningN5.filter((item) => item.type === type);
+    const picked = options.perType ? shuffle(items).slice(0, options.perType) : shuffle(items);
 
-    return shuffle(items).map((item) => {
+    return picked.map((item) => {
       const speakerNames = Array.from(new Set(item.script.map((line) => line.speaker)));
-
-      return {
+      const question: Question = {
         id: item.id,
         kind: "dengar" as const,
         prompt: item.prompt,
@@ -88,6 +117,10 @@ function buildListening(): Question[] {
         sectionKey: "listening",
         sectionLabel: "Mendengar",
       };
+
+      const optionCount =
+        options.forceOptionCount ?? (type === "expression" || type === "response" ? 3 : 4);
+      return trimOptions(question, optionCount);
     });
   });
 }
@@ -97,31 +130,43 @@ function tagSection(questions: Question[], key: string, label: string): Question
   return questions.map((question) => ({ ...question, sectionKey: key, sectionLabel: label }));
 }
 
-/** Soal pemahaman bacaan. */
-function buildReading(): Question[] {
+/** Soal pemahaman bacaan; `count` membatasi jumlah butir yang diambil. */
+function buildReading(count = Number.MAX_SAFE_INTEGER): Question[] {
   const questions: Question[] = [];
 
   for (const passage of reading) {
+    const passageText = passage.segments.map((segment) => segment.text).join("");
     passage.questions.forEach((question, index) => {
       questions.push({
         id: `${passage.id}:${index}`,
         kind: "bacaan",
         prompt: question.question,
         subPrompt: passage.title,
+        passage: passageText,
         options: question.options,
         answer: question.answer,
-        explanation: `Bacaan: ${passage.title}`,
+        explanation: `Bacaan: ${passage.title}. ${passage.translation}`,
       });
     });
   }
 
-  return shuffle(questions);
+  return shuffle(questions).slice(0, count);
+}
+
+/** JFT memakai 3 opsi untuk semua tipe. */
+function toJftOptions(questions: Question[]): Question[] {
+  return questions.map((question) => trimOptions(question, 3));
 }
 
 /**
  * Bangun paket ujian.
- * JLPT N5: seksi Bahasa & Membaca 120 poin + Mendengar 60 poin (total 180).
- * JFT-Basic: 4 seksi, total 250 poin.
+ *
+ * JLPT N5: 2 seksi penilaian (Bahasa & Membaca 120 poin; Mendengar 60 poin),
+ * 75 butir/90 menit. Ambang seksi 38 dan 19; total lulus 80.
+ *
+ * JFT-Basic 2026: 4 seksi, ~50 butir/60 menit, 3 opsi, skor estimasi 10–250
+ * dengan pita A1/A2.1/A2.2. Skor resmi memakai equating; angka di sini hanya
+ * estimasi latihan.
  */
 export function buildExam(kind: ExamKind): ExamSpec {
   if (kind === "jlpt-n5") {
@@ -129,9 +174,11 @@ export function buildExam(kind: ExamKind): ExamSpec {
       shuffle([
         ...buildKanjiReadingQuestions(8),
         ...buildKanjiWritingQuestions(4),
-        ...buildContextQuestions(4),
-        ...buildGrammarQuestions(grammar, 4),
+        ...buildContextQuestions(8),
+        ...buildVocabQuestions(vocab, 5),
+        ...buildGrammarQuestions(grammar, 8),
         ...buildSentenceOrderQuestions(5),
+        ...buildReading(13),
       ]),
       "language",
       "Bahasa & Membaca",
@@ -141,13 +188,24 @@ export function buildExam(kind: ExamKind): ExamSpec {
       kind,
       title: "JLPT N5 — Simulasi",
       description:
-        "2 seksi: Bahasa & Membaca (120 poin) dan Mendengar (60 poin). Lulus bila total ≥ 80 dan setiap seksi ≥ 19.",
-      minutes: 45,
+        "2 seksi penilaian: Bahasa & Membaca (120 poin) dan Mendengar (60 poin). Lulus bila total ≥ 80, Bahasa & Membaca ≥ 38, dan Mendengar ≥ 19.",
+      minutes: 90,
       passTotal: 80,
-      minSectionPoints: 19,
       sections: [
-        { key: "language", label: "Bahasa & Membaca", maxPoints: 120, questions: language },
-        { key: "listening", label: "Mendengar", maxPoints: 60, questions: buildListening() },
+        {
+          key: "language",
+          label: "Bahasa & Membaca",
+          maxPoints: 120,
+          minPoints: 38,
+          questions: language,
+        },
+        {
+          key: "listening",
+          label: "Mendengar",
+          maxPoints: 60,
+          minPoints: 19,
+          questions: buildListening(),
+        },
       ],
     };
   }
@@ -156,20 +214,27 @@ export function buildExam(kind: ExamKind): ExamSpec {
     kind,
     title: "JFT-Basic — Simulasi",
     description:
-      "4 seksi, total 250 poin. Lulus bila skor ≥ 200 (80%). Tidak ada pengurangan nilai untuk jawaban salah.",
-    minutes: 40,
+      "4 seksi, 50 butir, 60 menit. Skor resmi JFT-Basic memakai equating 10–250; simulasi ini menampilkan estimasi pita CEFR, bukan skor resmi.",
+    minutes: 60,
     passTotal: 200,
+    bands: [
+      { label: "A1", min: 145, max: 174 },
+      { label: "A2.1", min: 175, max: 199 },
+      { label: "A2.2", min: 200, max: 250 },
+    ],
     sections: [
       {
         key: "moji-goi",
         label: "文字・語彙 (Huruf & Kosakata)",
-        maxPoints: 63,
+        maxPoints: 62.5,
         questions: tagSection(
-          shuffle([
-            ...buildKanjiReadingQuestions(6),
-            ...buildKanjiWritingQuestions(6),
-            ...buildVocabQuestions(vocab, 4, { withKana: false }),
-          ]),
+          toJftOptions(
+            shuffle([
+              ...buildKanjiReadingQuestions(4),
+              ...buildKanjiWritingQuestions(4),
+              ...buildVocabQuestions(vocab, 5),
+            ]),
+          ),
           "moji-goi",
           "文字・語彙",
         ),
@@ -177,9 +242,9 @@ export function buildExam(kind: ExamKind): ExamSpec {
       {
         key: "kaiwa-hyougen",
         label: "会話・表現 (Percakapan & Ungkapan)",
-        maxPoints: 63,
+        maxPoints: 62.5,
         questions: tagSection(
-          buildGrammarQuestions(grammar, 8),
+          toJftOptions(buildGrammarQuestions(grammar, 13)),
           "kaiwa-hyougen",
           "会話・表現",
         ),
@@ -187,14 +252,22 @@ export function buildExam(kind: ExamKind): ExamSpec {
       {
         key: "choukai",
         label: "聴解 (Pemahaman Mendengar)",
-        maxPoints: 62,
-        questions: tagSection(buildListening(), "choukai", "聴解"),
+        maxPoints: 62.5,
+        questions: tagSection(
+          buildListening({ perType: 3, forceOptionCount: 3 }),
+          "choukai",
+          "聴解",
+        ),
       },
       {
         key: "dokkai",
         label: "読解 (Pemahaman Membaca)",
-        maxPoints: 62,
-        questions: tagSection(buildReading(), "dokkai", "読解"),
+        maxPoints: 62.5,
+        questions: tagSection(
+          toJftOptions(buildReading(12)),
+          "dokkai",
+          "読解",
+        ),
       },
     ],
   };
@@ -204,14 +277,19 @@ export function allQuestions(spec: ExamSpec): Question[] {
   return spec.sections.flatMap((section) => section.questions);
 }
 
-/** Hitung skor per seksi memakai skala resmi, lalu tentukan lulus/tidak. */
+/** Hitung skor per seksi memakai ambang per seksi, lalu tentukan lulus/pita. */
 export function scoreExam(spec: ExamSpec, answers: Record<string, number>): ExamResult {
   const sections: SectionResult[] = spec.sections.map((section) => {
     const total = section.questions.length;
-    const correct = section.questions.filter((question) => answers[question.id] === question.answer).length;
-    const score = total === 0 ? 0 : Math.round((correct / total) * section.maxPoints);
+    const correct = section.questions.filter(
+      (question) => answers[question.id] === question.answer,
+    ).length;
+    const rawScore = total === 0 ? 0 : (correct / total) * section.maxPoints;
+    // JLPT memakai skor seksi bulat; JFT memakai 4 × 62,5 sehingga perlu 1 desimal.
+    const score =
+      spec.kind === "jft-basic" ? Math.round(rawScore * 10) / 10 : Math.round(rawScore);
     const passedSection =
-      spec.minSectionPoints === undefined ? true : score >= spec.minSectionPoints;
+      section.minPoints === undefined ? true : score >= section.minPoints;
 
     return {
       key: section.key,
@@ -224,11 +302,20 @@ export function scoreExam(spec: ExamSpec, answers: Record<string, number>): Exam
     };
   });
 
-  const total = sections.reduce((sum, section) => sum + section.score, 0);
-  const maxTotal = spec.sections.reduce((sum, section) => sum + section.maxPoints, 0);
-  const passed = total >= spec.passTotal && sections.every((section) => section.passedSection);
+  const total = Math.round(sections.reduce((sum, section) => sum + section.score, 0) * 10) / 10;
+  const maxTotal = Math.round(
+    spec.sections.reduce((sum, section) => sum + section.maxPoints, 0) * 10,
+  ) / 10;
+  const passed =
+    total >= spec.passTotal && sections.every((section) => section.passedSection);
+  const band = spec.bands?.find((candidate) => total >= candidate.min && total <= candidate.max);
 
-  return { total, maxTotal, sections, passed };
+  return { total, maxTotal, sections, passed, band };
+}
+
+/** Format skor agar 120 tetap "120", tetapi 62,5 tampil "62,5". */
+export function formatScore(value: number): string {
+  return Number.isInteger(value) ? String(value) : value.toFixed(1).replace(".", ",");
 }
 
 export function formatClock(seconds: number): string {

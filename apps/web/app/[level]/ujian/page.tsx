@@ -24,6 +24,7 @@ import {
   allQuestions,
   buildExam,
   formatClock,
+  formatScore,
   scoreExam,
   type ExamKind,
   type ExamResult,
@@ -89,6 +90,8 @@ export default function ExamPage() {
   const [remaining, setRemaining] = useState(0);
   const [result, setResult] = useState<ExamResult | null>(null);
   const [exitOpen, setExitOpen] = useState(false);
+  /** Berapa kali audio soal saat ini sudah diputar (JFT maksimal 2×). */
+  const [audioPlays, setAudioPlays] = useState(0);
 
   // Ringkasan kertas ujian untuk layar pemilihan (jumlah soal & seksi asli).
   const papers = useMemo(() => EXAM_KINDS.map((kind) => previewOf(buildExam(kind))), []);
@@ -146,6 +149,13 @@ export default function ExamPage() {
     return () => window.clearInterval(timer);
   }, [spec, result]);
 
+  // Setiap butir baru punya jatah putar audio sendiri.
+  useEffect(() => {
+    setAudioPlays(0);
+  }, [index, spec?.kind]);
+
+  const audioPlayLimit = spec?.kind === "jft-basic" ? 2 : 1;
+
   // Waktu habis → kumpulkan otomatis.
   useEffect(() => {
     if (spec && !result && remaining === 0) {
@@ -167,9 +177,15 @@ export default function ExamPage() {
 
   /** Putar dialog berurutan dengan suara berbeda per pembicara. */
   function playDialogue() {
-    const lines = current?.audioLines;
+    if (!current) return;
+    const lines = current.audioLines;
+    const hasAudio = Boolean(lines?.length || current.audioText);
+    if (!hasAudio || audioPlays >= audioPlayLimit) return;
+
+    setAudioPlays((value) => value + 1);
+
     if (!lines || lines.length === 0) {
-      if (current?.audioText) speak(current.audioText);
+      if (current.audioText) speak(current.audioText);
       return;
     }
 
@@ -199,6 +215,25 @@ export default function ExamPage() {
   /* ---------------- layar hasil ---------------- */
   if (spec && result) {
     const wrong = questions.filter((question) => answers[question.id] !== question.answer);
+    const isJft = spec.kind === "jft-basic";
+    const resultTone = isJft
+      ? result.band?.label === "A2.2"
+        ? "success"
+        : result.band
+          ? "warning"
+          : "danger"
+      : result.passed
+        ? "success"
+        : "danger";
+    const resultBadge = isJft
+      ? result.band
+        ? `Estimasi pita ${result.band.label}`
+        : "Belum mencapai A1 (estimasi)"
+      : result.passed
+        ? "Lulus (simulasi)"
+        : "Belum lulus (simulasi)";
+    const progressTone =
+      isJft ? (result.band?.label === "A2.2" ? "success" : "accent") : result.passed ? "success" : "accent";
 
     return (
       <div className="space-y-8 pb-8">
@@ -208,85 +243,101 @@ export default function ExamPage() {
               <Badge tone="level" mono>
                 {level}
               </Badge>
-              <span className="label-micro">{meta.name} · Hasil ujian</span>
+              <span className="label-micro">
+                {meta.name} · {isJft ? "Hasil simulasi JFT" : "Hasil ujian"}
+              </span>
             </div>
           }
-          title="Hasil ujian"
+          title={isJft ? "Hasil simulasi JFT" : "Hasil ujian"}
           japanese="結果"
           description={spec.title}
         />
 
         <Card>
           <CardBody className="p-6 text-center sm:p-8">
-            <Badge tone={result.passed ? "success" : "danger"}>
-              {result.passed ? "Lulus (simulasi)" : "Belum lulus (simulasi)"}
-            </Badge>
+            <Badge tone={resultTone}>{resultBadge}</Badge>
             <p className="tnum mt-4 flex items-baseline justify-center gap-2 font-display text-display font-semibold leading-none text-fg">
-              {result.total}
-              <span className="text-h2 font-normal text-fg-muted">/ {result.maxTotal}</span>
+              {formatScore(result.total)}
+              <span className="text-h2 font-normal text-fg-muted">
+                / {formatScore(result.maxTotal)}
+              </span>
             </p>
-            <p className="mt-2 text-caption leading-relaxed text-fg-muted">
-              Ambang lulus: <span className="tnum font-semibold text-fg">{spec.passTotal} poin</span>
-              {spec.minSectionPoints
-                ? ` · minimal ${spec.minSectionPoints} poin per seksi`
-                : " · tanpa ambang per seksi"}
-            </p>
+            {isJft ? (
+              <p className="mt-2 text-caption leading-relaxed text-fg-muted">
+                Estimasi pita CEFR, bukan skor resmi JFT-Basic. Pita resmi: A1 145–174 ·
+                A2.1 175–199 · A2.2 200–250.
+              </p>
+            ) : (
+              <p className="mt-2 text-caption leading-relaxed text-fg-muted">
+                Ambang lulus: <span className="tnum font-semibold text-fg">{spec.passTotal} poin</span>
+                {" · "}minimal <span className="tnum font-semibold text-fg">38</span> poin Bahasa &
+                Membaca dan <span className="tnum font-semibold text-fg">19</span> poin Mendengar.
+              </p>
+            )}
             <ProgressBar
               className="mx-auto mt-5 max-w-sm"
               value={result.total}
               max={result.maxTotal}
-              tone={result.passed ? "success" : "accent"}
-              aria-label={`Skor total ${result.total} dari ${result.maxTotal}`}
+              tone={progressTone}
+              aria-label={`Skor total ${formatScore(result.total)} dari ${formatScore(result.maxTotal)}`}
             />
           </CardBody>
         </Card>
 
         <Section title="Rincian per seksi" glyph="節">
           <ul className="space-y-3">
-            {result.sections.map((section) => (
-              <li key={section.key}>
-                <Card>
-                  <CardBody className="p-4 sm:p-5">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="min-w-0">
-                        <p
-                          className={cn(
-                            "text-h3 font-semibold",
-                            JAPANESE.test(section.label) ? "font-jp-serif" : "font-display",
-                          )}
+            {result.sections.map((section) => {
+              const config = spec.sections.find((candidate) => candidate.key === section.key);
+              return (
+                <li key={section.key}>
+                  <Card>
+                    <CardBody className="p-4 sm:p-5">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="min-w-0">
+                          <p
+                            className={cn(
+                              "text-h3 font-semibold",
+                              JAPANESE.test(section.label) ? "font-jp-serif" : "font-display",
+                            )}
+                          >
+                            {section.label}
+                          </p>
+                          <p className="mt-1 text-caption text-fg-muted">
+                            <span className="tnum">{section.correct}</span>/
+                            <span className="tnum">{section.total}</span> soal benar
+                            {config?.minPoints !== undefined
+                              ? ` · ambang ${formatScore(config.minPoints)} poin`
+                              : ""}
+                          </p>
+                        </div>
+                        <Badge
+                          tone={isJft ? "neutral" : section.passedSection ? "success" : "danger"}
+                          mono
                         >
-                          {section.label}
-                        </p>
-                        <p className="mt-1 text-caption text-fg-muted">
-                          <span className="tnum">{section.correct}</span>/
-                          <span className="tnum">{section.total}</span> soal benar
-                          {spec.minSectionPoints
-                            ? ` · ambang ${spec.minSectionPoints} poin`
-                            : ""}
-                        </p>
+                          {formatScore(section.score)} / {formatScore(section.maxPoints)}
+                        </Badge>
                       </div>
-                      <Badge tone={section.passedSection ? "success" : "danger"} mono>
-                        {section.score} / {section.maxPoints}
-                      </Badge>
-                    </div>
-                    <ProgressBar
-                      className="mt-3"
-                      value={section.score}
-                      max={section.maxPoints}
-                      tone={section.passedSection ? "success" : "accent"}
-                      aria-label={`Skor ${section.label}`}
-                    />
-                    <p className="mt-2 text-caption text-fg-subtle">
-                      {section.passedSection
-                        ? spec.minSectionPoints
-                          ? `Memenuhi ambang ${spec.minSectionPoints} poin.`
-                          : "Seksi selesai."
-                        : `Di bawah ambang ${spec.minSectionPoints ?? 0} poin.`}
-                    </p>
-                  </CardBody>
-                </Card>
-              </li>
-            ))}
+                      <ProgressBar
+                        className="mt-3"
+                        value={section.score}
+                        max={section.maxPoints}
+                        tone={isJft ? "accent" : section.passedSection ? "success" : "accent"}
+                        aria-label={`Skor ${section.label}`}
+                      />
+                      <p className="mt-2 text-caption text-fg-subtle">
+                        {isJft
+                          ? "Persentase seksi untuk referensi; JFT tidak memakai ambang seksi."
+                          : config?.minPoints !== undefined
+                            ? section.passedSection
+                              ? `Memenuhi ambang ${formatScore(config.minPoints)} poin.`
+                              : `Di bawah ambang ${formatScore(config.minPoints)} poin.`
+                            : "Seksi selesai."}
+                      </p>
+                    </CardBody>
+                  </Card>
+                </li>
+              );
+            })}
           </ul>
         </Section>
 
@@ -328,6 +379,19 @@ export default function ExamPage() {
                         >
                           {question.prompt}
                         </p>
+                        {question.passage ? (
+                          <details className="mt-2 rounded-md border border-border bg-surface-muted/60 p-2.5">
+                            <summary className="cursor-pointer text-caption font-semibold text-fg-muted">
+                              Lihat bacaan
+                            </summary>
+                            <p
+                              lang="ja"
+                              className="mt-2 whitespace-pre-wrap font-jp text-caption leading-relaxed text-fg"
+                            >
+                              {question.passage}
+                            </p>
+                          </details>
+                        ) : null}
                         <p className="mt-2 text-caption leading-relaxed text-danger">
                           Jawabanmu:{" "}
                           {picked === undefined ? "(kosong)" : question.options[picked]}
@@ -392,11 +456,16 @@ export default function ExamPage() {
           }
           title="Ujian"
           japanese="試験"
-          description="Simulasi dengan skala penilaian resmi. Hasilnya bukan sertifikat — hanya pengukur kesiapan."
+          description="Format dan ambang mengikuti JLPT 2026 serta JFT-Basic 2026. Hasilnya bukan sertifikat — hanya pengukur kesiapan."
           actions={
-            <Link href={levelHref(level, "quiz")}>
-              <Button variant="outline">Latihan ringkas</Button>
-            </Link>
+            <div className="flex flex-wrap gap-2">
+              <Link href={levelHref(level, "bank")}>
+                <Button variant="outline">Bank soal</Button>
+              </Link>
+              <Link href={levelHref(level, "quiz")}>
+                <Button variant="outline">Latihan ringkas</Button>
+              </Link>
+            </div>
           }
         />
 
@@ -456,7 +525,7 @@ export default function ExamPage() {
                       >
                         <span className="min-w-0">{section.label}</span>
                         <span className="tnum shrink-0 text-fg-subtle">
-                          {section.count} soal · {section.maxPoints} poin
+                          {section.count} soal · {formatScore(section.maxPoints)} poin
                         </span>
                       </li>
                     ))}
@@ -464,9 +533,19 @@ export default function ExamPage() {
                 </CardBody>
                 <CardFooter className="justify-between px-5 py-3">
                   <span className="text-caption text-fg-muted">
-                    Lulus ≥{" "}
-                    <span className="tnum font-semibold text-fg">{paper.spec.passTotal}</span> poin
-                    dari <span className="tnum">{paper.maxTotal}</span>
+                    {paper.spec.kind === "jft-basic" ? (
+                      <>
+                        Target A2.2 ≥{" "}
+                        <span className="tnum font-semibold text-fg">{paper.spec.passTotal}</span> dari{" "}
+                        <span className="tnum">{formatScore(paper.maxTotal)}</span>
+                      </>
+                    ) : (
+                      <>
+                        Lulus ≥{" "}
+                        <span className="tnum font-semibold text-fg">{paper.spec.passTotal}</span> poin
+                        dari <span className="tnum">{formatScore(paper.maxTotal)}</span>
+                      </>
+                    )}
                   </span>
                   <Button
                     variant="level"
@@ -482,9 +561,10 @@ export default function ExamPage() {
         </Section>
 
         <Callout tone="info" title="Catatan kejujuran">
-          Bank soal {level} di aplikasi ini masih terbatas (kosakata, kanji, pola tata bahasa, dialog
-          mendengar, dan bacaan). Simulasi mengukur kesiapan pada materi yang tersedia — bukan
-          prediksi skor JLPT resmi.
+          Simulasi merakit soal dari materi yang tersedia, bukan dari bank butir terkurasi penuh.
+          Format dan ambang mengikuti JLPT 2026 serta JFT-Basic 2026, tetapi hasilnya bukan skor
+          resmi. Untuk JFT-Basic, skor resmi memakai <em>equating</em> 10–250; di sini hanya
+          estimasi pita CEFR.
         </Callout>
       </div>
     );
@@ -593,6 +673,18 @@ export default function ExamPage() {
               </div>
             </div>
 
+            {current.passage ? (
+              <div className="mt-3 rounded-lg border border-border bg-surface-muted/60 p-4">
+                <p className="label-micro">Bacaan</p>
+                <p
+                  lang="ja"
+                  className="mt-2 whitespace-pre-wrap font-jp text-body leading-loose text-fg"
+                >
+                  {current.passage}
+                </p>
+              </div>
+            ) : null}
+
             <p
               lang={promptJapanese ? "ja" : undefined}
               className={cn(
@@ -613,9 +705,10 @@ export default function ExamPage() {
                 size="sm"
                 variant="outline"
                 onClick={playDialogue}
+                disabled={audioPlays >= audioPlayLimit}
                 leading={<span aria-hidden="true">▶</span>}
               >
-                {current.audioLabel ?? "Putar audio"}
+                {current.audioLabel ?? "Putar audio"} ({audioPlays}/{audioPlayLimit})
               </Button>
             ) : null}
 

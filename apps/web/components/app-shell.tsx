@@ -52,6 +52,7 @@ const NAV_SECTIONS: NavSection[] = [
     title: "Latihan",
     items: [
       { label: "Latihan", glyph: "問", path: "quiz" },
+      { label: "Bank Soal", glyph: "題", path: "bank" },
       { label: "Ulasan", glyph: "復", path: "ulasan" },
       { label: "Ujian", glyph: "試", path: "ujian" },
     ],
@@ -157,69 +158,80 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   /**
-   * Saat sesi latihan/ujian berjalan, tidak ada navigasi sama sekali.
-   * Keluar hanya lewat dialog konfirmasi di halaman sesi.
+   * Saat sesi latihan/ujian berjalan, navigasi disembunyikan tanpa mengganti
+   * pohon React. Mengganti pohon (return berbeda) akan me-remount halaman sesi
+   * dan menghapus state soal yang sedang dikerjakan.
    */
-  if (session.active) {
-    return (
-      <div className={cn(levelClassName(level), "min-h-screen bg-paper text-fg")}>
-        <main className="mx-auto w-full max-w-[1120px] px-4 pb-10 pt-5 sm:px-6 md:px-8 md:py-8">
-          {children}
-        </main>
-      </div>
-    );
-  }
-
   return (
     <div className={cn(levelClassName(level), "min-h-screen bg-paper text-fg")}>
-      <div className="mx-auto flex w-full max-w-[1560px]">
-        <DesktopRail pathname={pathname} level={level} />
+      <div
+        className={cn(
+          "mx-auto flex w-full",
+          session.active ? "max-w-[1120px]" : "max-w-[1560px]",
+        )}
+      >
+        <div className={session.active ? "hidden" : "contents"}>
+          <DesktopRail pathname={pathname} level={level} />
+        </div>
         <div className="min-w-0 flex-1">
-          <MobileTopBar level={level} onOpenLevel={() => setMenu("level")} />
-          <main className="mx-auto w-full max-w-[1120px] px-4 pb-28 pt-5 sm:px-6 md:px-8 md:pb-16 md:pt-8">
+          <div className={session.active ? "hidden" : "contents"}>
+            <MobileTopBar level={level} onOpenLevel={() => setMenu("level")} />
+          </div>
+          <main
+            className={cn(
+              "mx-auto w-full max-w-[1120px] px-4 pt-5 sm:px-6 md:px-8",
+              session.active
+                ? "pb-10 md:py-8"
+                : "pb-28 md:pb-16 md:pt-8",
+            )}
+          >
             {children}
           </main>
         </div>
       </div>
 
-      <MobileBottomNav
-        pathname={pathname}
-        level={level}
-        activeMenu={menu}
-        onOpenMenu={(next) => setMenu((current) => (current === next ? null : next))}
-      />
+      {!session.active ? (
+        <>
+          <MobileBottomNav
+            pathname={pathname}
+            level={level}
+            activeMenu={menu}
+            onOpenMenu={(next) => setMenu((current) => (current === next ? null : next))}
+          />
 
-      <Sheet open={menu === "belajar"} onClose={closeMenu} title="Belajar">
-        <ModuleGrid level={level} onNavigate={closeMenu} paths={NAV_SECTIONS[0].items} />
-      </Sheet>
+          <Sheet open={menu === "belajar"} onClose={closeMenu} title="Belajar">
+            <ModuleGrid level={level} onNavigate={closeMenu} paths={NAV_SECTIONS[0].items} />
+          </Sheet>
 
-      <Sheet open={menu === "lainnya"} onClose={closeMenu} title="Lainnya">
-        <div className="space-y-5">
-          <div>
-            <p className="label-micro mb-2">Latihan</p>
-            <ModuleGrid level={level} onNavigate={closeMenu} paths={NAV_SECTIONS[1].items} />
-          </div>
-          <div>
-            <p className="label-micro mb-2">Referensi</p>
-            <ModuleGrid
-              level={level}
-              onNavigate={closeMenu}
-              paths={[
-                ...SECONDARY,
-                { label: "Tentang", glyph: "情", path: "about" },
-                { label: "Dasbor", glyph: "学", path: "dashboard" },
-              ]}
-            />
-          </div>
-        </div>
-      </Sheet>
+          <Sheet open={menu === "lainnya"} onClose={closeMenu} title="Lainnya">
+            <div className="space-y-5">
+              <div>
+                <p className="label-micro mb-2">Latihan</p>
+                <ModuleGrid level={level} onNavigate={closeMenu} paths={NAV_SECTIONS[1].items} />
+              </div>
+              <div>
+                <p className="label-micro mb-2">Referensi</p>
+                <ModuleGrid
+                  level={level}
+                  onNavigate={closeMenu}
+                  paths={[
+                    ...SECONDARY,
+                    { label: "Tentang", glyph: "情", path: "about" },
+                    { label: "Dasbor", glyph: "学", path: "dashboard" },
+                  ]}
+                />
+              </div>
+            </div>
+          </Sheet>
 
-      <Sheet open={menu === "level"} onClose={closeMenu} title="Pilih level">
-        <LevelList onPick={closeMenu} />
-        <p className="mt-4 text-caption leading-relaxed text-fg-muted">
-          Materi tiap level terpisah. Progres belajar Anda dihitung per level.
-        </p>
-      </Sheet>
+          <Sheet open={menu === "level"} onClose={closeMenu} title="Pilih level">
+            <LevelList onPick={closeMenu} />
+            <p className="mt-4 text-caption leading-relaxed text-fg-muted">
+              Materi tiap level terpisah. Progres belajar Anda dihitung per level.
+            </p>
+          </Sheet>
+        </>
+      ) : null}
     </div>
   );
 }

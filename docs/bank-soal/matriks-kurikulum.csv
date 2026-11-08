@@ -1,0 +1,46 @@
+level,section,item_type,label_jp,label_id,option_count,target_bank,per_form,forms_covered,difficulty_mix,catatan
+N5,moji-goi,MG.KR,æ¼¢å­—èª­ã¿,Cara baca kanji,4,240,7,34.3,15/30/35/15/5,Satu kata kanji inti + variasi kalimat
+N5,moji-goi,MG.OR,è¡¨è¨˜,Penulisan kanji,4,140,5,28.0,15/30/35/15/5,Fokus homofon dan okurigana
+N5,moji-goi,MG.CD,æ–‡è„ˆè¦å®š,Kata sesuai konteks,4,230,7,32.9,15/30/35/15/5,Distraktor satu kelas kata
+N5,moji-goi,MG.PP,è¨€ã„æ›ãˆé¡žç¾©,Parafrasa,4,130,6,21.7,15/30/35/15/5,Sinonim level N5
+N5,bunpou,B.GF,æ–‡æ³•å½¢å¼ã®åˆ¤æ–­,Pilih bentuk grammar,4,250,8,31.2,15/30/35/15/5,Satu konstruk per butir
+N5,bunpou,B.SC,æ–‡ã®çµ„ã¿ç«‹ã¦,Susun kalimat,4,170,5,34.0,15/30/35/15/5,"Empat fragmen, bintang ketiga"
+N5,bunpou,B.TG,æ–‡ç« ã®æ–‡æ³•,Grammar dalam teks,4,180,5,36.0,15/30/35/15/5,Stimulus 3-5 celah
+N5,dokkai,R.SH,å†…å®¹ç†è§£ï¼ˆçŸ­æ–‡ï¼‰,Pemahaman bacaan pendek,4,180,4,45.0,15/30/35/15/5,1 stimulus = 1-2 butir
+N5,dokkai,R.MD,å†…å®¹ç†è§£ï¼ˆä¸­æ–‡ï¼‰,Pemahaman bacaan menengah,4,90,3,30.0,15/30/35/15/5,1 stimulus = 2-3 butir
+N5,dokkai,R.IR,æƒ…å ±æ¤œç´¢,Pencarian informasi,4,50,1,50.0,15/30/35/15/5,Brosur/jadwal; informasi eksplisit
+N5,choukai,L.TB,èª²é¡Œç†è§£,Pemahaman tugas,4,100,6,16.7,15/30/35/15/5,Audio 15-30 detik
+N5,choukai,L.KP,ãƒã‚¤ãƒ³ãƒˆç†è§£,Pemahaman poin,4,100,6,16.7,15/30/35/15/5,Audio 20-35 detik
+N5,choukai,L.VE,ç™ºè©±è¡¨ç¾,Ungkapan yang tepat,3,70,5,14.0,15/30/35/15/5,Situasi + 3 ungkapan
+N5,choukai,L.QR,å³æ™‚å¿œç­”,Respons cepat,3,70,7,10.0,15/30/35/15/5,Ujaran pendek + 3 respons
+N4,moji-goi,MG.KR,æ¼¢å­—èª­ã¿,Cara baca kanji,4,280,9,31.1,15/30/35/15/5,Kanji baru + kata majemuk
+N4,moji-goi,MG.OR,è¡¨è¨˜,Penulisan kanji,4,150,6,25.0,15/30/35/15/5,Homofon level N4
+N4,moji-goi,MG.CD,æ–‡è„ˆè¦å®š,Kata sesuai konteks,4,280,10,28.0,15/30/35/15/5,"Konteks lebih panjang, kolokasi"
+N4,moji-goi,MG.PP,è¨€ã„æ›ãˆé¡žç¾©,Parafrasa,4,140,5,28.0,15/30/35/15/5,Parafrasa kalimat
+N4,moji-goi,MG.US,ç”¨æ³•,Penggunaan kata,4,110,5,22.0,15/30/35/15/5,Empat kalimat; satu penggunaan benar
+N4,bunpou,B.GF,æ–‡æ³•å½¢å¼ã®åˆ¤æ–­,Pilih bentuk grammar,4,280,10,28.0,15/30/35/15/5,"Pola majemuk, modalitas"
+N4,bunpou,B.SC,æ–‡ã®çµ„ã¿ç«‹ã¦,Susun kalimat,4,180,6,30.0,15/30/35/15/5,"Modifikasi nomina, urutan adverbia"
+N4,bunpou,B.TG,æ–‡ç« ã®æ–‡æ³•,Grammar dalam teks,4,160,5,32.0,15/30/35/15/5,Kohesi antar-kalimat
+N4,dokkai,R.SH,å†…å®¹ç†è§£ï¼ˆçŸ­æ–‡ï¼‰,Pemahaman bacaan pendek,4,190,5,38.0,15/30/35/15/5,150-250 karakter
+N4,dokkai,R.MD,å†…å®¹ç†è§£ï¼ˆä¸­æ–‡ï¼‰,Pemahaman bacaan menengah,4,130,7,18.6,15/30/35/15/5,250-500 karakter
+N4,dokkai,R.IR,æƒ…å ±æ¤œç´¢,Pencarian informasi,4,60,2,30.0,15/30/35/15/5,Tabel/brosur dengan syarat
+N4,choukai,L.TB,èª²é¡Œç†è§£,Pemahaman tugas,4,120,8,15.0,15/30/35/15/5,Audio 25-45 detik
+N4,choukai,L.KP,ãƒã‚¤ãƒ³ãƒˆç†è§£,Pemahaman poin,4,120,8,15.0,15/30/35/15/5,Audio 30-60 detik
+N4,choukai,L.VE,ç™ºè©±è¡¨ç¾,Ungkapan yang tepat,3,100,6,16.7,15/30/35/15/5,"Situasi sosial, kesopanan"
+N4,choukai,L.QR,å³æ™‚å¿œç­”,Respons cepat,3,100,6,16.7,15/30/35/15/5,"Respons cepat, nuansa"
+JFT,script-vocab,SV.WM,èªžã®æ„å‘³,Arti kata,3,160,4,40.0,15/30/35/15/5,Kata konkret + konteks kalimat
+JFT,script-vocab,SV.WU,èªžã®ç”¨æ³•,Penggunaan kata,3,120,3,40.0,15/30/35/15/5,Penggunaan dalam kalimat
+JFT,script-vocab,SV.KR,æ¼¢å­—ã®èª­ã¿,Cara baca kanji,3,100,3,33.3,15/30/35/15/5,Kanji sehari-hari
+JFT,script-vocab,SV.KMU,æ¼¢å­—ã®æ„å‘³ãƒ»ç”¨æ³•,Makna dan penggunaan kanji,3,100,3,33.3,15/30/35/15/5,Kanji dalam teks pendek
+JFT,conversation-expression,CE.GR,æ–‡æ³•,Grammar,3,240,7,34.3,15/30/35/15/5,Grammar sesuai konteks
+JFT,conversation-expression,CE.EX,è¡¨ç¾,Ungkapan,3,200,6,33.3,15/30/35/15/5,Ungkapan situasional
+JFT,listening,L.CV,ä¼šè©±ã®å†…å®¹ç†è§£,Pemahaman percakapan,3,160,5,32.0,15/30/35/15/5,Audio 2x; percakapan kerja
+JFT,listening,L.SH,åº—ãƒ»å…¬å…±æ–½è¨­ã§ã®å†…å®¹ç†è§£,Pemahaman di toko/fasilitas umum,3,120,4,30.0,15/30/35/15/5,Transaksi
+JFT,listening,L.AN,ãŠçŸ¥ã‚‰ã›ãƒ»æŒ‡ç¤ºã®å†…å®¹ç†è§£,Pemahaman pengumuman/instruksi,3,100,3,33.3,15/30/35/15/5,Pengumuman/instruksi
+JFT,reading,R.CT,å†…å®¹ç†è§£,Pemahaman isi,3,260,9,28.9,15/30/35/15/5,Pesan/surat pendek
+JFT,reading,R.IS,æƒ…å ±æ¤œç´¢,Pencarian informasi,3,120,3,40.0,15/30/35/15/5,Papan/brosur
+BRIDGE,fondasi,KANA,ã‹ãª,Kana & ortografi dasar,4,120,0,-,30/40/25/5/0,Diagnostik awal; bukan tipe JLPT
+BRIDGE,fondasi,PARTICLE,åŠ©è©ž,Partikel & micro-grammar,4,160,0,-,30/40/25/5/0,Kesalahan spesifik pembelajar Indonesia
+BRIDGE,fondasi,KANJI,æ¼¢å­—,Produksi kanji & bacaan,4,120,0,-,30/40/25/5/0,Menghubungkan input dan output
+BRIDGE,aplikasi,SCENARIO,å ´é¢,Skenario kehidupan,3,120,0,-,30/40/25/5/0,"JFT/SSW: instruksi, formulir, pengumuman"
+TOTAL,,,,Bruto; 600 JFT dual-tag -> 6.000 unik,,6600,,,,Lihat blueprint §2.6

@@ -332,6 +332,10 @@ export interface ContextCard {
   romaji?: string;
   summary: string;
   points: string[];
+  /** Langkah prosedural untuk kartu praktis (ATM, rekening, dll.). */
+  steps?: string[];
+  /** Sumber/rujukan untuk prosedur yang bisa berubah. */
+  source?: { label: string; url: string };
   /**
    * "kuat" = berlaku umum; "tergantung-situasi" = berbeda menurut daerah,
    * hubungan, atau sumber. Materi wajib jujur soal ini.

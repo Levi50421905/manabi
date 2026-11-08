@@ -18,6 +18,7 @@ import {
 } from "@manabi/ui";
 import { QUESTION_KIND_LABEL, scoreMessage, type Question } from "@/lib/quiz";
 import { recordQuiz } from "@/lib/store";
+import { createUtterance, speak } from "@/lib/tts";
 
 /** API imperatif runner, dipakai halaman sesi untuk menyelesaikan lebih awal. */
 export interface QuizRunnerHandle {
@@ -152,6 +153,33 @@ export const QuizRunner = forwardRef<QuizRunnerHandle, QuizRunnerProps>(function
   // Halaman sesi bisa menyelesaikan lebih awal lewat dialog konfirmasi.
   useImperativeHandle(ref, () => ({ finish: finishSession }));
 
+  /** Putar audio soal (dialog berurutan dengan suara berbeda per pembicara). */
+  function playAudio() {
+    if (!current) return;
+    const lines = current.audioLines;
+    if (!lines || lines.length === 0) {
+      if (current.audioText) speak(current.audioText);
+      return;
+    }
+
+    const synth = window.speechSynthesis;
+    synth.cancel();
+
+    let cursor = 0;
+    const next = () => {
+      if (cursor >= lines.length) return;
+      const line = lines[cursor];
+      cursor += 1;
+      if (!line) return;
+      const utterance = createUtterance(line.jp, undefined, line.speakerIndex);
+      if (!utterance) return;
+      utterance.onend = next;
+      synth.speak(utterance);
+    };
+
+    next();
+  }
+
   // Shortcut keyboard: tombol 1–4 memilih jawaban, Enter untuk periksa/lanjut.
   useEffect(() => {
     function handleKey(event: KeyboardEvent) {
@@ -261,6 +289,19 @@ export const QuizRunner = forwardRef<QuizRunnerHandle, QuizRunnerProps>(function
                       >
                         {question.prompt}
                       </p>
+                      {question.passage ? (
+                        <details className="mt-2 rounded-md border border-border bg-surface-muted/60 p-2.5">
+                          <summary className="cursor-pointer text-caption font-semibold text-fg-muted">
+                            Lihat bacaan
+                          </summary>
+                          <p
+                            lang="ja"
+                            className="mt-2 whitespace-pre-wrap font-jp text-caption leading-relaxed text-fg"
+                          >
+                            {question.passage}
+                          </p>
+                        </details>
+                      ) : null}
                       <p className="mt-1 text-caption leading-relaxed text-fg-muted">
                         Jawabanmu:{" "}
                         <span className={correct ? "text-success" : "text-danger"}>
@@ -362,12 +403,36 @@ export const QuizRunner = forwardRef<QuizRunnerHandle, QuizRunnerProps>(function
             {current.subPrompt ?? "Pilih jawaban yang benar"}
           </p>
 
+          {current.passage ? (
+            <div className="mt-3 rounded-lg border border-border bg-surface-muted/60 p-4">
+              <p className="label-micro">Bacaan</p>
+              <p
+                lang="ja"
+                className="mt-2 whitespace-pre-wrap font-jp text-body leading-loose text-fg"
+              >
+                {current.passage}
+              </p>
+            </div>
+          ) : null}
+
           <p
             lang={JAPANESE.test(current.prompt) ? "ja" : undefined}
             className={cn("mt-3 whitespace-pre-wrap", promptFont(current.prompt))}
           >
             {current.prompt}
           </p>
+
+          {current.audioLines || current.audioText ? (
+            <Button
+              className="mt-3"
+              size="sm"
+              variant="outline"
+              onClick={playAudio}
+              leading={<span aria-hidden="true">▶</span>}
+            >
+              {current.audioLabel ?? "Putar audio"}
+            </Button>
+          ) : null}
 
           <div className="mt-6 space-y-2" role="group" aria-label="Pilihan jawaban">
             {current.options.map((option, optionIndex) => {
@@ -429,7 +494,7 @@ export const QuizRunner = forwardRef<QuizRunnerHandle, QuizRunnerProps>(function
           <div aria-live="polite" aria-atomic="true" className="mt-5">
             {checked ? (
               <Callout tone={isCorrect ? "success" : "danger"} title={isCorrect ? "Benar!" : "Belum tepat."}>
-                <p className="text-sm leading-relaxed text-fg">{current.explanation}</p>
+                <p className="whitespace-pre-line text-sm leading-relaxed text-fg">{current.explanation}</p>
                 {isCorrect ? null : (
                   <p className="mt-1.5 text-caption text-fg-muted">
                     Jawaban benar:{" "}

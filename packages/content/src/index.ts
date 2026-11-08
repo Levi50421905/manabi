@@ -96,6 +96,7 @@ export {
   keigoVerbsN5,
   registerScenariosN5,
 } from "./data/context-n5";
+export { CONTEXT_ROMAJI, KEIGO_ROMAJI, REGISTER_ROMAJI } from "./data/context-romaji";
 
 /**
  * Kumpulan materi. Saat menambah level baru (N4, N3, …), cukup import
