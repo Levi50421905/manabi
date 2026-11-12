@@ -29,9 +29,9 @@ export function Section({
   return (
     <section className={cn("min-w-0", className)} {...props}>
       {title || action ? (
-        <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+        <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
           <div className="min-w-0">
-            <h2 className="flex items-baseline gap-2 font-display text-h2 font-semibold tracking-tight text-fg">
+            <h2 className="flex items-baseline gap-2 font-display text-h2 font-extrabold tracking-tight text-fg">
               {glyph ? (
                 <span lang="ja" className="jp text-sm font-normal text-fg-subtle" aria-hidden="true">
                   {glyph}
@@ -40,10 +40,10 @@ export function Section({
               {title}
             </h2>
             {description ? (
-              <p className="mt-1 text-sm leading-relaxed text-fg-muted">{description}</p>
+              <p className="mt-1.5 text-sm leading-relaxed text-fg-muted">{description}</p>
             ) : null}
           </div>
-          {action ? <div className="flex shrink-0 items-center gap-2">{action}</div> : null}
+          {action ? <div className="flex shrink-0 items-center gap-2.5">{action}</div> : null}
         </div>
       ) : null}
       {children}

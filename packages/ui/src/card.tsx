@@ -4,11 +4,11 @@ import { cn } from "./cn";
 export type CardVariant = "default" | "muted" | "interactive" | "outline";
 
 const variants: Record<CardVariant, string> = {
-  default: "border-border bg-surface",
+  default: "border-border bg-surface shadow-soft",
   muted: "border-border bg-surface-muted",
-  outline: "border-border bg-transparent",
+  outline: "border-border-strong bg-transparent",
   interactive:
-    "border-border bg-surface transition-[border-color,box-shadow,transform] duration-200 ease-emphasized hover:-translate-y-0.5 hover:border-border-strong hover:shadow-lifted",
+    "border-border bg-surface shadow-soft transition-[border-color,box-shadow,transform] duration-200 ease-emphasized hover:-translate-y-0.5 hover:border-border-strong hover:shadow-lifted",
 };
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -16,18 +16,18 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * Permukaan dasar aplikasi. Garis rambut + tanpa bayangan secara default —
- * bayangan hanya untuk elemen yang benar-benar mengambang.
+ * Permukaan dasar aplikasi. Kartu Nakama: sudut besar, garis hangat, dan
+ * bayangan tipis supaya terasa seperti kartu yang bisa dipegang.
  */
 export function Card({ className, variant = "default", ...props }: CardProps) {
-  return <div className={cn("rounded-xl border", variants[variant], className)} {...props} />;
+  return <div className={cn("rounded-2xl border", variants[variant], className)} {...props} />;
 }
 
 export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cn(
-        "flex flex-wrap items-start justify-between gap-3 border-b border-border px-5 py-3.5",
+        "flex flex-wrap items-start justify-between gap-3 border-b border-border px-5 py-4",
         className,
       )}
       {...props}
@@ -36,7 +36,7 @@ export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDiv
 }
 
 export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h3 className={cn("text-h3 font-semibold tracking-tight text-fg", className)} {...props} />;
+  return <h3 className={cn("text-h3 font-bold tracking-tight text-fg", className)} {...props} />;
 }
 
 export function CardDescription({
@@ -56,7 +56,7 @@ export const CardContent = CardBody;
 export function CardFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("flex flex-wrap items-center gap-2 border-t border-border px-5 py-3", className)}
+      className={cn("flex flex-wrap items-center gap-2 border-t border-border px-5 py-4", className)}
       {...props}
     />
   );

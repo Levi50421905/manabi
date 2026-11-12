@@ -1,10 +1,9 @@
 import type { Config } from "tailwindcss";
 
 /**
- * Design system 「和モダン」 Editorial Warm.
+ * Design system 「なかま」Nakama.
  * Semua warna memakai CSS variable (lihat app/globals.css) supaya tema terang
  * dan gelap berganti tanpa menulis ulang kelas di komponen.
- * Aturan pemakaian ada di docs/DESIGN-SYSTEM.md.
  */
 const config: Config = {
   darkMode: "class",
@@ -35,6 +34,15 @@ const config: Config = {
         "accent-strong": "rgb(var(--accent-strong) / <alpha-value>)",
         "accent-soft": "rgb(var(--accent-soft) / <alpha-value>)",
         "accent-contrast": "rgb(var(--accent-contrast) / <alpha-value>)",
+
+        /* ---- aksen sekunder ---- */
+        coral: "rgb(var(--coral) / <alpha-value>)",
+        "coral-strong": "rgb(var(--coral-strong) / <alpha-value>)",
+        "coral-soft": "rgb(var(--coral-soft) / <alpha-value>)",
+        sky: "rgb(var(--sky) / <alpha-value>)",
+        "sky-soft": "rgb(var(--sky-soft) / <alpha-value>)",
+        sun: "rgb(var(--sun) / <alpha-value>)",
+        "sun-soft": "rgb(var(--sun-soft) / <alpha-value>)",
 
         /* ---- level JLPT aktif ---- */
         level: "rgb(var(--level) / <alpha-value>)",
@@ -84,7 +92,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: [
-          "Inter",
+          "Nunito",
           "ui-sans-serif",
           "system-ui",
           "Segoe UI",
@@ -94,34 +102,37 @@ const config: Config = {
           "sans-serif",
         ],
         display: [
-          "Newsreader",
-          "Iowan Old Style",
-          "Georgia",
-          "Cambria",
-          "Times New Roman",
-          "serif",
+          "Nunito",
+          "ui-rounded",
+          "system-ui",
+          "Segoe UI",
+          "Arial",
+          "sans-serif",
         ],
         jp: ['"Noto Sans JP"', '"Hiragino Sans"', '"Yu Gothic"', "Meiryo", "sans-serif"],
         "jp-serif": [
-          '"Noto Serif JP"',
-          '"Yu Mincho"',
-          '"Hiragino Mincho ProN"',
-          '"MS PMincho"',
-          "serif",
+          '"Noto Sans JP"',
+          '"Hiragino Sans"',
+          '"Yu Gothic"',
+          "Meiryo",
+          "sans-serif",
         ],
       },
       fontSize: {
-        display: ["clamp(2.25rem, 1.55rem + 2.9vw, 3.5rem)", { lineHeight: "1.05", letterSpacing: "-0.025em" }],
-        h1: ["1.875rem", { lineHeight: "2.25rem", letterSpacing: "-0.021em" }],
-        h2: ["1.3125rem", { lineHeight: "1.75rem", letterSpacing: "-0.014em" }],
-        h3: ["1rem", { lineHeight: "1.5rem", letterSpacing: "-0.006em" }],
-        body: ["0.9375rem", { lineHeight: "1.5rem" }],
+        display: ["clamp(2.4rem, 1.6rem + 3.2vw, 3.9rem)", { lineHeight: "1.02", letterSpacing: "-0.03em" }],
+        h1: ["2rem", { lineHeight: "2.4rem", letterSpacing: "-0.028em" }],
+        h2: ["1.5rem", { lineHeight: "1.95rem", letterSpacing: "-0.02em" }],
+        h3: ["1.0625rem", { lineHeight: "1.55rem", letterSpacing: "-0.012em" }],
+        body: ["0.9375rem", { lineHeight: "1.6rem" }],
         caption: ["0.75rem", { lineHeight: "1.0625rem" }],
       },
       boxShadow: {
-        soft: "0 1px 2px rgb(26 24 21 / 0.04), 0 1px 1px rgb(26 24 21 / 0.03)",
-        lifted: "0 2px 4px rgb(26 24 21 / 0.04), 0 10px 28px -10px rgb(26 24 21 / 0.14)",
-        overlay: "0 28px 70px -20px rgb(26 24 21 / 0.32), 0 2px 8px rgb(26 24 21 / 0.06)",
+        soft: "0 4px 14px rgb(36 32 27 / 0.06)",
+        lifted: "0 10px 30px rgb(36 32 27 / 0.1)",
+        overlay: "0 24px 60px -18px rgb(36 32 27 / 0.28), 0 4px 14px rgb(36 32 27 / 0.06)",
+      },
+      borderRadius: {
+        "4xl": "2rem",
       },
       keyframes: {
         "fade-up": {

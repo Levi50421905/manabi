@@ -10,6 +10,7 @@ export interface PillProps extends React.ButtonHTMLAttributes<HTMLButtonElement>
 /**
  * Chip filter yang bisa ditekan. Dipakai untuk kategori kosakata, jenis kanji,
  * tab jangka waktu, dsb. — satu implementasi agar state aktifnya konsisten.
+ * Aktif = matcha penuh, pasif = permukaan krem dengan garis hangat.
  */
 export function Pill({ className, active = false, glyph, children, type = "button", ...props }: PillProps) {
   return (
@@ -17,10 +18,10 @@ export function Pill({ className, active = false, glyph, children, type = "butto
       type={type}
       aria-pressed={active}
       className={cn(
-        "inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-caption font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper",
+        "inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-2 text-caption font-bold transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper",
         active
-          ? "border-transparent bg-fg text-paper"
-          : "border-border bg-surface text-fg-muted hover:border-border-strong hover:text-fg",
+          ? "border-transparent bg-accent text-accent-contrast shadow-soft"
+          : "border-border bg-surface text-fg-muted hover:border-accent/50 hover:bg-surface-muted hover:text-fg",
         className,
       )}
       {...props}

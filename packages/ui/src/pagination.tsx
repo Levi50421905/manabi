@@ -24,11 +24,11 @@ export function Pagination({ page, pageCount, onChange, className }: PaginationP
   if (pageCount <= 1) return null;
 
   const button =
-    "grid h-9 min-w-9 place-items-center rounded-md border px-2 text-caption font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1";
+    "grid h-11 min-w-11 place-items-center rounded-xl border px-3 text-caption font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1";
 
   return (
     <nav
-      className={cn("flex flex-wrap items-center justify-center gap-1", className)}
+      className={cn("flex flex-wrap items-center justify-center gap-1.5", className)}
       aria-label="Navigasi halaman"
     >
       <button
@@ -50,7 +50,7 @@ export function Pagination({ page, pageCount, onChange, className }: PaginationP
           className={cn(
             button,
             item === page
-              ? "border-transparent bg-fg text-paper"
+              ? "border-transparent bg-accent text-accent-contrast shadow-soft"
               : "border-border bg-surface text-fg-muted hover:bg-surface-muted hover:text-fg",
           )}
         >

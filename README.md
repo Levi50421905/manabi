@@ -43,17 +43,19 @@ manabi/
 
 Semua modul berada di bawah segmen level: `/[level]/<modul>`, mis. `/n5/vocab`.
 Menambah level baru otomatis menambah rute (lihat **Level & kurikulum** di bawah).
+Struktur menu (grup, label, glyph, path, sub-tab) dibaca dari
+`packages/content/src/curriculum.ts`.
 
 | Rute | Isi |
 |---|---|
-| `/` | Landing: konsep, peta kurikulum, daftar modul |
+| `/` | Beranda: penjelasan produk, untuk siapa, cara belajar, peta level, CTA |
 | `/dashboard` | XP, level, streak, kartu jatuh tempo, aktivitas 7 hari, riwayat latihan |
 | `/[level]` | Ringkasan level: jumlah materi, progres per modul, aktivitas minggu ini |
-| `/[level]/kana` | Hiragana & katakana + kuis dua arah |
-| `/[level]/write` | Latihan menulis kana & kanji di kanvas (mouse/stylus/sentuh) |
+| `/[level]/kana` | Hiragana & katakana + kuis dua arah (tab **Kana & Menulis**) |
+| `/[level]/write` | Latihan menulis kana & kanji di kanvas (tab pasangan Kana) |
 | `/[level]/vocab` | 708 kosakata N5 + sesi SRS + re-queue otomatis saat "Lupa" |
-| `/[level]/kanji` | 111 kanji N5: bacaan, radikal, goresan, mnemonic, kuis |
-| `/[level]/bacaan-kanji` | Aturan perubahan bacaan (何, 今, 日, 人), jukujikun, rendaku |
+| `/[level]/kanji` | 111 kanji N5: bacaan, radikal, goresan, mnemonic, kuis (tab **Kanji & Bacaan**) |
+| `/[level]/bacaan-kanji` | Aturan perubahan bacaan, jukujikun, rendaku (tab pasangan Kanji) |
 | `/[level]/bacaan-kanji/latihan` | Latihan membaca kanji: pilih bacaan & bedakan bacaan |
 | `/[level]/grammar` | 48 pola tata bahasa N5 dengan contoh + latihan 文の組み立て |
 | `/[level]/partikel` | 18 partikel N5: fungsi, contoh, pasangan tertukar, jebakan khusus |
@@ -63,20 +65,26 @@ Menambah level baru otomatis menambah rute (lihat **Level & kurikulum** di bawah
 | `/[level]/ulasan` | Ulasan SRS berbasis konteks: bacaan, partikel, situasi |
 | `/[level]/listening` | 12 dialog, 3 kecepatan, toggle kana & terjemahan |
 | `/[level]/reading` | 10 bacaan berfurigana + pertanyaan pemahaman |
-| `/[level]/quiz` | Latihan: 9 mode (campuran, variasi, kosakata, kana, kanji, tata bahasa, membaca, mendengar, susun) + pembahasan + shortcut 1–4 & Enter |
-| `/[level]/bank` | Bank soal terkurasi (beta): butir tetap, pembahasan berlapis, paket N5 & JFT-Basic |
+| `/[level]/quiz` | Latihan: 9 mode + **Bentuk jawaban** (Terjemahan/Romaji/Kana) + sumber Bank Soal N5/JFT-Basic |
 | `/[level]/ujian` | Simulasi JLPT N5 dan JFT-Basic |
 | `/dictionary` | Pencarian lintas level: kosakata, kanji, tata bahasa, bacaan (global) |
 | `/settings` | Tema, target harian, kecepatan suara, furigana, reset data (global) |
 | `/about` | Metodologi, kredit data terbuka, lisensi, peta level |
 
-Rute lama (`/vocab`, `/kanji`, …) dialihkan permanen ke `/n5/…` lewat `next.config.mjs`.
+**Bank Soal bukan halaman/menu.** Ia lapisan data (`apps/web/lib/bank.ts`) yang
+memasok butir untuk Latihan Soal dan Simulasi Ujian. Rute `/[level]/bank`
+dialihkan permanen ke `/[level]/quiz`.
+
+Rute lama (`/vocab`, `/kanji`, `/partikel`, `/bacaan-kanji`, `/bank`, …)
+dialihkan permanen ke `/n5/…` lewat `next.config.mjs`.
 
 ## Level & kurikulum
 
-Metadata setiap level JLPT ada di satu tempat: `packages/content/src/levels.ts`
-(`LEVEL_META`, `LEVEL_ORDER`, `levelHref`, `levelMeta`). Yang dibaca dari sana
-adalah warna aksen, nama, deskripsi, jam belajar, dan label di seluruh UI.
+Metadata setiap level JLPT **dan struktur menu** ada di satu tempat:
+`packages/content/src/curriculum.ts` (`LEVEL_META`, `LEVEL_ORDER`, `LEVELS`,
+`NAV_SECTIONS`, `NAV_ITEMS`, `navItemHref`, `navItemActive`). Yang dibaca dari
+sana adalah warna aksen, nama, deskripsi, jam belajar, grup menu, label, glyph,
+path, dan sub-tab.
 
 **Menambah level baru (mis. N4):**
 
@@ -88,9 +96,9 @@ adalah warna aksen, nama, deskripsi, jam belajar, dan label di seluruh UI.
    - warna aksen N4 (`--level` per level, lihat `globals.css`) otomatis terpakai,
    - dasbor, hub level, dan kamus ikut menghitung materi baru.
 
-Tidak ada komponen atau layout yang perlu disunting. Level yang belum punya
-materi menampilkan layar "segera hadir" dari `apps/web/app/[level]/layout.tsx`
-alih-alih halaman kosong.
+**Menambah menu/modul baru:** tambahkan satu `NavItem` ke grup yang sesuai di
+`NAV_SECTIONS` — shell, bottom nav, sheet mobile, dan level hub membacanya
+otomatis.
 
 ## Cara menambah materi
 
@@ -151,19 +159,22 @@ menyunting komponen.
 
 ## Design system
 
-Tampilan memakai arah 「和モダン」 Editorial Warm: netral hangat (kertas & tinta),
-judul serif, garis rambut, dan warna aksen yang mengikuti level JLPT.
+Tampilan memakai arah 「なかま」Nakama: krem hangat, matcha, coral, kartu
+membulat, bayangan lembut, dan tipografi Nunito + Noto Sans JP. Fokusnya ramah
+pemula dan nyaman di ponsel.
 
-- Kontrak lengkap: [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md) — tipografi,
-  token warna, ukuran huruf, aturan mobile, dan daftar komponen. **Baca ini
-  sebelum menulis UI baru.**
+- Kontrak lengkap: [`docs/DESIGN-SYSTEM.md`](docs/DESIGN-SYSTEM.md) — catatan:
+  dokumen itu masih memuat arah visual lama; token dan komponen aktual ada di
+  `apps/web/app/globals.css` + `packages/ui`. **Baca keduanya sebelum menulis UI baru.**
 - Token: `apps/web/app/globals.css` (variabel CSS + varian gelap + `--level` per level)
   dan `apps/web/tailwind.config.ts` (pemetaan ke kelas Tailwind).
 - Komponen: `packages/ui/src/` — `Button`, `Card`, `Badge`, `Pill`, `ProgressBar`,
   `ProgressRing`, `SegmentedControl`, `PageHeader`, `Section`, `StatTile`,
   `Toolbar`, `SearchField`, `EmptyState`, `Callout`, `ListRow`, `Skeleton`, `Pagination`.
-- Kerangka aplikasi: `apps/web/components/app-shell.tsx` (rail desktop, top bar +
-  bottom nav mobile, sheet) dan `apps/web/components/level-switcher.tsx`.
+- Kerangka aplikasi: `apps/web/components/app-shell.tsx` (sidebar ringkas tanpa
+  scroll di desktop, top bar + bottom nav mobile, sheet) dan
+  `apps/web/components/level-switcher.tsx`.
+- Maskot: `apps/web/components/mascot.tsx` (bentuk CSS, sementara).
 
 ## QA visual
 

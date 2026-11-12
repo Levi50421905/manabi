@@ -18,6 +18,7 @@ import {
   kanjiByLevel,
   levelHref,
   levelMeta,
+  type JlptLevel,
   type Kanji,
 } from "@manabi/content";
 import type { SrsCard } from "@manabi/srs";
@@ -220,7 +221,7 @@ export default function KanjiPage() {
             />
           }
         >
-          <Card className="overflow-hidden">
+          <Card className="overflow-hidden rounded-2xl">
             <div className="p-3 sm:p-4">
               {filtered.length === 0 ? (
                 <EmptyState
@@ -363,31 +364,80 @@ export default function KanjiPage() {
   );
 }
 
+/* ------------------------------------------------------------------ *
+ * Tab gabungan modul kanji & bacaan
+ * ------------------------------------------------------------------ */
+
+const MODULE_TABS = [
+  { key: "kanji", label: "Kanji", glyph: "漢", path: "kanji" },
+  { key: "bacaan-kanji", label: "Perubahan Bacaan", glyph: "読", path: "bacaan-kanji" },
+] as const;
+
+type ModuleTabKey = (typeof MODULE_TABS)[number]["key"];
+
+/** Tab bar tipis di atas header: kanji dan bacaannya satu kesatuan. */
+function ModuleTabs({ level, current }: { level: JlptLevel; current: ModuleTabKey }) {
+  return (
+    <nav
+      aria-label="Modul kanji"
+      className="flex gap-1 rounded-2xl border border-border bg-surface-muted p-1"
+    >
+      {MODULE_TABS.map((tab) => {
+        const active = tab.key === current;
+        return (
+          <Link
+            key={tab.key}
+            href={levelHref(level, tab.path)}
+            aria-current={active ? "page" : undefined}
+            className={cn(
+              "inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl px-2 text-caption font-semibold transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper sm:px-4 sm:text-sm",
+              active
+                ? "bg-surface text-fg shadow-soft"
+                : "text-fg-muted hover:bg-surface/60 hover:text-fg",
+            )}
+          >
+            <span lang="ja" aria-hidden="true" className="jp text-base leading-none">
+              {tab.glyph}
+            </span>
+            <span className="whitespace-nowrap">{tab.label}</span>
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
+
 /** Header seragam untuk mode daftar, kuis, dan level kosong. */
 function KanjiHeader({
   level,
   description,
   action,
 }: {
-  level: string;
+  level: JlptLevel;
   description: string;
   action?: ReactNode;
 }) {
   return (
-    <PageHeader
-      eyebrow={
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge tone="level" mono>
-            {level}
-          </Badge>
-          <span className="label-micro">Kanji</span>
-        </div>
-      }
-      title="Kanji"
-      japanese="漢字"
-      description={description}
-      actions={action}
-    />
+    <div className="space-y-6">
+      <ModuleTabs level={level} current="kanji" />
+      <PageHeader
+        eyebrow={
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge tone="level" mono>
+              {level}
+            </Badge>
+            <span className="label-micro">Kanji</span>
+            <span lang="ja" className="jp text-caption font-normal text-fg-subtle">
+              漢字
+            </span>
+          </div>
+        }
+        title="Kanji"
+        japanese="漢字"
+        description={description}
+        actions={action}
+      />
+    </div>
   );
 }
 
@@ -406,7 +456,7 @@ function KanjiDetail({
   const firstWord = item.words[0]?.replace(/\s*\(.*?\)/g, "") ?? item.character;
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden rounded-2xl">
       <div className="genko-grid flex items-center justify-center border-b border-border bg-surface py-8 sm:py-10">
         <span
           lang="ja"

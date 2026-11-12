@@ -23,6 +23,7 @@ export interface SegmentedControlProps<T extends string | number> {
  * Kontrol pilihan bergaya segmented (tab/pil). Dipakai untuk tab kana,
  * kecepatan suara, target harian, dan pemilih tema — satu implementasi
  * supaya gaya & perilakunya konsisten di seluruh aplikasi.
+ * Pilihan aktif memakai matcha lembut, bukan tinta gelap.
  */
 export function SegmentedControl<T extends string | number>({
   options,
@@ -38,7 +39,7 @@ export function SegmentedControl<T extends string | number>({
       role="group"
       aria-label={ariaLabel}
       className={cn(
-        "inline-flex gap-1 rounded-lg border border-border bg-surface-muted p-1",
+        "inline-flex gap-1 rounded-2xl border border-border bg-surface-muted p-1",
         block ? "flex w-full" : "flex-wrap",
         className,
       )}
@@ -52,12 +53,12 @@ export function SegmentedControl<T extends string | number>({
             aria-pressed={active}
             onClick={() => onChange(option.value)}
             className={cn(
-              "flex items-center justify-center gap-1.5 rounded-md font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1",
+              "flex items-center justify-center gap-1.5 rounded-xl font-bold transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1",
               block && "flex-1",
-              size === "sm" ? "px-2.5 py-1 text-caption" : "px-3 py-1.5 text-xs",
+              size === "sm" ? "px-3 py-1.5 text-caption" : "px-4 py-2 text-sm",
               active
-                ? "bg-fg text-paper shadow-soft"
-                : "text-fg-muted hover:text-fg",
+                ? "bg-accent-soft text-accent-strong shadow-soft"
+                : "text-fg-muted hover:bg-surface hover:text-fg",
             )}
           >
             {option.glyph ? (

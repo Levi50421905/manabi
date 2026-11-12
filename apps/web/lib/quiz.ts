@@ -507,11 +507,39 @@ export function buildContextQuestions(count = 6): Question[] {
   });
 }
 
+/**
+ * Acak urutan soal sekaligus posisi opsinya tanpa mengubah kunci jawaban.
+ *
+ * Dipakai sesi dari Bank Soal: butir terkurasi punya kunci tetap, jadi yang
+ * boleh diacak hanya urutan soal dan letak opsi — bukan jawabannya.
+ */
+export function randomizeQuestions(questions: Question[]): Question[] {
+  return shuffle(questions).map((question) => {
+    const correct = question.options[question.answer];
+    if (correct === undefined) return question;
+    const options = shuffle(question.options);
+    return { ...question, options, answer: options.indexOf(correct) };
+  });
+}
+
+/**
+ * Ambil `count` butir dari bank secara acak **tanpa pengulangan**.
+ *
+ * Butir bank diambil dari satu deck yang sudah unik per `id`; pengaman Map
+ * menjaga kalau data bank suatu saat memuat id kembar. Bila `count` melebihi
+ * isi deck, seluruh butir yang ada dipakai.
+ */
+export function drawBankQuestions(pool: Question[], count = 10): Question[] {
+  const unique = Array.from(new Map(pool.map((question) => [question.id, question])).values());
+  const takeCount = Math.min(Math.max(0, count), unique.length);
+  return randomizeQuestions(shuffle(unique).slice(0, takeCount));
+}
+
 export function scoreMessage(correct: number, total: number): string {
   const ratio = total === 0 ? 0 : correct / total;
-  if (ratio === 1) return "完璧！ Sempurna, semua benar!";
-  if (ratio >= 0.8) return "素晴らしい！ Sangat bagus!";
-  if (ratio >= 0.6) return "いいね！ Terus berlatih.";
-  if (ratio >= 0.4) return "もう一度！ Coba ulangi materi ini.";
-  return "頑張って！ Jangan menyerah, mulai dari dasar lagi.";
+  if (ratio === 1) return "Sempurna. Semua jawaban benar.";
+  if (ratio >= 0.8) return "Sangat baik. Pertahankan.";
+  if (ratio >= 0.6) return "Cukup. Ulangi bagian yang belum tepat.";
+  if (ratio >= 0.4) return "Perlu diulang. Baca pembahasan, lalu coba lagi.";
+  return "Mulai dari pembahasan, lalu ulangi sesi ini.";
 }

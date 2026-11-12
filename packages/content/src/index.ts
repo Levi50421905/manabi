@@ -50,13 +50,21 @@ export * from "./types";
 export {
   LEVEL_META,
   LEVEL_ORDER,
+  LEVELS,
+  NAV_ITEMS,
+  NAV_SECTIONS,
+  MATERI_ITEMS,
   isJlptLevel,
   levelClassName,
   levelHref,
   levelMeta,
+  navItemActive,
+  navItemByPath,
+  navItemHref,
+  navSubHref,
   nextAvailableLevel,
-} from "./levels";
-export type { LevelMeta } from "./levels";
+} from "./curriculum";
+export type { LevelMeta, NavItem, NavSection, NavSubItem } from "./curriculum";
 export { hiragana, katakana, kana, kanaRows, kanaRowLabels } from "./data/kana";
 export { vocabN5 } from "./data/vocab-n5";
 export { vocabN5Batch1 } from "./data/vocab-n5-batch-1";

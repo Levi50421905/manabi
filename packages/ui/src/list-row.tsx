@@ -26,12 +26,12 @@ export function ListRow({
   const content = (
     <>
       {leading ? (
-        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-surface-muted text-sm font-semibold text-fg-muted transition-colors group-hover:bg-level-soft group-hover:text-level">
+        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-surface-muted text-base font-bold text-fg-muted transition-colors group-hover:bg-level-soft group-hover:text-level">
           {leading}
         </span>
       ) : null}
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-sm font-medium text-fg">{title}</span>
+        <span className="block truncate text-sm font-bold text-fg">{title}</span>
         {subtitle ? (
           <span className="mt-0.5 block truncate text-caption text-fg-muted">{subtitle}</span>
         ) : null}
@@ -41,7 +41,7 @@ export function ListRow({
   );
 
   const shared =
-    "group flex w-full items-center gap-3 rounded-lg border border-border bg-surface px-3 py-2.5 text-left transition-colors duration-150 hover:border-border-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1";
+    "group flex w-full items-center gap-3 rounded-xl border border-border bg-surface px-3.5 py-3 text-left transition-[background-color,border-color,box-shadow] duration-150 hover:border-border-strong hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1";
 
   if (href) {
     return (

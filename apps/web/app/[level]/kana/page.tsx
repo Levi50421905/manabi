@@ -10,6 +10,7 @@ import {
   katakana,
   levelHref,
   levelMeta,
+  type JlptLevel,
   type Kana,
   type KanaType,
 } from "@manabi/content";
@@ -83,6 +84,49 @@ function familyOf(row: string): FamilyKey {
   if (label.includes("yōon")) return "yoon";
   if (label.includes("dakuten") || label.includes("handakuten")) return "dakuten";
   return "dasar";
+}
+
+/* ------------------------------------------------------------------ *
+ * Tab gabungan modul aksara
+ * ------------------------------------------------------------------ */
+
+const MODULE_TABS = [
+  { key: "kana", label: "Kana", glyph: "あ", path: "kana" },
+  { key: "write", label: "Menulis", glyph: "書", path: "write" },
+] as const;
+
+type ModuleTabKey = (typeof MODULE_TABS)[number]["key"];
+
+/** Tab bar tipis di atas header: kana dan menulis adalah satu keterampilan. */
+function ModuleTabs({ level, current }: { level: JlptLevel; current: ModuleTabKey }) {
+  return (
+    <nav
+      aria-label="Modul aksara"
+      className="flex gap-1 rounded-2xl border border-border bg-surface-muted p-1"
+    >
+      {MODULE_TABS.map((tab) => {
+        const active = tab.key === current;
+        return (
+          <Link
+            key={tab.key}
+            href={levelHref(level, tab.path)}
+            aria-current={active ? "page" : undefined}
+            className={cn(
+              "inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper",
+              active
+                ? "bg-surface text-fg shadow-soft"
+                : "text-fg-muted hover:bg-surface/60 hover:text-fg",
+            )}
+          >
+            <span lang="ja" aria-hidden="true" className="jp text-base leading-none">
+              {tab.glyph}
+            </span>
+            {tab.label}
+          </Link>
+        );
+      })}
+    </nav>
+  );
 }
 
 /* ------------------------------------------------------------------ *
@@ -423,6 +467,8 @@ export default function KanaPage() {
 
   return (
     <div className="space-y-8 pb-10 md:space-y-10">
+      <ModuleTabs level={level} current="kana" />
+
       <PageHeader
         title="Kana"
         japanese="かな"
@@ -432,7 +478,7 @@ export default function KanaPage() {
               {level}
             </Badge>
             <span className="label-micro">Kana</span>
-            <span lang="ja" className="font-jp text-caption text-fg-subtle">
+            <span lang="ja" className="jp text-caption text-fg-subtle">
               もじ
             </span>
           </div>

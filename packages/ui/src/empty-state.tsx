@@ -15,24 +15,24 @@ export function EmptyState({ glyph, title, description, action, className }: Emp
   return (
     <div
       className={cn(
-        "flex flex-col items-center rounded-xl border border-dashed border-border-strong bg-surface/50 px-6 py-12 text-center",
+        "flex flex-col items-center rounded-2xl border border-dashed border-border-strong bg-surface-muted/40 px-6 py-12 text-center",
         className,
       )}
     >
       {glyph ? (
-        <p
+        <span
           lang="ja"
-          className="jp-serif select-none text-4xl leading-none text-fg-subtle/50"
           aria-hidden="true"
+          className="jp grid h-16 w-16 place-items-center rounded-2xl bg-surface text-4xl leading-none text-accent-strong shadow-soft"
         >
           {glyph}
-        </p>
+        </span>
       ) : null}
-      <p className="mt-4 text-h3 font-semibold text-fg">{title}</p>
+      <p className="mt-5 text-h3 font-bold text-fg">{title}</p>
       {description ? (
         <p className="mt-1.5 max-w-sm text-sm leading-relaxed text-fg-muted">{description}</p>
       ) : null}
-      {action ? <div className="mt-5 flex justify-center">{action}</div> : null}
+      {action ? <div className="mt-6 flex justify-center">{action}</div> : null}
     </div>
   );
 }

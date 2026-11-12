@@ -35,10 +35,10 @@ export function ProgressBar({
   return (
     <div className={cn("w-full", className)}>
       {showValue || label ? (
-        <div className="mb-1.5 flex items-center justify-between gap-2 text-caption text-fg-muted">
+        <div className="mb-2 flex items-center justify-between gap-2 text-caption text-fg-muted">
           <span>{label}</span>
           {showValue ? (
-            <span className="tnum font-semibold text-fg">{Math.round(percent)}%</span>
+            <span className="tnum font-bold text-fg">{Math.round(percent)}%</span>
           ) : null}
         </div>
       ) : null}
@@ -48,7 +48,7 @@ export function ProgressBar({
         aria-valuemin={0}
         aria-valuemax={max}
         aria-label={label}
-        className="h-1.5 w-full overflow-hidden rounded-full bg-fg/10"
+        className="h-1.5 w-full overflow-hidden rounded-full bg-border"
         {...props}
       >
         <div
@@ -108,7 +108,7 @@ export function ProgressRing({
           r={radius}
           fill="none"
           strokeWidth={stroke}
-          className="stroke-fg/10"
+          className="stroke-border"
         />
         <circle
           cx={size / 2}

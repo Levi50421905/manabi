@@ -9,8 +9,6 @@ import {
   Card,
   CardBody,
   PageHeader,
-  Section,
-  SegmentedControl,
   cn,
 } from "@manabi/ui";
 import {
@@ -26,6 +24,7 @@ import {
 } from "@manabi/content";
 import { QuizRunner, type QuizRunnerHandle } from "@/components/quiz-runner";
 import { SessionExitDialog } from "@/components/session-exit-dialog";
+import { bankDecks, type BankDeck } from "@/lib/bank";
 import {
   ANSWER_TYPE_HINT,
   ANSWER_TYPE_LABEL,
@@ -37,6 +36,7 @@ import {
   buildSentenceOrderQuestions,
   buildVarietyQuestions,
   buildVocabQuestions,
+  drawBankQuestions,
   shuffle,
   type AnswerType,
   type Question,
@@ -54,6 +54,13 @@ type QuizMode =
   | "membaca"
   | "mendengar"
   | "susun";
+
+/**
+ * Sumber butir latihan. `materi` memakai generator runtime dari paket konten,
+ * dua sisanya mengambil deck terkurasi dari Bank Soal — yang kini menjadi
+ * lapisan data, bukan halaman/menu sendiri.
+ */
+type QuizSource = "materi" | "bank-n5" | "bank-jft";
 
 interface ModeOption {
   key: QuizMode;
@@ -136,6 +143,25 @@ const ANSWER_OPTIONS: Array<{ value: AnswerType; label: string }> = (
   ["meaning", "romaji", "kana"] as const
 ).map((value) => ({ value, label: ANSWER_TYPE_LABEL[value] }));
 
+interface SourceOption {
+  key: QuizSource;
+  label: string;
+  hint: string;
+  deck: BankDeck | null;
+}
+
+/** Gaya dasar chip Arah 3: membulat, target sentuh 44px, aksen matcha. */
+function chipClass(active: boolean, disabled = false): string {
+  return cn(
+    "inline-flex min-h-11 items-center gap-2 rounded-full border px-3.5 py-2 text-body font-medium transition-colors duration-150",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper",
+    active
+      ? "border-accent bg-accent-soft text-accent-strong"
+      : "border-border bg-surface text-fg hover:border-border-strong hover:bg-surface-muted",
+    disabled && "cursor-not-allowed border-dashed opacity-50",
+  );
+}
+
 export default function QuizPage() {
   const { level } = useActiveLevel();
   const meta = levelMeta(level);
@@ -153,6 +179,7 @@ export default function QuizPage() {
     [level],
   );
 
+  const [source, setSource] = useState<QuizSource>("materi");
   const [mode, setMode] = useState<QuizMode>("campuran");
   const [count, setCount] = useState(10);
   const [label, setLabel] = useState("");
@@ -163,15 +190,69 @@ export default function QuizPage() {
   const runnerRef = useRef<QuizRunnerHandle>(null);
   /** Bentuk jawaban yang diminta untuk soal kosakata dan kanji. */
   const [answerType, setAnswerType] = useState<AnswerType>("meaning");
+  /**
+   * Contoh soal dibuat dari pengacakan runtime, jadi baru dirender setelah
+   * mount. Tanpa ini HTML server dan klien berbeda dan hidrasi gagal.
+   */
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   const modeInfo = MODES.find((item) => item.key === mode) ?? MODES[0]!;
 
+  /** Bank Soal sebagai lapisan data: deck terkurasi yang bisa dipilih. */
+  const sourceOptions = useMemo<SourceOption[]>(
+    () => [
+      {
+        key: "materi",
+        label: `Materi ${level}`,
+        hint: "generator",
+        deck: null,
+      },
+      ...bankDecks.map((deck) => ({
+        key: `bank-${deck.id}` as QuizSource,
+        label: `Bank ${deck.label}`,
+        hint: `${deck.questions.length} butir`,
+        deck,
+      })),
+    ],
+    [level],
+  );
+  const activeSource =
+    sourceOptions.find((option) => option.key === source) ?? sourceOptions[0]!;
+  const activeDeck = activeSource.deck;
+
+  /**
+   * Jumlah soal: 10/20/30 untuk sumber materi. Deck bank biasanya lebih
+   * pendek, jadi pilihan menyesuaikan isi paket (dan tetap bisa memakai semua
+   * butir lewat pilihan terakhir).
+   */
+  const countOptions = useMemo<Array<{ value: number; label: string }>>(() => {
+    if (!activeDeck) {
+      return COUNTS.map((value) => ({ value, label: String(value) }));
+    }
+
+    const deckSize = activeDeck.questions.length;
+    const available = COUNTS.filter((value) => value <= deckSize).map((value) => ({
+      value,
+      label: String(value),
+    }));
+    if (available.length === 0 || available[available.length - 1]!.value !== deckSize) {
+      available.push({ value: deckSize, label: `Semua (${deckSize})` });
+    }
+    return available;
+  }, [activeDeck]);
+
+  const effectiveCount = activeDeck
+    ? Math.min(count, activeDeck.questions.length)
+    : count;
+
   /** Mode yang soalnya bisa memakai bentuk jawaban pilihan. */
   const isTyped =
-    mode === "kosakata" || mode === "kanji" || mode === "campuran" || mode === "variasi";
+    !activeDeck &&
+    (mode === "kosakata" || mode === "kanji" || mode === "campuran" || mode === "variasi");
 
   const preview = useMemo(() => {
-    if (!isTyped) return null;
+    if (!isTyped || !mounted) return null;
     const samples =
       mode === "kanji"
         ? buildKanjiQuestions(kanjiPool, 1, answerType)
@@ -183,7 +264,7 @@ export default function QuizPage() {
       subPrompt: sample.subPrompt ?? "",
       answer: sample.options[sample.answer] ?? "",
     };
-  }, [isTyped, mode, answerType, kanjiPool, vocabPool]);
+  }, [isTyped, mounted, mode, answerType, kanjiPool, vocabPool]);
 
   /** Jumlah materi yang bisa dijadikan soal untuk sebuah mode. */
   function materialCount(key: QuizMode): number {
@@ -264,15 +345,40 @@ export default function QuizPage() {
     }
   }
 
+  /** Pilih sumber; jumlah soal disesuaikan agar tidak melebihi isi deck bank. */
+  function selectSource(next: QuizSource) {
+    setSource(next);
+    const nextDeck = sourceOptions.find((option) => option.key === next)?.deck ?? null;
+
+    if (!nextDeck) {
+      // Kembali ke generator: pastikan jumlah soal ada di pilihan 10/20/30.
+      setCount((current) => (COUNTS.includes(current) ? current : 10));
+      return;
+    }
+
+    const deckSize = nextDeck.questions.length;
+    setCount((current) => {
+      if (current <= deckSize) return current;
+      const fits = COUNTS.filter((value) => value <= deckSize);
+      return fits[fits.length - 1] ?? 10;
+    });
+  }
+
   function start() {
     const info = MODES.find((item) => item.key === mode) ?? MODES[0]!;
     const answerLabel = ANSWER_TYPE_LABEL[answerType];
+    const nextQuestions = activeDeck
+      ? drawBankQuestions(activeDeck.questions, effectiveCount)
+      : buildQuestions(mode, count);
+
     setLabel(
-      isTyped
-        ? `Latihan ${info.title} · ${answerLabel} · ${level}`
-        : `Latihan ${info.title} · ${level}`,
+      activeDeck
+        ? `Bank ${activeDeck.label} · ${nextQuestions.length} butir acak`
+        : isTyped
+          ? `Latihan ${info.title} · ${answerLabel} · ${level}`
+          : `Latihan ${info.title} · ${level}`,
     );
-    setQuestions(buildQuestions(mode, count));
+    setQuestions(nextQuestions);
     setRunning(true);
     setExitOpen(false);
     window.scrollTo({ top: 0 });
@@ -303,19 +409,12 @@ export default function QuizPage() {
               <Badge tone="level" mono>
                 {level}
               </Badge>
-              <span className="label-micro">{meta.name} · Latihan</span>
+              <span className="label-micro">{meta.name} · Latihan Soal</span>
             </div>
           }
-          title="Latihan"
+          title="Latihan Soal"
           japanese="練習"
           description={label}
-          actions={
-            running ? (
-              <Button variant="outline" onClick={() => setExitOpen(true)}>
-                Keluar
-              </Button>
-            ) : undefined
-          }
         />
         <QuizRunner
           ref={runnerRef}
@@ -351,22 +450,31 @@ export default function QuizPage() {
   }
 
   /* ---------------- layar penyiapan ---------------- */
-  const available = materialCount(mode) > 0;
+  const available = activeDeck
+    ? activeDeck.questions.length > 0
+    : materialCount(mode) > 0;
+
+  const summaryTitle = activeDeck
+    ? `${activeDeck.label} · ${effectiveCount} butir acak`
+    : `${modeInfo.title} · ${count} soal${isTyped ? ` · ${ANSWER_TYPE_LABEL[answerType]}` : ""}`;
+  const summaryDescription = activeDeck
+    ? "Bank terkurasi diacak tanpa pengulangan; pembahasan berlapis tampil setelah menjawab."
+    : modeInfo.description;
 
   return (
-    <div className="space-y-8 pb-8">
+    <div className="space-y-6 pb-8">
       <PageHeader
         eyebrow={
           <div className="flex flex-wrap items-center gap-2">
             <Badge tone="level" mono>
               {level}
             </Badge>
-            <span className="label-micro">{meta.name} · Latihan</span>
+            <span className="label-micro">{meta.name} · Latihan Soal</span>
           </div>
         }
-        title="Latihan"
+        title="Latihan Soal"
         japanese="練習"
-        description={`Susun sesi singkat dari materi ${level}: pilih mode, jumlah soal, lalu mulai.`}
+        description="Pilih sumber soal, atur sesi, lalu mulai. Soal diacak tanpa pengulangan dalam satu sesi."
         actions={
           <Link href={levelHref(level, "ujian")}>
             <Button variant="outline">Simulasi ujian</Button>
@@ -374,172 +482,302 @@ export default function QuizPage() {
         }
       />
 
-      <Section
-        title="Pilih mode"
-        glyph="問"
-        description="Satu mode per sesi agar fokus latihanmu jelas."
-      >
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" role="group" aria-label="Mode latihan">
-          {MODES.map((item) => {
-            const active = item.key === mode;
-            const material = materialCount(item.key);
-            const disabled = material === 0;
-
-            return (
-              <button
-                key={item.key}
-                type="button"
-                aria-pressed={active}
-                disabled={disabled}
-                onClick={() => setMode(item.key)}
-                className={cn(
-                  "group flex h-full w-full flex-col gap-2 rounded-xl border p-4 text-left transition-colors duration-150",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper",
-                  "disabled:cursor-not-allowed disabled:opacity-50",
-                  active
-                    ? "border-level/45 bg-level-soft"
-                    : "border-border bg-surface hover:border-border-strong",
-                )}
-              >
-                <span className="flex w-full items-start justify-between gap-3">
-                  <span
-                    lang="ja"
-                    aria-hidden="true"
-                    className={cn(
-                      "jp-serif grid h-10 w-10 place-items-center rounded-lg text-base font-semibold transition-colors",
-                      active ? "bg-level text-level-contrast" : "bg-surface-muted text-fg-subtle",
-                    )}
-                  >
-                    {item.glyph}
-                  </span>
-                  {active ? (
-                    <Badge tone="level">Dipilih</Badge>
-                  ) : (
-                    <span className="tnum text-caption text-fg-subtle">
-                      {disabled ? "Belum tersedia" : `${material} materi`}
-                    </span>
-                  )}
-                </span>
-                <span className="text-h3 font-semibold text-fg">
-                  {item.title}
-                  <span lang="ja" className="jp ml-1.5 text-caption font-normal text-fg-subtle">
-                    {item.japanese}
-                  </span>
-                </span>
-                <span className="text-caption leading-relaxed text-fg-muted">
-                  {item.description}
-                </span>
-              </button>
-            );
-          })}
+      <div className="rounded-3xl border border-border bg-surface p-4 shadow-soft sm:p-6">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="label-micro">Atur sesi</p>
+            <h2 className="mt-1 font-display text-h2 font-semibold tracking-tight text-fg">
+              Sumber, mode, dan jumlah soal
+            </h2>
+            <p className="mt-1 max-w-[54ch] text-caption leading-relaxed text-fg-muted">
+              Bank Soal bukan menu — ia lapisan data yang menyuplai butir untuk sesi ini.
+            </p>
+          </div>
+          <Badge tone="accent">Bank Soal · sumber data</Badge>
         </div>
-      </Section>
 
-      {isTyped ? (
-        <Section
-          title="Bentuk jawaban"
-          glyph="答"
-          description={
-            mode === "campuran"
-              ? "Berlaku untuk soal kosakata dan kanji di sesi ini."
-              : "Pilih apa yang ingin kamu jawab dari tiap soal."
-          }
-        >
-          <Card>
-            <CardBody className="space-y-5 p-4 sm:p-5">
+        <div className="mt-5 space-y-5">
+          {/* Sumber soal: materi level atau deck bank terkurasi. */}
+          <div>
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <p className="label-micro">Sumber soal</p>
+              <span className="text-caption text-fg-subtle">
+                {activeDeck
+                  ? `${activeDeck.questions.length} butir terkurasi`
+                  : "Generator dari materi level ini"}
+              </span>
+            </div>
+            <div className="mt-2 flex flex-wrap gap-2" role="group" aria-label="Sumber soal">
+              {sourceOptions.map((option) => {
+                const active = option.key === source;
+                return (
+                  <button
+                    key={option.key}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => selectSource(option.key)}
+                    className={chipClass(active)}
+                  >
+                    <span>{option.label}</span>
+                    <span className="tnum text-caption font-normal text-fg-muted">
+                      {option.hint}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {activeDeck ? (
+            <div className="rounded-2xl border border-border bg-surface-muted p-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="label-micro">Paket bank terpilih</p>
+                  <p className="mt-1 text-body font-semibold text-fg">
+                    {activeDeck.label}
+                    <span lang="ja" className="jp ml-1.5 text-caption font-normal text-fg-subtle">
+                      {activeDeck.japanese}
+                    </span>
+                  </p>
+                  <p className="mt-0.5 text-caption leading-relaxed text-fg-muted">
+                    {activeDeck.description}
+                  </p>
+                </div>
+                <Badge tone="success">Tanpa pengulangan</Badge>
+              </div>
+
+              <ul className="mt-3 grid gap-1.5 sm:grid-cols-2">
+                {activeDeck.sectionCounts.map((section) => (
+                  <li
+                    key={section.label}
+                    className="flex items-baseline justify-between gap-2 rounded-lg bg-surface px-2.5 py-1.5 text-caption"
+                  >
+                    <span className="min-w-0 text-fg-muted">{section.label}</span>
+                    <span className="tnum shrink-0 font-semibold text-fg">{section.count}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <p className="mt-3 text-caption leading-relaxed text-fg-muted">
+                Butir bank punya kunci tetap dan pembahasan empat lapis yang tetap tampil setelah
+                menjawab. Bentuk jawaban mengikuti butir aslinya (pilihan ganda).
+              </p>
+            </div>
+          ) : (
+            <>
+              {/* Mode latihan: sembilan mode lama, kini berupa chip. */}
               <div>
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="text-h3 font-semibold text-fg">Jawab dengan</p>
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <p className="label-micro">Mode latihan</p>
                   <span className="text-caption text-fg-subtle">
-                    {ANSWER_TYPE_HINT[answerType]}
+                    Satu mode per sesi agar fokus latihanmu jelas.
                   </span>
                 </div>
-                <SegmentedControl
-                  className="mt-2"
-                  block
-                  ariaLabel="Bentuk jawaban"
-                  value={answerType}
-                  onChange={setAnswerType}
-                  options={ANSWER_OPTIONS}
-                />
+                <div className="mt-2 flex flex-wrap gap-2" role="group" aria-label="Mode latihan">
+                  {MODES.map((item) => {
+                    const active = item.key === mode;
+                    const material = materialCount(item.key);
+                    const disabled = material === 0;
+
+                    return (
+                      <button
+                        key={item.key}
+                        type="button"
+                        aria-pressed={active}
+                        disabled={disabled}
+                        title={item.description}
+                        onClick={() => setMode(item.key)}
+                        className={chipClass(active, disabled)}
+                      >
+                        <span
+                          lang="ja"
+                          aria-hidden="true"
+                          className={cn(
+                            "jp grid h-6 w-6 place-items-center rounded-md text-caption font-semibold",
+                            active
+                              ? "bg-accent text-accent-contrast"
+                              : "bg-surface-muted text-fg-subtle",
+                          )}
+                        >
+                          {item.glyph}
+                        </span>
+                        <span>{item.title}</span>
+                        <span className="tnum text-caption font-normal text-fg-muted">
+                          {disabled ? "—" : material}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="mt-1.5 text-caption leading-relaxed text-fg-subtle">
+                  {modeInfo.description}
+                </p>
               </div>
 
-              <div className="rounded-lg border border-border bg-surface-muted p-3.5">
-                <p className="label-micro">Contoh soal</p>
-                {preview ? (
-                  <>
-                    <p
-                      lang="ja"
-                      className="jp-serif mt-2 text-h1 font-semibold leading-tight text-fg"
-                    >
-                      {preview.prompt}
-                    </p>
-                    <p className="mt-1 text-caption text-fg-muted">{preview.subPrompt}</p>
-                    <p className="mt-2.5 border-t border-border pt-2.5 text-caption text-fg-subtle">
-                      Jawaban benar:{" "}
-                      <span className="font-semibold text-fg">{preview.answer}</span>
-                    </p>
-                  </>
-                ) : (
-                  <p className="mt-2 text-caption text-fg-muted">
-                    Belum ada materi untuk level ini, jadi contoh soal belum bisa dibuat.
-                  </p>
-                )}
-              </div>
-            </CardBody>
-          </Card>
-        </Section>
-      ) : null}
+              {/* Bentuk jawaban — permintaan eksplisit pemilik produk. */}
+              <div className="rounded-2xl border border-accent/30 bg-accent-soft/40 p-4">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="label-micro">Bentuk jawaban</p>
+                    <p className="mt-1 text-body font-semibold text-fg">Pilih bentuk jawaban</p>
+                  </div>
+                  <Badge tone="level">
+                    {isTyped ? ANSWER_TYPE_LABEL[answerType] : "Tidak aktif"}
+                  </Badge>
+                </div>
+                <p className="mt-1 text-caption leading-relaxed text-fg-muted">
+                  {isTyped
+                    ? `Berlaku untuk soal kosakata dan kanji di sesi ini — ${ANSWER_TYPE_HINT[answerType]}.`
+                    : "Aktif untuk mode Kosakata, Kanji, Campuran, atau Variasi."}
+                </p>
 
-      <Section title="Jumlah soal" glyph="数" description="Sesuaikan dengan waktu yang kamu punya.">
-        <Card>
-          <CardBody className="p-4 sm:p-5">
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-h3 font-semibold text-fg">Soal per sesi</p>
-              <Badge tone="neutral" mono>
-                {count} soal
-              </Badge>
+                <div
+                  className="mt-3 grid gap-2 sm:grid-cols-3"
+                  role="group"
+                  aria-label="Bentuk jawaban"
+                >
+                  {ANSWER_OPTIONS.map((option) => {
+                    const active = isTyped && answerType === option.value;
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        aria-pressed={active}
+                        disabled={!isTyped}
+                        onClick={() => setAnswerType(option.value)}
+                        className={cn(
+                          "flex min-h-12 flex-col items-start justify-center rounded-xl border px-3.5 py-2.5 text-left transition-colors duration-150",
+                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper",
+                          "disabled:cursor-not-allowed disabled:opacity-50",
+                          active
+                            ? "border-accent bg-accent-soft text-accent-strong"
+                            : "border-border bg-surface text-fg hover:border-border-strong hover:bg-surface-muted",
+                        )}
+                      >
+                        <span className="text-body font-semibold">{option.label}</span>
+                        <span className="mt-0.5 text-caption font-normal text-fg-muted">
+                          {ANSWER_TYPE_HINT[option.value]}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="mt-3 rounded-xl border border-border bg-surface p-3.5">
+                  <p className="label-micro">Contoh soal</p>
+                  {isTyped && preview ? (
+                    <>
+                      <p
+                        lang="ja"
+                        className="jp-serif mt-2 break-words text-h1 font-semibold leading-tight text-fg"
+                      >
+                        {preview.prompt}
+                      </p>
+                      <p className="mt-1 text-caption text-fg-muted">{preview.subPrompt}</p>
+                      <p className="mt-2.5 border-t border-border pt-2.5 text-caption text-fg-subtle">
+                        Jawaban benar:{" "}
+                        <span className="font-semibold text-fg">{preview.answer}</span>
+                      </p>
+                    </>
+                  ) : (
+                    <p className="mt-2 text-caption leading-relaxed text-fg-muted">
+                      {isTyped
+                        ? mounted
+                          ? "Belum ada materi untuk level ini, jadi contoh soal belum bisa dibuat."
+                          : "Menyiapkan contoh soal…"
+                        : "Pilih mode Kosakata, Kanji, Campuran, atau Variasi untuk melihat contoh dan mengaktifkan pilihan ini."}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* Jumlah soal. */}
+          <div>
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <p className="label-micro">Jumlah soal</p>
+              <span className="text-caption text-fg-subtle">
+                {activeDeck
+                  ? `Paket ini berisi ${activeDeck.questions.length} butir`
+                  : "Sesuaikan dengan waktu yang tersedia."}
+              </span>
             </div>
-            <SegmentedControl
-              className="mt-3"
-              block
-              ariaLabel="Jumlah soal"
-              value={count}
-              onChange={setCount}
-              options={COUNTS.map((value) => ({ value, label: String(value) }))}
-            />
+            <div className="mt-2 flex flex-wrap gap-2" role="group" aria-label="Jumlah soal">
+              {countOptions.map((option) => {
+                const active = option.value === count;
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => setCount(option.value)}
+                    className={cn(chipClass(active), "tnum justify-center")}
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
+            </div>
+            {activeDeck ? (
+              <p className="mt-1.5 text-caption leading-relaxed text-fg-subtle">
+                Pilihan jumlah menyesuaikan isi paket bank; pilihan terakhir memakai semua butir
+                yang tersedia.
+              </p>
+            ) : null}
+          </div>
+        </div>
+
+        <div className="mt-5 border-t border-border pt-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0">
+              <p className="label-micro">Siap mulai</p>
+              <p className="mt-1 text-body font-semibold text-fg">{summaryTitle}</p>
+              <p className="mt-0.5 text-caption leading-relaxed text-fg-muted">
+                {summaryDescription}
+              </p>
+            </div>
+            <Button
+              size="lg"
+              onClick={start}
+              disabled={!available}
+              className="w-full shrink-0 sm:w-auto"
+            >
+              Mulai latihan
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Callout tone="info" title="Cara menjawab">
+          Tekan <span className="tnum font-semibold text-fg">1–4</span> untuk memilih jawaban, lalu{" "}
+          <span className="tnum font-semibold text-fg">Enter</span> untuk memeriksa dan lanjut.
+          Umpan balik dan pembahasan muncul langsung setelah jawaban diperiksa.
+        </Callout>
+
+        <Card variant="muted" className="rounded-2xl">
+          <CardBody className="p-4">
+            <details>
+              <summary className="flex min-h-11 cursor-pointer items-center text-body font-semibold text-fg">
+                Kenapa Bank Soal tidak ada di menu?
+              </summary>
+              <p className="mt-2 text-caption leading-relaxed text-fg-muted">
+                Bank Soal adalah lapisan data, bukan halaman. Latihan Soal dan Simulasi Ujian
+                mengambil butir acak tanpa pengulangan dari sana. Menampilkannya sebagai menu hanya
+                menambah satu klik tanpa menambah materi.
+              </p>
+            </details>
           </CardBody>
         </Card>
-      </Section>
+      </div>
 
-      <Card variant="muted">
-        <CardBody className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="min-w-0">
-            <p className="label-micro">Siap mulai</p>
-            <p className="mt-1.5 text-body font-semibold text-fg">
-              {modeInfo.title} · {count} soal
-              {isTyped ? ` · ${ANSWER_TYPE_LABEL[answerType]}` : ""}
-            </p>
-            <p className="mt-0.5 text-caption text-fg-muted">{modeInfo.description}</p>
-          </div>
-          <Button size="lg" onClick={start} disabled={!available} className="w-full sm:w-auto">
-            Mulai latihan
-          </Button>
-        </CardBody>
-      </Card>
-
-      <Callout tone="info" title="Cara menjawab">
-        Tekan <span className="tnum font-semibold text-fg">1–4</span> untuk memilih jawaban, lalu{" "}
-        <span className="tnum font-semibold text-fg">Enter</span> untuk memeriksa dan lanjut. Umpan
-        balik dan pembahasan muncul langsung setelah jawaban diperiksa.
-      </Callout>
-
-      <Card variant="muted">
+      <Card variant="muted" className="rounded-2xl">
         <CardBody className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
             <p className="label-micro">Latihan khusus</p>
             <p className="mt-1.5 text-body font-semibold text-fg">Partikel (助詞)</p>
-            <p className="mt-0.5 text-caption text-fg-muted">
+            <p className="mt-0.5 text-caption leading-relaxed text-fg-muted">
               Lima bentuk soal khusus partikel: isi celah, ketik, cocokkan fungsi, bedakan pasangan,
               dan lengkapi teks.
             </p>

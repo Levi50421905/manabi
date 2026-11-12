@@ -121,8 +121,8 @@ export function SessionExitDialog({
           {title}
         </h2>
         <p id={descriptionId} className="mt-2 text-sm leading-relaxed text-fg-muted">
-          Kamu sedang di tengah sesi, jadi navigasi ke menu lain dikunci. Pilih
-          cara keluar di bawah ini.
+          Sesi sedang berjalan. Navigasi ke menu lain dikunci sampai sesi selesai.
+          Pilih cara keluar di bawah ini.
         </p>
 
         <Callout tone="danger" title="Jawaban akan hilang" className="mt-4">

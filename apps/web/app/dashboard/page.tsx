@@ -2,59 +2,46 @@
 
 import Link from "next/link";
 import {
-  Badge,
-  Button,
-  Callout,
-  Card,
-  CardBody,
-  PageHeader,
-  ProgressBar,
-  Section,
-  StatTile,
-  cn,
-} from "@manabi/ui";
-import {
+  LEVEL_META,
+  LEVEL_ORDER,
+  availableLevels,
   contentCountByLevel,
   grammarByLevel,
+  kana,
   kanjiByLevel,
   levelHref,
   levelMeta,
-  readingByLevel,
   vocabByLevel,
 } from "@manabi/content";
 import { isDue, summarize, type SrsCard } from "@manabi/srs";
+import { cn } from "@manabi/ui";
 import { currentStreak, dayKey, levelFromXp, resetProgress, useProgress } from "@/lib/store";
 import { usePrefs } from "@/lib/prefs";
 import { useActiveLevel } from "@/lib/level";
+import { dailyCards } from "@/lib/daily-card";
+import { Mascot } from "@/components/mascot";
 
 const DAY_LABELS = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
 
 interface DeckStat {
   total: number;
   reviewed: number;
-  /** Kartu yang sudah pernah diulas dan kini jatuh tempo. */
   due: number;
-  /** Kartu yang belum pernah dilihat sama sekali. */
   fresh: number;
   mature: number;
   accuracy: number;
 }
 
 function deckStats(ids: string[], cards: Record<string, SrsCard>): DeckStat {
-  const list = ids
-    .map((id) => cards[id])
-    .filter((card): card is SrsCard => Boolean(card));
+  const list = ids.map((id) => cards[id]).filter((card): card is SrsCard => Boolean(card));
   const summary = summarize(list);
 
   let due = 0;
   let fresh = 0;
   for (const id of ids) {
     const card = cards[id];
-    if (!card) {
-      fresh += 1;
-    } else if (isDue(card)) {
-      due += 1;
-    }
+    if (!card) fresh += 1;
+    else if (isDue(card)) due += 1;
   }
 
   return {
@@ -86,18 +73,9 @@ export default function DashboardPage() {
   const { level: xpLevel, intoLevel, need } = levelFromXp(progress.xp);
   const streak = currentStreak(progress);
 
-  const vocabStats = deckStats(
-    vocabByLevel(level).map((item) => item.id),
-    progress.cards,
-  );
-  const kanjiStats = deckStats(
-    kanjiByLevel(level).map((item) => item.id),
-    progress.cards,
-  );
-  const grammarStats = deckStats(
-    grammarByLevel(level).map((item) => item.id),
-    progress.cards,
-  );
+  const vocabStats = deckStats(vocabByLevel(level).map((item) => item.id), progress.cards);
+  const kanjiStats = deckStats(kanjiByLevel(level).map((item) => item.id), progress.cards);
+  const grammarStats = deckStats(grammarByLevel(level).map((item) => item.id), progress.cards);
 
   const totalDue = vocabStats.due + kanjiStats.due + grammarStats.due;
   const totalFresh = vocabStats.fresh + kanjiStats.fresh + grammarStats.fresh;
@@ -112,374 +90,485 @@ export default function DashboardPage() {
   });
   const weeklyMax = Math.max(1, ...weekly.map((day) => day.value));
   const weekTotal = weekly.reduce((sum, day) => sum + day.value, 0);
+  const todayActions = progress.activity[dayKey()] ?? 0;
+  const goalPct = Math.min(100, Math.round((todayActions / Math.max(1, prefs.dailyGoal)) * 100));
+  const todayCard = dailyCards(dayKey(), 1)[0];
 
-  const modules = [
+  const modules: Array<{
+    href: string;
+    glyph: string;
+    title: string;
+    caption: string;
+    pct: number | null;
+    tone: string;
+  }> = [
     {
-      path: "kana",
+      href: levelHref(level, "kana"),
       glyph: "あ",
-      title: "Kana",
-      detail: "Hiragana & katakana",
-      value: null as number | null,
-      caption: "208 huruf",
-      due: 0,
+      title: "Kana & Menulis",
+      caption: `${kana.length} huruf · kanvas menulis`,
+      pct: 100,
+      tone: "bg-accent-soft text-accent",
     },
     {
-      path: "vocab",
+      href: levelHref(level, "vocab"),
       glyph: "語",
       title: "Kosakata",
-      detail: `${vocabStats.reviewed} dari ${vocabStats.total} kata pernah diulas`,
-      value: vocabStats.reviewed,
-      caption: `${vocabStats.total}`,
-      due: vocabStats.due,
+      caption: `${vocabStats.reviewed} / ${vocabStats.total} diulas`,
+      pct: Math.round((vocabStats.reviewed / Math.max(1, vocabStats.total)) * 100),
+      tone: "bg-coral-soft text-coral-strong",
     },
     {
-      path: "kanji",
+      href: levelHref(level, "kanji"),
       glyph: "漢",
-      title: "Kanji",
-      detail: `${kanjiStats.mature} kanji sudah matang`,
-      value: kanjiStats.reviewed,
-      caption: `${kanjiStats.total}`,
-      due: kanjiStats.due,
+      title: "Kanji & Bacaan",
+      caption: `${kanjiStats.reviewed} / ${kanjiStats.total} diulas`,
+      pct: Math.round((kanjiStats.reviewed / Math.max(1, kanjiStats.total)) * 100),
+      tone: "bg-sky-soft text-sky",
     },
     {
-      path: "grammar",
+      href: levelHref(level, "grammar"),
       glyph: "文",
-      title: "Tata bahasa",
-      detail: `${grammarStats.reviewed} dari ${grammarStats.total} pola dipelajari`,
-      value: grammarStats.reviewed,
-      caption: `${grammarStats.total}`,
-      due: grammarStats.due,
+      title: "Tata Bahasa",
+      caption: `${grammarStats.reviewed} / ${grammarStats.total} pola`,
+      pct: Math.round((grammarStats.reviewed / Math.max(1, grammarStats.total)) * 100),
+      tone: "bg-sun-soft text-sun",
     },
     {
-      path: "partikel",
+      href: levelHref(level, "partikel"),
       glyph: "助",
       title: "Partikel",
-      detail: "Penanda fungsi kata + pasangan yang sering tertukar",
-      value: null,
-      caption: `${counts.particles} partikel`,
-      due: 0,
+      caption: `${counts.particles} partikel · 6 pasangan`,
+      pct: null,
+      tone: "bg-accent-soft text-accent",
     },
     {
-      path: "bacaan-kanji",
-      glyph: "音",
-      title: "Bacaan Kanji",
-      detail: "Bacaan berubah sesuai konteks",
-      value: null,
-      caption: "aturan + jukujikun",
-      due: 0,
-    },
-    {
-      path: "konteks",
-      glyph: "敬",
-      title: "Konteks & Etiket",
-      detail: "Bentuk sopan dan kebiasaan sehari-hari",
-      value: null,
-      caption: "tingkat bicara",
-      due: 0,
-    },
-    {
-      path: "reading",
-      glyph: "読",
-      title: "Membaca",
-      detail: `${progress.readPassages.length} bacaan diselesaikan`,
-      value: null,
-      caption: `${counts.reading} bacaan`,
-      due: 0,
-    },
-    {
-      path: "listening",
+      href: levelHref(level, "listening"),
       glyph: "聴",
       title: "Mendengar",
-      detail: "Dialog dengan pelafalan Jepang",
-      value: null,
-      caption: `${counts.listening} dialog`,
-      due: 0,
+      caption: `${counts.listening} dialog · 3 kecepatan`,
+      pct: null,
+      tone: "bg-sky-soft text-sky",
+    },
+    {
+      href: levelHref(level, "reading"),
+      glyph: "読",
+      title: "Membaca",
+      caption: `${Math.min(progress.readPassages.length, counts.reading)} / ${counts.reading} bacaan`,
+      pct: Math.round((Math.min(progress.readPassages.length, counts.reading) / Math.max(1, counts.reading)) * 100),
+      tone: "bg-sun-soft text-sun",
+    },
+    {
+      href: levelHref(level, "konteks"),
+      glyph: "敬",
+      title: "Konteks & Etiket",
+      caption: "Tingkat bicara, keigo, kebiasaan",
+      pct: null,
+      tone: "bg-coral-soft text-coral-strong",
     },
   ];
 
   return (
-    <div className="space-y-8 pb-8">
-      <PageHeader
-        eyebrow={
+    <div className="space-y-7 pb-10 sm:space-y-9">
+      {/* ---------- Sapaan ---------- */}
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge tone="level" mono>
-              {level}
-            </Badge>
-            <span className="label-micro">{formatToday()}</span>
+            <span className="rounded-full bg-accent-soft px-2.5 py-1 text-[11px] font-black text-accent">
+              {level} · {meta.name}
+            </span>
+            <span className="text-[11px] font-black uppercase tracking-[0.12em] text-fg-subtle">
+              {formatToday()}
+            </span>
           </div>
-        }
-        title="Selamat belajar lagi"
-        japanese="おかえりなさい"
-        description={
-          totalDue > 0
-            ? `Ada ${totalDue} kartu jatuh tempo hari ini di level ${level} (${meta.name}) — plus ${totalFresh} kartu baru yang bisa dipelajari.`
-            : totalFresh > 0
-              ? `Tidak ada ulasan tertunda. ${totalFresh} kartu baru di level ${level} siap dipelajari.`
-              : `Semua kartu level ${level} sudah diulang. Tambah materi baru lewat modul lain, yuk.`
-        }
-        actions={
-          <>
-            <Link href={levelHref(level, "quiz")}>
-              <Button variant="outline">Latihan cepat</Button>
-            </Link>
-            <Link href={levelHref(level, "vocab")}>
-              <Button>Mulai ulasan</Button>
-            </Link>
-          </>
-        }
-      />
-
-      {/* ---------- Fokus hari ini ---------- */}
-      <Card className="overflow-hidden">
-        <div className="grid gap-6 p-5 sm:p-6 md:grid-cols-[1.4fr_1fr] md:items-center">
-          <div>
-            <p className="label-micro">Fokus hari ini</p>
-            <div className="mt-2 flex flex-wrap items-baseline gap-3">
-              <span className="tnum font-display text-[44px] font-semibold leading-none text-fg">
-                {totalDue}
-              </span>
-              <span className="text-sm text-fg-muted">kartu jatuh tempo</span>
-            </div>
-            <p className="mt-3 max-w-[52ch] text-sm leading-relaxed text-fg-muted">
-              {totalDue > 0
-                ? `Kosakata ${vocabStats.due} · kanji ${kanjiStats.due} · tata bahasa ${grammarStats.due}. Ulasan singkat hari ini menjaga materi lama tetap tinggal. Masih ada ${totalFresh} kartu baru bila ingin menambah beban.`
-                : `Tidak ada ulasan yang menumpuk. Ini waktu yang tepat untuk membuka ${totalFresh} kartu baru atau mencoba latihan campuran.`}
-            </p>
-            <div className="mt-5 flex flex-wrap gap-2">
-              <Link href={levelHref(level, "vocab")}>
-                <Button size="lg">Ulas kosakata</Button>
-              </Link>
-              <Link href={levelHref(level, "kanji")}>
-                <Button size="lg" variant="outline">
-                  Ulas kanji
-                </Button>
-              </Link>
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-border bg-surface-muted p-4">
-            <div className="flex items-baseline justify-between">
-              <span className="label-micro">Progres level {level}</span>
-              <span className="tnum text-caption font-semibold text-fg">
-                {totalItems > 0 ? Math.round((totalReviewed / totalItems) * 100) : 0}%
-              </span>
-            </div>
-            <ProgressBar className="mt-2.5" value={totalReviewed} max={Math.max(1, totalItems)} tone="level" />
-            <div className="mt-4 space-y-2.5">
-              <div className="flex items-center justify-between text-caption text-fg-muted">
-                <span>Kosakata</span>
-                <span className="tnum">
-                  {vocabStats.reviewed}/{vocabStats.total}
-                </span>
-              </div>
-              <ProgressBar value={vocabStats.reviewed} max={Math.max(1, vocabStats.total)} tone="level" />
-              <div className="flex items-center justify-between pt-1 text-caption text-fg-muted">
-                <span>Kanji</span>
-                <span className="tnum">
-                  {kanjiStats.reviewed}/{kanjiStats.total}
-                </span>
-              </div>
-              <ProgressBar value={kanjiStats.reviewed} max={Math.max(1, kanjiStats.total)} tone="success" />
-            </div>
-          </div>
+          <h1 className="mt-2 font-display text-[clamp(2rem,4.4vw,3.1rem)] font-black leading-[1.04] tracking-[-0.035em] text-fg">
+            Ringkasan belajar
+          </h1>
+          <p className="mt-2 max-w-[64ch] text-[13.5px] font-medium leading-relaxed text-fg-muted">
+            {totalDue > 0
+              ? `Ada ${totalDue} kartu jatuh tempo dan ${totalFresh} kartu baru di level ${level}.`
+              : totalFresh > 0
+                ? `Tidak ada ulasan tertunda. ${totalFresh} kartu baru siap dipelajari.`
+                : `Semua kartu level ${level} sudah diulang. Saatnya menambah materi baru.`}
+          </p>
         </div>
-      </Card>
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href={levelHref(level, "quiz")}
+            className="inline-flex h-11 items-center justify-center rounded-2xl border border-border bg-surface px-4 text-[13px] font-black text-fg shadow-soft transition-colors hover:border-accent/40"
+          >
+            Latihan cepat
+          </Link>
+          <Link
+            href={levelHref(level, "vocab")}
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-accent px-4 text-[13px] font-black text-accent-contrast shadow-soft transition-colors hover:bg-accent-strong"
+          >
+            Mulai ulasan
+            <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+      </header>
+
+      {/* ---------- Fokus + streak ---------- */}
+      <div className="grid gap-3 lg:grid-cols-[1.45fr_0.85fr]">
+        <section className="relative overflow-hidden rounded-[2rem] border border-accent/20 bg-gradient-to-br from-accent-soft via-surface to-sun-soft/60 p-6 shadow-soft sm:p-7">
+          <div className="relative z-10 max-w-[58ch]">
+            <p className="label-micro text-accent">Fokus hari ini</p>
+            <h2 className="mt-2 font-display text-[clamp(1.5rem,3vw,2rem)] font-black leading-[1.14] tracking-[-0.025em] text-fg">
+              {totalDue > 0 ? "Ulasan kartu menunggu." : "Latihan singkat untuk hari ini."}
+            </h2>
+            <p className="mt-2 text-[13px] font-medium leading-relaxed text-fg-muted">
+              {totalDue > 0
+                ? `Kosakata ${vocabStats.due} · kanji ${kanjiStats.due} · tata bahasa ${grammarStats.due}. Ulasan singkat menjaga materi lama tetap tinggal.`
+                : `Tidak ada antrean. Gunakan waktu ini untuk latihan campuran atau membuka ${totalFresh} kartu baru.`}
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <span className="rounded-full bg-surface px-3 py-1.5 text-[11.5px] font-black text-fg shadow-soft">
+                {totalDue} jatuh tempo
+              </span>
+              <span className="rounded-full bg-surface px-3 py-1.5 text-[11.5px] font-black text-fg shadow-soft">
+                {totalFresh} kartu baru
+              </span>
+              <span className="rounded-full bg-surface px-3 py-1.5 text-[11.5px] font-black text-fg shadow-soft">
+                ±10 menit
+              </span>
+            </div>
+            <div className="mt-5 flex flex-wrap gap-2">
+              <Link
+                href={levelHref(level, "vocab")}
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-accent px-5 text-[13.5px] font-black text-accent-contrast shadow-soft hover:bg-accent-strong"
+              >
+                Ulas kosakata
+                <span aria-hidden="true">→</span>
+              </Link>
+              <Link
+                href={levelHref(level, "quiz")}
+                className="inline-flex h-12 items-center justify-center rounded-2xl border border-border bg-surface px-5 text-[13.5px] font-black text-fg shadow-soft hover:bg-surface-muted"
+              >
+                Latihan Soal
+              </Link>
+            </div>
+          </div>
+          <Mascot size={120} className="pointer-events-none absolute -bottom-4 right-2 hidden opacity-90 sm:block sm:right-8" />
+        </section>
+
+        <section className="rounded-[2rem] border border-border bg-surface p-5 shadow-soft sm:p-6">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="label-micro text-coral-strong">Streak</p>
+              <p className="mt-1 font-display text-[30px] font-black leading-none text-fg">
+                {streak} hari
+              </p>
+              <p className="mt-1 text-[12px] font-semibold text-fg-muted">
+                Total {weekTotal} aksi pekan ini
+              </p>
+            </div>
+            <span className="grid h-11 w-11 place-items-center rounded-2xl bg-coral-soft text-lg" aria-hidden="true">
+              🔥
+            </span>
+          </div>
+
+          <div className="mt-4 grid grid-cols-7 gap-1 text-center">
+            {weekly.map((day) => {
+              const levelDot = day.value === 0 ? 0 : day.value >= 20 ? 2 : 1;
+              return (
+                <div key={day.key} className="flex flex-col items-center gap-1">
+                  <span className="text-[10.5px] font-black text-fg-subtle">{day.label}</span>
+                  <span
+                    className={cn(
+                      "h-3.5 w-3.5 rounded-full",
+                      levelDot === 0
+                        ? "border border-dashed border-border bg-transparent"
+                        : levelDot === 2
+                          ? "bg-accent"
+                          : "bg-accent/45",
+                    )}
+                    aria-hidden="true"
+                  />
+                  <span className="text-[10.5px] font-black text-fg-muted">{day.value}</span>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="mt-4 border-t border-border pt-3">
+            <div className="flex items-center justify-between text-[11.5px] font-black text-fg-muted">
+              <span>Target hari ini</span>
+              <span className="tnum">
+                {Math.min(todayActions, prefs.dailyGoal)}/{prefs.dailyGoal}
+              </span>
+            </div>
+            <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-surface-inset">
+              <div className="h-full rounded-full bg-sun" style={{ width: `${goalPct}%` }} />
+            </div>
+          </div>
+        </section>
+      </div>
 
       {/* ---------- Statistik ---------- */}
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatTile
-          label="Streak"
-          value={streak}
-          unit="hari"
-          hint={progress.lastStudyDate ? `Terakhir ${progress.lastStudyDate}` : "Belum mulai"}
-          glyph="連"
-        />
-        <StatTile
-          label={`Level ${xpLevel}`}
-          value={progress.xp}
-          unit="XP"
-          hint={`${intoLevel}/${need} menuju level ${xpLevel + 1}`}
-          glyph="級"
-        />
-        <StatTile
-          label="Jatuh tempo"
-          value={totalDue}
-          hint={`${totalFresh} kartu baru menunggu`}
-          glyph="復"
-        />
-        <StatTile
-          label="Akurasi ulasan"
-          value={vocabStats.accuracy}
-          unit="%"
-          hint={`dari ${vocabStats.reviewed} kosakata diulas`}
-          glyph="正"
-        />
+      <div className="grid gap-3 sm:grid-cols-3">
+        {[
+          {
+            label: "XP total",
+            value: progress.xp.toLocaleString("id-ID"),
+            unit: "XP",
+            hint: `Level ${xpLevel} · ${intoLevel}/${need} menuju ${xpLevel + 1}`,
+            pct: Math.round((intoLevel / need) * 100),
+            tone: "bg-accent",
+          },
+          {
+            label: "Akurasi ulasan",
+            value: String(vocabStats.accuracy),
+            unit: "%",
+            hint: `Dari ${vocabStats.reviewed} kosakata diulas`,
+            pct: vocabStats.accuracy,
+            tone: "bg-sun",
+          },
+          {
+            label: "Progres level",
+            value: String(totalItems ? Math.round((totalReviewed / totalItems) * 100) : 0),
+            unit: "%",
+            hint: `${totalReviewed} dari ${totalItems} kartu pernah diulas`,
+            pct: totalItems ? Math.round((totalReviewed / totalItems) * 100) : 0,
+            tone: "bg-coral",
+          },
+        ].map((stat) => (
+          <div key={stat.label} className="rounded-3xl border border-border bg-surface p-4 shadow-soft">
+            <p className="text-[11px] font-black uppercase tracking-[0.11em] text-fg-subtle">
+              {stat.label}
+            </p>
+            <p className="mt-1 flex items-baseline gap-1">
+              <span className="tnum font-display text-[28px] font-black leading-none text-fg">
+                {stat.value}
+              </span>
+              <span className="text-[12px] font-black text-fg-muted">{stat.unit}</span>
+            </p>
+            <p className="mt-1 text-[11.5px] font-semibold text-fg-muted">{stat.hint}</p>
+            <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-surface-inset">
+              <div className={cn("h-full rounded-full", stat.tone)} style={{ width: `${stat.pct}%` }} />
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* ---------- Aktivitas + modul ---------- */}
-      <div className="grid gap-4 lg:grid-cols-[1fr_1.1fr]">
-        <Card>
-          <CardBody>
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-h3 font-semibold text-fg">Aktivitas 7 hari</h2>
-              <span className="tnum text-caption text-fg-muted">{weekTotal} aksi</span>
-            </div>
-            <div
-              className="mt-5 flex h-32 items-end gap-2"
-              role="img"
-              aria-label={`Aktivitas tujuh hari terakhir, total ${weekTotal} aksi`}
-            >
-              {weekly.map((day) => {
-                const barHeight =
-                  day.value === 0 ? 3 : Math.max(8, Math.round((day.value / weeklyMax) * 100));
-                return (
-                  <div key={day.key} className="flex h-full flex-1 flex-col justify-end gap-2">
-                    <span className="text-center text-caption text-fg-subtle">
-                      {day.value > 0 ? day.value : ""}
-                    </span>
-                    <div
-                      className={cn(
-                        "w-full rounded-sm transition-all",
-                        day.value > 0 ? "bg-level" : "bg-surface-inset",
-                      )}
-                      style={{ height: `${barHeight}px` }}
-                      title={`${day.value} aksi`}
-                    />
-                    <span className="text-center text-caption text-fg-subtle">{day.label}</span>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="mt-5 border-t border-border pt-4">
-              <div className="flex items-center justify-between text-caption text-fg-muted">
-                <span>Target harian</span>
-                <span className="tnum">
-                  {Math.min(progress.activity[dayKey()] ?? 0, prefs.dailyGoal)}/{prefs.dailyGoal}
-                </span>
-              </div>
-            </div>
-          </CardBody>
-        </Card>
+      {/* ---------- Materi ---------- */}
+      <section aria-labelledby="modulesTitle">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 id="modulesTitle" className="font-display text-[26px] font-black tracking-tight text-fg">
+              Materi level {level}
+            </h2>
+            <p className="mt-1 text-[12.5px] font-semibold text-fg-muted">
+              8 modul · {counts.vocab} kosakata · {counts.kanji} kanji · {counts.grammar} tata bahasa
+            </p>
+          </div>
+          <Link
+            href={levelHref(level)}
+            className="inline-flex h-10 items-center rounded-2xl bg-surface-muted px-3.5 text-[12px] font-black text-fg-muted transition-colors hover:text-fg"
+          >
+            Semua modul →
+          </Link>
+        </div>
 
-        <Card>
-          <CardBody>
-            <div className="flex items-baseline justify-between">
-              <h2 className="text-h3 font-semibold text-fg">Lanjut belajar</h2>
-              <Link href={levelHref(level)} className="text-caption text-accent hover:underline">
-                Semua modul
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {modules.map((module) => (
+            <Link
+              key={module.href}
+              href={module.href}
+              className="group flex min-h-[150px] flex-col rounded-3xl border border-border bg-surface p-4 shadow-soft transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-lifted"
+            >
+              <span
+                lang="ja"
+                aria-hidden="true"
+                className={cn("grid h-11 w-11 place-items-center rounded-2xl text-lg font-black", module.tone)}
+              >
+                {module.glyph}
+              </span>
+              <span className="mt-3 block text-[14px] font-black text-fg">{module.title}</span>
+              <span className="mt-0.5 block text-[11.5px] font-semibold leading-relaxed text-fg-muted">
+                {module.caption}
+              </span>
+              <span className="mt-auto block pt-3">
+                {module.pct === null ? (
+                  <span className="text-[11px] font-black text-fg-subtle">Terbuka langsung</span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-inset">
+                      <span className="block h-full rounded-full bg-accent" style={{ width: `${module.pct}%` }} />
+                    </span>
+                    <span className="tnum text-[10.5px] font-black text-fg-subtle">{module.pct}%</span>
+                  </span>
+                )}
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ---------- Riwayat + kartu hari ini ---------- */}
+      <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+        <section className="rounded-3xl border border-border bg-surface p-5 shadow-soft" aria-labelledby="historyTitle">
+          <div className="flex items-center justify-between gap-3">
+            <h2 id="historyTitle" className="font-display text-[22px] font-black text-fg">
+              Riwayat latihan
+            </h2>
+            <Link href={levelHref(level, "quiz")} className="text-[12px] font-black text-accent hover:underline">
+              Latihan lagi →
+            </Link>
+          </div>
+
+          {progress.quizzes.length === 0 ? (
+            <div className="mt-4 rounded-2xl bg-surface-muted px-4 py-8 text-center">
+              <p lang="ja" aria-hidden="true" className="font-jp text-3xl font-black text-accent/40">
+                始
+              </p>
+              <p className="mt-2 text-sm font-black text-fg">Belum ada latihan</p>
+              <p className="mt-1 text-[12px] font-semibold text-fg-muted">
+                Mulai dari latihan campuran untuk mengukur kemampuan awal.
+              </p>
+              <Link
+                href={levelHref(level, "quiz")}
+                className="mt-3 inline-flex h-10 items-center rounded-2xl bg-accent px-4 text-[12px] font-black text-accent-contrast"
+              >
+                Coba latihan
               </Link>
             </div>
-            <ul className="mt-4 divide-y divide-border">
-              {modules.map((module) => (
-                <li key={module.path}>
-                  <Link
-                    href={levelHref(level, module.path)}
-                    className="group flex items-center gap-3 py-2.5"
-                  >
-                    <span
-                      lang="ja"
-                      aria-hidden="true"
-                      className="jp grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-surface-muted text-caption font-semibold text-fg-subtle transition-colors group-hover:bg-level-soft group-hover:text-level"
-                    >
-                      {module.glyph}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block text-sm font-medium text-fg">{module.title}</span>
-                      <span className="block truncate text-caption text-fg-muted">{module.detail}</span>
-                    </span>
-                    {module.due > 0 ? (
-                      <Badge tone="level" className="tnum">
-                        {module.due} ulang
-                      </Badge>
-                    ) : (
-                      <span aria-hidden="true" className="text-caption text-fg-subtle">
-                        →
+          ) : (
+            <ul className="mt-3 divide-y divide-border">
+              {progress.quizzes.slice(0, 5).map((quiz) => {
+                const percent = quiz.total > 0 ? Math.round((quiz.correct / quiz.total) * 100) : 0;
+                return (
+                  <li key={quiz.id} className="flex items-center justify-between gap-3 py-3">
+                    <div className="min-w-0">
+                      <p className="truncate text-[13px] font-black text-fg">{quiz.label}</p>
+                      <p className="text-[11px] font-semibold text-fg-subtle">
+                        {new Date(quiz.date).toLocaleDateString("id-ID", {
+                          day: "numeric",
+                          month: "short",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </p>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-2">
+                      <span className="tnum text-[11.5px] font-bold text-fg-muted">
+                        {quiz.correct}/{quiz.total}
                       </span>
-                    )}
-                  </Link>
-                </li>
-              ))}
+                      <span
+                        className={cn(
+                          "tnum rounded-full px-2 py-0.5 text-[11px] font-black",
+                          percent >= 70
+                            ? "bg-success-soft text-success"
+                            : percent >= 40
+                              ? "bg-warning-soft text-warning"
+                              : "bg-danger-soft text-danger",
+                        )}
+                      >
+                        {percent}%
+                      </span>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
-          </CardBody>
-        </Card>
+          )}
+        </section>
+
+        <section className="rounded-3xl border border-border bg-surface p-5 shadow-soft" aria-labelledby="dailyTitle">
+          <div className="flex items-center justify-between gap-3">
+            <h2 id="dailyTitle" className="font-display text-[22px] font-black text-fg">
+              Kartu hari ini
+            </h2>
+            <span className="rounded-full bg-accent-soft px-2.5 py-1 text-[10.5px] font-black text-accent">
+              Bergilir tiap hari
+            </span>
+          </div>
+
+          {todayCard ? (
+            <div className="mt-4">
+              <p className="text-[10.5px] font-black uppercase tracking-[0.12em] text-fg-subtle">
+                {todayCard.moduleLabel} · {level}
+              </p>
+              <div className="mt-2 flex items-start gap-4">
+                <span
+                  lang="ja"
+                  className={
+                    todayCard.kind === "tata-bahasa"
+                      ? "shrink-0 font-jp text-[44px] font-black leading-none text-fg"
+                      : "shrink-0 font-jp text-[64px] font-black leading-none text-fg"
+                  }
+                >
+                  {todayCard.kind === "tata-bahasa" ? "文" : todayCard.glyph}
+                </span>
+                <div className="min-w-0">
+                  <p className="font-display text-[20px] font-black leading-tight text-fg">
+                    {todayCard.title}
+                  </p>
+                  <p className="mt-1 text-[12.5px] font-semibold text-fg-muted">
+                    {todayCard.reading} {todayCard.romaji ? `· ${todayCard.romaji}` : ""}
+                  </p>
+                  <p className="mt-1 text-[11px] font-semibold text-fg-subtle">{todayCard.meta}</p>
+                </div>
+              </div>
+              <p className="mt-3 rounded-2xl bg-surface-muted px-3 py-2 text-[12px] font-semibold leading-relaxed text-fg-muted">
+                {todayCard.note}
+              </p>
+              <Link
+                href={todayCard.href}
+                className="mt-3 inline-flex h-10 items-center rounded-2xl bg-accent px-4 text-[12px] font-black text-accent-contrast hover:bg-accent-strong"
+              >
+                Buka materi →
+              </Link>
+            </div>
+          ) : null}
+        </section>
       </div>
 
-      {/* ---------- Riwayat ---------- */}
-      <Section
-        title="Riwayat latihan"
-        glyph="跡"
-        description="Sesi latihan dan ujian terakhir di browser ini."
-        action={
-          <Link href={levelHref(level, "quiz")} className="text-caption text-accent hover:underline">
-            Latihan lagi
-          </Link>
-        }
-      >
-        <Card>
-          <CardBody className="p-0">
-            {progress.quizzes.length === 0 ? (
-              <div className="px-5 py-10 text-center">
-                <p lang="ja" aria-hidden="true" className="jp-serif text-3xl text-fg-subtle/50">
-                  始
-                </p>
-                <p className="mt-3 text-sm font-medium text-fg">Belum ada latihan</p>
-                <p className="mt-1 text-caption text-fg-muted">
-                  Mulai dari latihan campuran untuk mengukur kemampuan awal.
-                </p>
-                <Link href={levelHref(level, "quiz")} className="mt-4 inline-block">
-                  <Button size="sm">Coba latihan campuran</Button>
-                </Link>
-              </div>
-            ) : (
-              <ul className="divide-y divide-border">
-                {progress.quizzes.slice(0, 6).map((quiz) => {
-                  const percent = quiz.total > 0 ? Math.round((quiz.correct / quiz.total) * 100) : 0;
-                  return (
-                    <li key={quiz.id} className="flex items-center justify-between gap-3 px-5 py-3">
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-medium text-fg">{quiz.label}</p>
-                        <p className="text-caption text-fg-subtle">
-                          {new Date(quiz.date).toLocaleDateString("id-ID", {
-                            day: "numeric",
-                            month: "short",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </p>
-                      </div>
-                      <div className="flex shrink-0 items-center gap-2">
-                        <span className="tnum text-caption text-fg-muted">
-                          {quiz.correct}/{quiz.total}
-                        </span>
-                        <Badge tone={percent >= 70 ? "success" : percent >= 40 ? "warning" : "danger"}>
-                          {percent}%
-                        </Badge>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-          </CardBody>
-        </Card>
-      </Section>
+      {/* ---------- Jalur level + reset ---------- */}
+      <section className="rounded-3xl border border-border bg-surface p-4 shadow-soft" aria-labelledby="pathTitle">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 id="pathTitle" className="text-[12px] font-black uppercase tracking-[0.11em] text-fg-subtle">
+            Jalur level
+          </h2>
+          <span className="text-[11px] font-semibold text-fg-subtle">
+            Satu level, satu warna, satu progres
+          </span>
+        </div>
+        <div className="mt-3 grid grid-cols-5 gap-1.5">
+          {LEVEL_ORDER.map((item) => {
+            const ready = availableLevels.includes(item);
+            const active = item === level;
+            return (
+              <Link
+                key={item}
+                href={ready ? levelHref(item) : "#"}
+                aria-disabled={!ready}
+                className={cn(
+                  "rounded-2xl border px-2 py-2.5 text-center transition-colors",
+                  active
+                    ? "border-accent bg-accent-soft text-accent"
+                    : ready
+                      ? "border-border bg-surface text-fg-muted hover:border-accent/40"
+                      : "pointer-events-none border-dashed border-border text-fg-subtle/60",
+                )}
+              >
+                <span className="tnum block text-[15px] font-black">{item}</span>
+                <span className="mt-0.5 block truncate text-[10px] font-bold">
+                  {LEVEL_META[item].name}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
 
-      <Callout tone="info" title={`Materi level ${level}`}>
-        <p>
-          {meta.description} Level lain bisa dibuka kapan saja lewat pemilih level — progres tiap
-          level dihitung terpisah.
-        </p>
-      </Callout>
-
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-5 text-caption text-fg-subtle">
-        <p>Progres disimpan di localStorage browser ini.</p>
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4 text-[11.5px] font-semibold text-fg-subtle">
+        <p>Progres disimpan di localStorage browser ini · tanpa akun.</p>
         <button
           type="button"
           className="underline underline-offset-2 hover:text-fg"
           onClick={() => {
-            if (window.confirm("Hapus semua progres belajar di browser ini?")) {
-              resetProgress();
-            }
+            if (window.confirm("Hapus semua progres belajar di browser ini?")) resetProgress();
           }}
         >
           Reset progres

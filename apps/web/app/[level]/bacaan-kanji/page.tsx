@@ -18,6 +18,7 @@ import {
   readingEntriesByLevel,
   readingEntriesByKind,
   readingRulesByLevel,
+  type JlptLevel,
   type ReadingChangeKind,
   type ReadingEntry,
   type ReadingRule,
@@ -25,6 +26,49 @@ import {
 import { SpeakButton } from "@/components/speak-button";
 import { useActiveLevel } from "@/lib/level";
 import { READING_KIND_HINT, READING_KIND_LABEL } from "@/lib/bacaan-kanji";
+
+/* ------------------------------------------------------------------ *
+ * Tab gabungan modul kanji & bacaan
+ * ------------------------------------------------------------------ */
+
+const MODULE_TABS = [
+  { key: "kanji", label: "Kanji", glyph: "漢", path: "kanji" },
+  { key: "bacaan-kanji", label: "Perubahan Bacaan", glyph: "読", path: "bacaan-kanji" },
+] as const;
+
+type ModuleTabKey = (typeof MODULE_TABS)[number]["key"];
+
+/** Tab bar tipis di atas header: kanji dan bacaannya satu kesatuan. */
+function ModuleTabs({ level, current }: { level: JlptLevel; current: ModuleTabKey }) {
+  return (
+    <nav
+      aria-label="Modul kanji"
+      className="flex gap-1 rounded-2xl border border-border bg-surface-muted p-1"
+    >
+      {MODULE_TABS.map((tab) => {
+        const active = tab.key === current;
+        return (
+          <Link
+            key={tab.key}
+            href={levelHref(level, tab.path)}
+            aria-current={active ? "page" : undefined}
+            className={cn(
+              "inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl px-2 text-caption font-semibold transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper sm:px-4 sm:text-sm",
+              active
+                ? "bg-surface text-fg shadow-soft"
+                : "text-fg-muted hover:bg-surface/60 hover:text-fg",
+            )}
+          >
+            <span lang="ja" aria-hidden="true" className="jp text-base leading-none">
+              {tab.glyph}
+            </span>
+            <span className="whitespace-nowrap">{tab.label}</span>
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
 
 const KIND_TONE: Record<ReadingChangeKind, "accent" | "success" | "level" | "neutral"> = {
   jukujikun: "accent",
@@ -64,7 +108,7 @@ function ContextRow({
 
 function RuleCard({ rule }: { rule: ReadingRule }) {
   return (
-    <Card>
+    <Card className="rounded-2xl">
       <CardBody className="p-4 sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="flex items-center gap-3">
@@ -141,7 +185,7 @@ function RuleCard({ rule }: { rule: ReadingRule }) {
 
 function EntryCard({ entry }: { entry: ReadingEntry }) {
   return (
-    <Card className="h-full">
+    <Card className="h-full rounded-2xl">
       <CardBody className="flex h-full flex-col gap-2 p-4">
         <div className="flex items-start justify-between gap-2">
           <span lang="ja" className="font-jp-serif text-2xl font-semibold leading-none text-fg">
@@ -194,24 +238,30 @@ export default function BacaanKanjiPage() {
   const entries = readingEntriesByLevel(level);
 
   const header = (
-    <PageHeader
-      eyebrow={
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge tone="level" mono>
-            {level}
-          </Badge>
-          <span className="label-micro">{meta.name} · Bacaan Kanji</span>
-        </div>
-      }
-      title="Bacaan Kanji"
-      japanese="読み方"
-      description="Bacaan kanji berubah tergantung kata yang mengikutinya. Di sini aturannya dijelaskan beserta kapan dipakai dan kapan tidak."
-      actions={
-        <Link href={levelHref(level, "bacaan-kanji/latihan")}>
-          <Button>Latihan membaca</Button>
-        </Link>
-      }
-    />
+    <div className="space-y-6">
+      <ModuleTabs level={level} current="bacaan-kanji" />
+      <PageHeader
+        eyebrow={
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge tone="level" mono>
+              {level}
+            </Badge>
+            <span className="label-micro">{meta.name} · Bacaan Kanji</span>
+            <span lang="ja" className="jp text-caption font-normal text-fg-subtle">
+              読み方
+            </span>
+          </div>
+        }
+        title="Bacaan Kanji"
+        japanese="読み方"
+        description="Bacaan kanji berubah tergantung kata yang mengikutinya. Di sini aturannya dijelaskan beserta kapan dipakai dan kapan tidak."
+        actions={
+          <Link href={levelHref(level, "bacaan-kanji/latihan")}>
+            <Button>Latihan membaca</Button>
+          </Link>
+        }
+      />
+    </div>
   );
 
   if (entries.length === 0 && rules.length === 0) {

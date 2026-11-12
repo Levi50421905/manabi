@@ -13,8 +13,8 @@ export function Skeleton({ className, shape = "block", ...props }: SkeletonProps
       aria-hidden="true"
       className={cn(
         "animate-pulse bg-surface-inset",
-        shape === "text" && "h-3 rounded",
-        shape === "block" && "rounded-lg",
+        shape === "text" && "h-3 rounded-full",
+        shape === "block" && "rounded-2xl",
         shape === "circle" && "rounded-full",
         className,
       )}

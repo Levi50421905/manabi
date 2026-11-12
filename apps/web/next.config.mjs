@@ -4,32 +4,64 @@ const MODULE_ROUTES = [
   "write",
   "vocab",
   "kanji",
+  "bacaan-kanji",
   "grammar",
+  "partikel",
+  "konteks",
   "listening",
   "reading",
+  "ulasan",
   "quiz",
   "ujian",
 ];
 
+/**
+ * Modul berada di bawah segmen level (`/n5/vocab`). Rute lama diarahkan
+ * permanen agar tautan lama, bookmark, dan hasil pencarian tetap hidup.
+ *
+ * `bank` tidak lagi menjadi halaman: Bank Soal adalah lapisan data untuk
+ * Latihan Soal dan Simulasi Ujian, jadi tautan lamanya dialihkan ke Latihan.
+ */
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ["@manabi/ui", "@manabi/content", "@manabi/srs"],
-  /**
-   * Modul kini berada di bawah segmen level (`/n5/vocab`), bukan lagi di akar.
-   * Rute lama diarahkan permanen agar tautan lama dan bookmark tetap hidup.
-   */
   async redirects() {
-    return MODULE_ROUTES.map((module) => ({
-      source: `/${module}`,
-      destination: `/n5/${module}`,
-      permanent: true,
-    })).concat(
-      MODULE_ROUTES.map((module) => ({
+    const moduleRedirects = MODULE_ROUTES.flatMap((module) => [
+      {
+        source: `/${module}`,
+        destination: `/n5/${module}`,
+        permanent: true,
+      },
+      {
         source: `/${module}/:path*`,
         destination: `/n5/${module}/:path*`,
         permanent: true,
-      })),
-    );
+      },
+    ]);
+
+    return [
+      ...moduleRedirects,
+      {
+        source: "/bank",
+        destination: "/n5/quiz",
+        permanent: true,
+      },
+      {
+        source: "/bank/:path*",
+        destination: "/n5/quiz",
+        permanent: true,
+      },
+      {
+        source: "/:level(n5|n4|n3|n2|n1)/bank",
+        destination: "/:level/quiz",
+        permanent: true,
+      },
+      {
+        source: "/:level(n5|n4|n3|n2|n1)/bank/:path*",
+        destination: "/:level/quiz",
+        permanent: true,
+      },
+    ];
   },
 };
 

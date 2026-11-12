@@ -17,17 +17,17 @@ export type BadgeTone =
 
 const tones: Record<BadgeTone, string> = {
   neutral: "bg-surface-muted text-fg-muted",
-  accent: "bg-accent-soft text-accent",
+  accent: "bg-accent-soft text-accent-strong",
   level: "bg-level-soft text-level",
   success: "bg-success-soft text-success",
   warning: "bg-warning-soft text-warning",
   danger: "bg-danger-soft text-danger",
   outline: "border border-border text-fg-muted",
   /* alias lama → token baru */
-  sakura: "bg-accent-soft text-accent",
+  sakura: "bg-accent-soft text-accent-strong",
   matcha: "bg-success-soft text-success",
   amber: "bg-warning-soft text-warning",
-  sky: "bg-surface-muted text-fg",
+  sky: "bg-sky-soft text-fg",
 };
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
@@ -40,7 +40,7 @@ export function Badge({ className, tone = "neutral", mono, children, ...props }:
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-md px-2 py-1 text-caption font-semibold leading-none",
+        "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-caption font-bold leading-none",
         mono && "tnum tracking-wider",
         tones[tone],
         className,

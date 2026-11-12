@@ -49,14 +49,20 @@ function levelAvailable(level: JlptLevel): boolean {
 export function LevelRail() {
   const { level: active } = useActiveLevel();
   const switchLevel = useSwitchLevel();
+  const meta = levelMeta(active);
 
   return (
-    <div
-      className={cn(levelClassName(active), "rounded-xl border border-border bg-surface p-1")}
-      role="group"
-      aria-label="Pilih level JLPT"
-    >
-      <div className="flex items-center gap-0.5">
+    <div className={cn(levelClassName(active))} role="group" aria-label="Pilih level JLPT">
+      <div className="flex items-center justify-between gap-2 px-1">
+        <span className="label-micro">Level</span>
+        <Link
+          href={`/${active.toLowerCase()}`}
+          className="text-[11px] font-extrabold text-fg-subtle transition-colors hover:text-fg"
+        >
+          {meta.name} · <span lang="ja" className="jp">{meta.japanese}</span>
+        </Link>
+      </div>
+      <div className="mt-1.5 grid grid-cols-5 gap-1">
         {LEVEL_ORDER.map((level) => {
           const available = levelAvailable(level);
           const isActive = level === active;
@@ -69,12 +75,12 @@ export function LevelRail() {
               aria-label={available ? `Level ${level}` : `Level ${level} belum tersedia`}
               onClick={() => switchLevel(level)}
               className={cn(
-                "tnum flex-1 rounded-lg py-1.5 text-caption font-semibold transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
+                "tnum h-9 rounded-xl border text-[12px] font-extrabold transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
                 isActive
-                  ? "bg-level text-level-contrast"
+                  ? "border-transparent bg-level text-level-contrast shadow-soft"
                   : available
-                    ? "text-fg-muted hover:bg-surface-muted hover:text-fg"
-                    : "cursor-not-allowed text-fg-subtle/50",
+                    ? "border-border bg-surface text-fg-muted hover:border-border-strong hover:text-fg"
+                    : "cursor-not-allowed border-dashed border-border bg-transparent text-fg-subtle/55",
               )}
             >
               {level}
@@ -82,12 +88,6 @@ export function LevelRail() {
           );
         })}
       </div>
-      <Link
-        href={`/${active.toLowerCase()}`}
-        className="mt-0.5 block rounded-lg px-2 pb-1 pt-1.5 text-center text-caption text-fg-muted transition-colors hover:text-fg"
-      >
-        {levelMeta(active).name} · <span lang="ja" className="jp">{levelMeta(active).japanese}</span>
-      </Link>
     </div>
   );
 }

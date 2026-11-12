@@ -1,0 +1,3398 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manabi — 設計 Blueprint / Kokpit Data</title>
+<meta name="description" content="Preview arah visual Arah 2 — 設計 Blueprint / Kokpit Data untuk redesign aplikasi Manabi.">
+<meta name="theme-color" content="#F3F5F8">
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<script>
+(function () {
+  try {
+    var q = new URLSearchParams(location.search);
+    var t = q.get('theme');
+    var saved = localStorage.getItem('manabi-preview-theme');
+    var theme = (t === 'dark' || t === 'light') ? t : (saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+    document.documentElement.setAttribute('data-theme', theme);
+    if (q.get('note') === '0') document.documentElement.setAttribute('data-note', 'off');
+  } catch (e) { /* file:// tanpa storage tetap aman */ }
+})();
+</script>
+<style>
+/* ============================================================
+   ARAH 02 — 設計 / BLUEPRINT · KOKPIT DATA
+   Token, shell, dan komponen. CSS murni, tanpa build.
+   ============================================================ */
+:root {
+  --font-ui: "Archivo", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --font-jp: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+
+  --paper: #F3F5F8;
+  --surface: #FFFFFF;
+  --surface-2: #F8FAFC;
+  --ink: #0E1526;
+  --muted: #5A6478;
+  --line: #D6DCE6;
+  --line-strong: #B9C2D2;
+
+  --cobalt: #2547D0;
+  --cobalt-solid: #2547D0;
+  --cobalt-solid-hover: #1B36A6;
+  --cobalt-soft: #E8EDFF;
+  --cobalt-line: rgba(37, 71, 208, .34);
+
+  --persimmon: #E2542C;
+  --persimmon-text: #B23A18;
+  --persimmon-soft: #FDECE7;
+  --persimmon-line: rgba(226, 84, 44, .36);
+
+  --teal: #0F7A6C;
+  --teal-text: #0B6B5F;
+  --teal-soft: #E1F3EF;
+  --teal-line: rgba(15, 122, 108, .36);
+
+  --grid: rgba(37, 71, 208, .05);
+  --bar-track: #E9EDF3;
+  --overlay: rgba(9, 14, 24, .52);
+  --shadow-pop: 0 20px 60px rgba(14, 21, 38, .18);
+  --radius: 6px;
+  --radius-sm: 4px;
+  --on-cobalt: #FFFFFF;
+  color-scheme: light;
+}
+[data-theme="dark"] {
+  --paper: #0B0F17;
+  --surface: #121927;
+  --surface-2: #161E2E;
+  --ink: #E8ECF4;
+  --muted: #98A3B8;
+  --line: #253044;
+  --line-strong: #34415A;
+
+  --cobalt: #7C93FF;
+  --cobalt-solid: #233FAF;
+  --cobalt-solid-hover: #1B3392;
+  --cobalt-soft: #19233C;
+  --cobalt-line: rgba(124, 147, 255, .4);
+
+  --persimmon: #FF8A64;
+  --persimmon-text: #FFA184;
+  --persimmon-soft: #331B15;
+  --persimmon-line: rgba(255, 138, 100, .42);
+
+  --teal: #4FD1B8;
+  --teal-text: #7FE0CC;
+  --teal-soft: #112A27;
+  --teal-line: rgba(79, 209, 184, .42);
+
+  --grid: rgba(124, 147, 255, .065);
+  --bar-track: #1C2538;
+  --overlay: rgba(0, 0, 0, .6);
+  --shadow-pop: 0 24px 70px rgba(0, 0, 0, .6);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+[hidden] { display: none !important; }
+img, svg { vertical-align: middle; }
+a { color: var(--cobalt); }
+button, input, select, textarea { font: inherit; color: inherit; }
+::selection { background: var(--cobalt); color: #fff; }
+
+:focus-visible {
+  outline: 2px solid var(--cobalt);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+.sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0);
+  white-space: nowrap; border: 0;
+}
+.skip-link {
+  position: fixed; left: 12px; top: -60px; z-index: 200;
+  background: var(--cobalt-solid); color: #fff;
+  padding: 10px 16px; border-radius: 4px; text-decoration: none;
+  font-weight: 600; transition: top .15s ease;
+}
+.skip-link:focus { top: 12px; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+/* ---------- Tipografi util ---------- */
+.mono, .mono-label, .mono-note, .note-foot, .eyebrow, kbd, .chart-val,
+.chart-day, .stat-value, .stat-index, .deck-num, .p-index-num, .tier-label,
+.cmp-take, .table td.num, .table th.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.mono-label {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  line-height: 1.35;
+}
+.mono-note { margin: 0; font-size: 12px; color: var(--muted); line-height: 1.5; }
+[lang="ja"] { font-family: var(--font-jp); }
+
+/* ---------- Catatan desain (lembar spesifikasi) ---------- */
+.design-note {
+  position: relative;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.note-top {
+  max-width: 1440px; margin: 0 auto;
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 20px; align-items: center;
+  padding: 14px 32px;
+  border-bottom: 1px solid var(--line);
+}
+.note-mark {
+  width: 58px; height: 58px;
+  display: grid; place-content: center; justify-items: center; gap: 1px;
+  background: var(--cobalt-solid); color: #fff;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-jp);
+  line-height: 1;
+}
+.note-mark span { font-family: var(--font-mono); font-size: 12px; letter-spacing: .1em; opacity: .78; }
+.note-mark b { font-size: 19px; font-weight: 700; letter-spacing: .04em; }
+.note-title h2 {
+  margin: 2px 0 2px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  line-height: 1.15;
+}
+.note-kicker {
+  margin: 0;
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: .1em;
+  color: var(--muted); text-transform: uppercase;
+}
+.note-tagline { margin: 0; font-size: 12.5px; color: var(--muted); }
+.note-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.note-file { margin: 0; font-family: var(--font-mono); font-size: 12px; line-height: 1.5; color: var(--muted); text-align: right; }
+.note-body {
+  max-width: 1440px; margin: 0 auto;
+  display: grid; grid-template-columns: 1.02fr 1.1fr 1.38fr;
+  gap: 30px;
+  padding: 16px 32px 18px;
+}
+.note-col h3 {
+  margin: 0 0 8px;
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--ink);
+}
+.note-col h3::before { content: ""; width: 14px; height: 2px; background: var(--cobalt); flex: 0 0 auto; }
+.note-col p { margin: 0 0 8px; font-size: 12.5px; line-height: 1.55; color: var(--muted); }
+.note-col p strong { color: var(--ink); font-weight: 600; }
+.note-menu { margin: 0; display: grid; gap: 5px; }
+.note-menu > div { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 8px; }
+.note-menu dt {
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  letter-spacing: .08em; color: var(--cobalt); text-transform: uppercase;
+}
+.note-menu dd { margin: 0; font-size: 12.5px; line-height: 1.45; color: var(--muted); }
+.note-menu dd b { color: var(--ink); font-weight: 600; }
+.note-reasons {
+  margin: 0; padding: 0; list-style: none;
+  counter-reset: reason;
+  display: grid; gap: 5px;
+}
+.note-reasons li {
+  counter-increment: reason;
+  position: relative; padding-left: 21px;
+  font-size: 12.5px; line-height: 1.5; color: var(--muted);
+}
+.note-reasons li::before {
+  content: "0" counter(reason);
+  position: absolute; left: 0; top: 1px;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--cobalt);
+}
+.note-reasons b { color: var(--ink); font-weight: 600; }
+.note-swatches { display: flex; gap: 4px; margin-top: 10px; }
+.swatch { height: 20px; flex: 1; border-radius: 2px; border: 1px solid rgba(0, 0, 0, .08); }
+.note-foot {
+  max-width: 1440px; margin: 0 auto;
+  display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  padding: 9px 32px 13px;
+  border-top: 1px solid var(--line);
+  font-size: 12px; color: var(--muted);
+  letter-spacing: .02em;
+}
+.note-restore {
+  width: 100%; border: 0; border-bottom: 1px solid var(--line);
+  background: var(--surface); color: var(--cobalt);
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em;
+  padding: 8px 16px; text-align: left; cursor: pointer; min-height: 36px;
+}
+.note-restore:hover { background: var(--surface-2); }
+@media (max-width: 1023px) {
+  .note-top { grid-template-columns: auto minmax(0, 1fr); padding: 12px 20px; }
+  .note-actions { grid-column: 1 / -1; flex-direction: row; align-items: center; justify-content: space-between; }
+  .note-file { text-align: left; }
+  .note-body { grid-template-columns: 1fr 1fr; gap: 22px; padding: 14px 20px 16px; }
+  .note-foot { padding: 9px 20px 13px; }
+}
+@media (max-width: 719px) {
+  .note-top { gap: 12px; padding: 12px 16px; }
+  .note-mark { width: 46px; height: 46px; }
+  .note-mark b { font-size: 16px; }
+  .note-title h2 { font-size: 19px; }
+  .note-tagline { font-size: 12px; }
+  .note-actions { gap: 10px; }
+  .note-file { display: none; }
+  .note-body { grid-template-columns: 1fr; gap: 16px; max-height: 35vh; overflow-y: auto; padding: 12px 16px 14px; scrollbar-width: thin; }
+  .note-foot { flex-direction: column; gap: 3px; align-items: flex-start; font-size: 12px; }
+}
+
+/* ---------- Tombol & kontrol ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-height: 38px; padding: 8px 13px;
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--ink);
+  font-size: 13px; font-weight: 600; line-height: 1.2;
+  text-decoration: none; cursor: pointer;
+  transition: background .15s ease, border-color .15s ease, color .15s ease;
+}
+.btn:hover { border-color: var(--line-strong); background: var(--surface-2); }
+.btn--primary { background: var(--cobalt-solid); border-color: var(--cobalt-solid); color: var(--on-cobalt); }
+.btn--primary:hover { background: var(--cobalt-solid-hover); border-color: var(--cobalt-solid-hover); }
+.btn--ghost { background: transparent; }
+.btn--sm { min-height: 32px; padding: 6px 10px; font-size: 12px; }
+.btn--on-cobalt { background: #fff; border-color: #fff; color: var(--cobalt-solid); }
+.btn--on-cobalt:hover { background: #EDF1FF; border-color: #EDF1FF; }
+.btn--on-cobalt-ghost { background: transparent; border-color: rgba(255, 255, 255, .45); color: #fff; }
+.btn--on-cobalt-ghost:hover { background: rgba(255, 255, 255, .1); border-color: rgba(255, 255, 255, .7); }
+.icon-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 38px; min-height: 38px; padding: 0;
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--ink);
+  cursor: pointer; flex: 0 0 auto;
+  transition: background .15s ease, border-color .15s ease;
+}
+.icon-btn:hover { background: var(--surface-2); border-color: var(--line-strong); }
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 6px;
+  border: 1px solid var(--line); border-radius: 3px;
+  background: var(--surface-2); color: var(--muted);
+  font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+  line-height: 1.35; white-space: nowrap;
+}
+.badge--cobalt { color: var(--cobalt); border-color: var(--cobalt-line); background: var(--cobalt-soft); }
+.badge--ok { color: var(--teal-text); border-color: var(--teal-line); background: var(--teal-soft); }
+.badge--warn { color: var(--persimmon-text); border-color: var(--persimmon-line); background: var(--persimmon-soft); }
+
+/* ---------- Shell ---------- */
+.app { display: flex; align-items: flex-start; min-height: 100vh; }
+.sidebar {
+  position: sticky; top: 0;
+  flex: 0 0 248px; width: 248px; height: 100vh;
+  display: flex; flex-direction: column;
+  background: var(--surface);
+  border-right: 1px solid var(--line);
+  z-index: 30;
+}
+.sidebar-brand {
+  display: flex; align-items: center; gap: 10px;
+  padding: 15px 14px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.brand-link { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); min-width: 0; }
+.brand-mark {
+  width: 34px; height: 34px; border-radius: var(--radius-sm);
+  display: grid; place-items: center;
+  background: var(--cobalt-solid); color: #fff;
+  font-family: var(--font-jp); font-size: 18px; font-weight: 700;
+  flex: 0 0 auto;
+}
+.brand-copy { display: flex; flex-direction: column; min-width: 0; }
+.brand-name { font-size: 16px; font-weight: 700; letter-spacing: -.02em; line-height: 1.1; }
+.brand-sub { font-family: var(--font-mono); font-size: 12px; color: var(--muted); letter-spacing: .02em; }
+.mobile-close { display: none; margin-left: auto; }
+.level-switch { padding: 10px 14px 8px; }
+.level-switch-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.level-hours { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.level-segments {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  overflow: hidden; background: var(--surface);
+}
+.level-seg {
+  appearance: none; border: 0; border-right: 1px solid var(--line);
+  background: transparent; color: var(--muted);
+  font-family: var(--font-ui); font-size: 12px; font-weight: 600;
+  padding: 8px 0; min-height: 34px; cursor: pointer;
+  transition: background .15s ease, color .15s ease;
+}
+.level-seg:last-child { border-right: 0; }
+.level-seg:hover { background: var(--surface-2); color: var(--ink); }
+.level-seg[aria-current="true"] { background: var(--cobalt-solid); color: var(--on-cobalt); }
+.level-seg[data-soon="1"] { color: var(--muted); opacity: .58; }
+.level-seg[data-soon="1"]:hover { opacity: .85; }
+.level-meta {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 7px 2px 0;
+  font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+}
+.level-meta b { color: var(--ink); font-weight: 600; }
+.level-soon {
+  margin: 5px 0 0; padding: 0 2px;
+  font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+  letter-spacing: .02em;
+}
+.sidebar-nav { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 4px 10px 10px; scrollbar-width: thin; }
+.nav-group { margin-top: 9px; }
+.nav-group-label {
+  margin: 0; padding: 5px 8px;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  letter-spacing: .14em; color: var(--muted); text-transform: uppercase;
+}
+.nav-link {
+  position: relative;
+  display: flex; align-items: center; gap: 8px;
+  min-height: 34px; padding: 5px 8px;
+  border-radius: var(--radius-sm);
+  color: var(--ink); text-decoration: none;
+  font-size: 13.5px; line-height: 1.25;
+  transition: background .15s ease, color .15s ease;
+}
+.nav-link:hover { background: var(--surface-2); }
+.nav-link[aria-current="page"] { background: var(--cobalt-soft); color: var(--cobalt); font-weight: 600; }
+.nav-link[aria-current="page"]::before {
+  content: ""; position: absolute; left: -10px; top: 6px; bottom: 6px;
+  width: 2px; background: var(--cobalt);
+}
+.nav-icon {
+  width: 22px; height: 22px; flex: 0 0 auto;
+  display: grid; place-items: center;
+  border: 1px solid var(--line); border-radius: 3px;
+  background: var(--surface); color: var(--cobalt);
+  font-family: var(--font-jp); font-size: 13px; line-height: 1;
+}
+.nav-link[aria-current="page"] .nav-icon { background: var(--cobalt-solid); border-color: var(--cobalt-solid); color: var(--on-cobalt); }
+.nav-badge {
+  margin-left: auto;
+  padding: 1px 5px; border-radius: 3px;
+  background: var(--persimmon-soft); color: var(--persimmon-text);
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+}
+.nav-sub { display: grid; gap: 1px; padding: 1px 0 2px 38px; }
+.nav-sub a {
+  display: flex; align-items: center; min-height: 27px;
+  padding: 3px 8px;
+  border-left: 1px solid var(--line);
+  color: var(--muted); text-decoration: none;
+  font-size: 12.5px; line-height: 1.3;
+}
+.nav-sub a:hover { color: var(--ink); }
+.nav-sub a[aria-current="page"] { color: var(--cobalt); border-left-color: var(--cobalt); font-weight: 600; }
+.sidebar-progress {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 15px 16px;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+.ring {
+  --p: 0;
+  --ring-fg: var(--cobalt);
+  --ring-track: var(--bar-track);
+  --ring-hole: var(--surface);
+  position: relative;
+  width: 52px; height: 52px; flex: 0 0 auto;
+  border-radius: 50%;
+  background: conic-gradient(var(--ring-fg) calc(var(--p) * 1%), var(--ring-track) 0);
+  display: grid; place-items: center;
+}
+.ring::before { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: var(--ring-hole); }
+.ring > span {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center;
+  line-height: 1.05; text-align: center;
+}
+.ring b { font-family: var(--font-mono); font-size: 12px; font-weight: 600; }
+.ring em { font-family: var(--font-mono); font-size: 12px; font-style: normal; color: var(--muted); }
+.ring--lg { width: 88px; height: 88px; }
+.ring--lg::before { inset: 5px; }
+.ring--lg b { font-size: 19px; }
+.ring--on-cobalt em { color: rgba(255, 255, 255, .74); }
+.sp-copy { min-width: 0; flex: 1; }
+.sp-copy .mono-label { margin-bottom: 3px; }
+.sp-line { margin: 0 0 5px; font-size: 12.5px; color: var(--muted); }
+.sp-line b { color: var(--ink); font-family: var(--font-mono); font-size: 13px; }
+.sp-meta { margin: 5px 0 0; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+
+.main {
+  flex: 1 1 auto; min-width: 0;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: -1px -1px;
+}
+.topbar {
+  position: sticky; top: 0; z-index: 25;
+  display: flex; align-items: center; gap: 10px;
+  height: 56px; padding: 0 24px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+.menu-btn { display: none; }
+.crumb {
+  display: flex; align-items: center; gap: 8px; min-width: 0;
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: .06em;
+  color: var(--muted); text-transform: uppercase;
+}
+.crumb-root { color: var(--muted); }
+.crumb-slash { color: var(--line-strong); }
+#crumbCurrent { color: var(--ink); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.topbar-spacer { flex: 1; }
+.topbar-date { margin: 0; font-family: var(--font-mono); font-size: 12px; color: var(--muted); letter-spacing: .04em; white-space: nowrap; }
+.level-chip {
+  display: none; align-items: center; gap: 6px;
+  min-height: 36px; padding: 6px 10px;
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--ink);
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  cursor: pointer; white-space: nowrap;
+}
+.level-chip:hover { border-color: var(--line-strong); background: var(--surface-2); }
+.level-chip svg { color: var(--muted); }
+.theme-btn { position: relative; }
+.theme-btn .icon-sun { display: block; }
+.theme-btn .icon-moon { display: none; }
+[data-theme="dark"] .theme-btn .icon-sun { display: none; }
+[data-theme="dark"] .theme-btn .icon-moon { display: block; }
+
+/* ---------- View & header halaman ---------- */
+#view { outline: none; }
+.view { max-width: 1280px; margin: 0 auto; padding: 24px 28px 52px; }
+.page-head {
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;
+  margin: 0 0 20px;
+}
+.page-head > div:first-child { min-width: 0; }
+.eyebrow {
+  margin: 0 0 7px;
+  display: flex; align-items: center; gap: 7px; flex-wrap: wrap;
+  font-size: 12px; font-weight: 600; letter-spacing: .11em;
+  text-transform: uppercase; color: var(--muted);
+}
+.eyebrow .sep { color: var(--line-strong); }
+.page-head h1 {
+  margin: 0;
+  font-size: 30px; font-weight: 700; letter-spacing: -.03em; line-height: 1.08;
+}
+.lede { max-width: 68ch; margin: 8px 0 0; color: var(--muted); font-size: 13.5px; line-height: 1.55; }
+.head-side { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.head-stat { margin: 0; font-family: var(--font-mono); font-size: 12px; color: var(--muted); letter-spacing: .02em; }
+.head-stat b { color: var(--ink); font-size: 13px; }
+
+/* ---------- Dashboard ---------- */
+.dash-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
+.next-action {
+  grid-column: span 12;
+  position: relative; overflow: hidden;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px; align-items: center;
+  padding: 20px 22px;
+  border: 1px solid var(--cobalt-solid); border-radius: var(--radius);
+  background: var(--cobalt-solid); color: #fff;
+}
+.next-action::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .075) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .075) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.next-action::after {
+  content: ""; position: absolute; right: 0; top: 0; bottom: 0; width: 3px;
+  background: var(--persimmon);
+}
+.na-main, .na-side { position: relative; z-index: 1; }
+.na-kicker {
+  margin: 0 0 6px;
+  display: flex; align-items: center; gap: 7px;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  letter-spacing: .12em; text-transform: uppercase; color: rgba(255, 255, 255, .78);
+}
+.na-kicker .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--persimmon); box-shadow: 0 0 0 2px rgba(255, 255, 255, .18); }
+.next-action h2 { margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -.02em; line-height: 1.12; color: #fff; }
+.na-meta { margin: 6px 0 0; font-size: 13px; color: rgba(255, 255, 255, .82); }
+.na-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 15px; }
+.na-side { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.na-side p { margin: 0; font-family: var(--font-mono); font-size: 12px; line-height: 1.5; color: rgba(255, 255, 255, .78); }
+.na-side p b { display: block; color: #fff; font-size: 15px; font-weight: 600; }
+.na-side .ring { --ring-fg: #fff; --ring-track: rgba(255, 255, 255, .22); --ring-hole: var(--cobalt-solid); }
+.na-side .ring em { color: rgba(255, 255, 255, .76); }
+
+.stat {
+  grid-column: span 3;
+  position: relative;
+  display: flex; flex-direction: column; gap: 7px;
+  min-height: 128px;
+  padding: 13px 15px;
+  background: var(--surface);
+  border: 1px solid var(--line); border-radius: var(--radius);
+}
+.stat::after {
+  content: ""; position: absolute; top: 7px; right: 7px; width: 7px; height: 7px;
+  border-top: 1px solid var(--line-strong); border-right: 1px solid var(--line-strong);
+}
+.stat-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.stat-index { font-size: 12px; color: var(--line-strong); letter-spacing: .1em; }
+.stat-value { margin: 1px 0 0; font-size: 30px; line-height: 1; font-weight: 700; letter-spacing: -.04em; }
+.stat-value small { margin-left: 5px; font-size: 13px; font-weight: 500; color: var(--muted); letter-spacing: 0; }
+.stat-sub { margin: 0; font-size: 12.5px; line-height: 1.42; color: var(--muted); }
+.stat .bar { margin-top: auto; }
+.dot-row { display: flex; gap: 4px; margin-top: auto; }
+.dot-days { width: 100%; display: flex; gap: 3px; }
+.dot-days span {
+  flex: 1; height: 6px; border-radius: 1px;
+  background: var(--bar-track); border: 1px solid transparent;
+}
+.dot-days span.on { background: var(--cobalt); }
+.dot-days span.today { background: var(--persimmon); }
+
+.bar { height: 4px; border-radius: 2px; background: var(--bar-track); overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--cobalt); border-radius: 2px; }
+.bar--seg { display: flex; gap: 2px; height: 6px; background: transparent; overflow: hidden; border-radius: 2px; }
+.bar--seg > i { display: block; height: 100%; background: var(--cobalt); }
+.bar--seg > i:nth-child(2) { background: var(--teal); }
+.bar--seg > i:nth-child(3) { background: var(--persimmon); }
+
+.panel-7 { grid-column: span 7; }
+.panel-5 { grid-column: span 5; }
+
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); min-width: 0; }
+.dash-grid > .card { display: flex; flex-direction: column; }
+.dash-grid > .card > .card-body { flex: 1 1 auto; }
+.card-head {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 14px;
+  padding: 13px 16px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.card-head h2 { margin: 2px 0 0; font-size: 17px; font-weight: 700; letter-spacing: -.02em; line-height: 1.2; }
+.card-head .mono-label { margin: 0; }
+.card-body { padding: 16px; min-width: 0; }
+.card-foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 9px 16px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+}
+.card-foot a { color: var(--cobalt); text-decoration: none; font-weight: 600; }
+.card-foot a:hover { text-decoration: underline; }
+
+.chart-body { padding: 8px 12px 10px 10px; }
+.chart { display: flex; gap: 8px; }
+.chart-y {
+  width: 26px; flex: 0 0 auto;
+  height: 166px; padding: 15px 0 20px;
+  display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end;
+  font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+}
+.chart-plot { position: relative; flex: 1; height: 166px; min-width: 0; }
+.chart-grid {
+  position: absolute; left: 0; right: 0; top: 18px; height: 118px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  pointer-events: none;
+}
+.chart-grid i { display: block; border-top: 1px dashed var(--line); }
+.chart-cols {
+  position: relative; height: 166px;
+  display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px;
+}
+.chart-col { display: grid; grid-template-rows: 18px 118px 20px; align-items: end; justify-items: center; }
+.chart-val { align-self: start; font-size: 12px; font-weight: 600; color: var(--ink); }
+.chart-bar {
+  display: block; width: 100%; max-width: 30px;
+  background: var(--cobalt); border-radius: 2px 2px 0 0;
+  align-self: end;
+}
+.chart-col.is-zero .chart-bar { height: 2px !important; background: var(--line-strong); }
+.chart-day { align-self: center; font-size: 12px; color: var(--muted); }
+.chart-col:nth-child(5) .chart-bar { background: var(--persimmon); }
+
+.deck-list { display: grid; gap: 13px; }
+.deck-row { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: baseline; }
+.deck-top { grid-column: 1 / -1; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.deck-name { font-size: 13.5px; font-weight: 600; }
+.deck-num { font-size: 12px; color: var(--ink); font-weight: 600; }
+.deck-num em { font-style: normal; font-weight: 400; color: var(--muted); font-size: 12px; }
+.deck-row .bar { grid-column: 1 / -1; height: 4px; }
+.deck-sub { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 8px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+
+.today-body { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px; align-items: start; }
+.today-note {
+  margin: 12px 0 0; padding: 8px 10px;
+  border-left: 2px solid var(--cobalt);
+  background: var(--cobalt-soft);
+  font-size: 12px; line-height: 1.5; color: var(--muted);
+}
+.today-note b { color: var(--ink); font-weight: 600; }
+.today-progress { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.today-progress .bar { flex: 1; }
+.today-progress b { font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--muted); white-space: nowrap; }
+.today-glyph {
+  width: 96px; height: 96px; flex: 0 0 auto;
+  display: grid; place-items: center;
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 12px 12px;
+  font-family: var(--font-jp); font-size: 54px; line-height: 1;
+}
+.today-meaning { margin: 0 0 10px; font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
+.reading-list { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
+.reading-list > div { display: flex; flex-direction: column; gap: 1px; }
+.reading-list dt { font-family: var(--font-mono); font-size: 12px; letter-spacing: .1em; color: var(--muted); }
+.reading-list dd { margin: 0; font-size: 13px; font-family: var(--font-jp); }
+.word-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 11px; }
+.word-chips span {
+  padding: 2px 6px; border: 1px solid var(--line); border-radius: 3px;
+  background: var(--surface-2); font-family: var(--font-jp); font-size: 12px;
+}
+
+.table-wrap { width: 100%; overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.table caption { text-align: left; }
+.table th {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  letter-spacing: .07em; text-transform: uppercase; color: var(--muted);
+  text-align: left; white-space: nowrap;
+}
+.table td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.table tr:last-child td { border-bottom: 0; }
+.table tbody tr:hover td { background: var(--surface-2); }
+.table .num { text-align: right; }
+.tbl-progress { display: flex; align-items: center; gap: 8px; min-width: 150px; }
+.tbl-progress .bar { flex: 1; min-width: 70px; }
+.tbl-progress b { font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--muted); white-space: nowrap; }
+.table .row-link { color: var(--cobalt); text-decoration: none; font-weight: 600; font-size: 12.5px; white-space: nowrap; }
+.table .row-link:hover { text-decoration: underline; }
+.acc-bar { display: inline-flex; align-items: center; gap: 8px; }
+.acc-bar .bar { width: 64px; }
+.acc-bar b { font-family: var(--font-mono); font-size: 12px; font-weight: 500; }
+
+.mobile-rows { display: none; }
+.mobile-row {
+  display: grid; gap: 6px; padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none; color: var(--ink);
+}
+.mobile-row:last-child { border-bottom: 0; }
+.mobile-row:hover { background: var(--surface-2); }
+.mr-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 13.5px; font-weight: 600; }
+.mr-sub { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.mr-sub b { color: var(--ink); font-weight: 500; }
+
+/* ---------- Partikel ---------- */
+.particle-head-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.meta-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 7px;
+  border: 1px solid var(--line); border-radius: 3px;
+  background: var(--surface); color: var(--muted);
+  font-family: var(--font-mono); font-size: 12px;
+}
+.meta-chip b { color: var(--ink); font-weight: 600; }
+.filter-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  margin: 0 0 14px;
+}
+.segmented {
+  display: inline-flex; flex-wrap: wrap; gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+.segmented button {
+  appearance: none; border: 0; border-radius: 3px;
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: 34px; padding: 6px 11px;
+  background: transparent; color: var(--muted);
+  font-size: 12.5px; font-weight: 600; cursor: pointer;
+  transition: background .15s ease, color .15s ease;
+}
+.segmented button:hover { background: var(--surface-2); color: var(--ink); }
+.segmented button[aria-pressed="true"] { background: var(--cobalt-solid); color: var(--on-cobalt); }
+.seg-count { font-family: var(--font-mono); font-size: 12px; opacity: .72; }
+.filter-note { margin: 0; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.filter-note b { color: var(--ink); font-weight: 600; }
+
+.particle-layout {
+  display: grid; grid-template-columns: 336px minmax(0, 1fr);
+  gap: 16px; align-items: start;
+}
+.particle-index {
+  position: sticky; top: 72px;
+  display: flex; flex-direction: column;
+  max-height: calc(100vh - 92px);
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line); border-radius: var(--radius);
+}
+.p-index-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 10px 13px;
+  border-bottom: 1px solid var(--line);
+}
+.p-index-head .mono { font-size: 12px; color: var(--muted); }
+.p-index-list { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 2px; padding: 6px; overflow-y: auto; scrollbar-width: thin; }
+.p-index-item {
+  display: grid; grid-template-columns: 24px 38px minmax(0, 1fr) auto;
+  gap: 9px; align-items: center;
+  width: 100%; min-height: 52px; padding: 7px 8px;
+  border: 1px solid transparent; border-radius: var(--radius-sm);
+  background: transparent; color: var(--ink);
+  text-align: left; cursor: pointer;
+  transition: background .15s ease, border-color .15s ease;
+}
+.p-index-item:hover { background: var(--surface-2); }
+.p-index-item.is-active { background: var(--cobalt-soft); border-color: var(--cobalt-line); }
+.p-index-num { font-size: 12px; color: var(--muted); }
+.p-index-char {
+  width: 36px; height: 36px;
+  display: grid; place-items: center;
+  border: 1px solid var(--line); border-radius: 3px;
+  background: var(--surface); font-family: var(--font-jp); font-size: 21px; line-height: 1;
+}
+.p-index-item.is-active .p-index-char { border-color: var(--cobalt-line); background: var(--surface); }
+.p-index-meta { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.p-index-romaji { font-size: 13px; font-weight: 600; line-height: 1.25; }
+.p-index-role { font-size: 12px; color: var(--muted); line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tier-dot { width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--line-strong); flex: 0 0 auto; }
+.tier-dot.tier--dasar { background: var(--cobalt); border-color: var(--cobalt); }
+.tier-dot.tier--inti { background: var(--teal); border-color: var(--teal); }
+.tier-dot.tier--menengah { background: var(--persimmon); border-color: var(--persimmon); }
+
+.particle-detail { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); min-height: 520px; min-width: 0; }
+.p-detail-top {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 16px; align-items: start;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--line);
+}
+.p-glyph {
+  position: relative;
+  width: 104px; height: 104px;
+  display: grid; place-items: center;
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 13px 13px;
+  font-family: var(--font-jp); font-size: 56px; line-height: 1;
+}
+.p-glyph::after {
+  content: ""; position: absolute; top: 6px; right: 6px; width: 8px; height: 8px;
+  border-top: 1px solid var(--line-strong); border-right: 1px solid var(--line-strong);
+}
+.p-detail-info { min-width: 0; }
+.p-romaji-big {
+  margin: 0 0 4px;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+}
+.p-name { margin: 0; font-family: var(--font-jp); font-size: 29px; font-weight: 600; line-height: 1.15; }
+.p-name .romaji { margin-left: 8px; font-family: var(--font-mono); font-size: 13px; font-weight: 400; color: var(--muted); }
+.p-role { margin: 4px 0 0; font-size: 14px; color: var(--muted); }
+.p-badges { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+.p-detail-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.audio-btn { min-height: 32px; padding: 5px 9px; font-size: 12px; }
+.p-explain { margin: 0; padding: 15px 20px; border-bottom: 1px solid var(--line); font-size: 14px; line-height: 1.66; max-width: 78ch; }
+.p-section { padding: 14px 20px; border-bottom: 1px solid var(--line); }
+.p-section:last-child { border-bottom: 0; }
+.p-section-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+.example-list { list-style: none; margin: 0; padding: 0; }
+.example {
+  display: grid; grid-template-columns: 24px minmax(0, 1fr) auto;
+  gap: 9px; align-items: start;
+  padding: 9px 0; border-top: 1px dashed var(--line);
+}
+.example:first-child { border-top: 0; padding-top: 0; }
+.ex-num { font-family: var(--font-mono); font-size: 12px; color: var(--muted); padding-top: 4px; }
+.ex-jp { margin: 0; font-family: var(--font-jp); font-size: 18px; line-height: 1.55; overflow-wrap: anywhere; }
+.ex-id { margin: 2px 0 0; font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+.ex-note {
+  margin: 5px 0 0; padding-left: 8px;
+  border-left: 2px solid var(--line);
+  font-size: 12px; color: var(--muted); line-height: 1.45;
+}
+.hl { color: var(--cobalt); font-weight: 700; background: var(--cobalt-soft); border-radius: 2px; padding: 0 1px; }
+.caution {
+  margin: 0 20px 14px;
+  padding: 10px 13px;
+  border-left: 3px solid var(--persimmon);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--persimmon-soft);
+}
+.caution-title {
+  margin: 0 0 3px;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--persimmon-text);
+}
+.caution p { margin: 0; font-size: 13px; line-height: 1.55; color: var(--ink); }
+.related-list { display: grid; gap: 6px; }
+.related-item {
+  display: grid; grid-template-columns: 108px minmax(0, 1fr); gap: 10px;
+  padding: 7px 9px;
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+.related-item b { font-size: 13px; }
+.related-item span { font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+.known-btn { margin-top: 2px; }
+
+.p-cards { display: none; }
+.p-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.p-card.is-active { border-color: var(--cobalt-line); }
+.p-card-head {
+  display: grid; grid-template-columns: 42px 40px minmax(0, 1fr) auto;
+  gap: 10px; align-items: center;
+  width: 100%; min-height: 64px; padding: 10px 12px;
+  border: 0; background: transparent; color: var(--ink);
+  text-align: left; cursor: pointer;
+}
+.p-card.is-active .p-card-head { background: var(--cobalt-soft); }
+.p-card-char {
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  border: 1px solid var(--line); border-radius: 3px;
+  background: var(--surface); font-family: var(--font-jp); font-size: 22px; line-height: 1;
+}
+.p-card-meta { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.p-card-meta b { font-size: 13.5px; }
+.p-card-meta span { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.p-card-chevron { color: var(--muted); transition: transform .15s ease; }
+.p-card.is-active .p-card-chevron { transform: rotate(180deg); }
+.p-card-body { border-top: 1px solid var(--line); }
+.p-card-body .p-detail-top { grid-template-columns: auto minmax(0, 1fr); padding: 14px 14px 12px; }
+.p-card-body .p-glyph { width: 76px; height: 76px; font-size: 42px; }
+.p-card-body .p-explain, .p-card-body .p-section { padding-left: 14px; padding-right: 14px; }
+.p-card-body .caution { margin-left: 14px; margin-right: 14px; }
+.p-card-body .p-detail-actions { grid-column: 1 / -1; flex-direction: row; justify-content: flex-start; align-items: center; }
+
+.mobile-only { display: none; }
+.block { margin-top: 26px; }
+.block-head {
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  padding-bottom: 9px; margin-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.block-head h2 { margin: 0; font-size: 19px; font-weight: 700; letter-spacing: -.02em; }
+.block-head .mono-label { margin: 0; }
+.cmp-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.cmp-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 13px; }
+.cmp-title { margin: 0; font-family: var(--font-jp); font-size: 18px; font-weight: 600; }
+.cmp-question { margin: 4px 0 9px; font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+.cmp-sides { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.cmp-side { padding: 8px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface-2); min-width: 0; }
+.cmp-char { font-family: var(--font-jp); font-size: 24px; line-height: 1.1; }
+.cmp-side b { display: block; margin-top: 2px; font-size: 12px; color: var(--muted); font-weight: 500; }
+.cmp-ex { margin: 6px 0 0; font-family: var(--font-jp); font-size: 12.5px; line-height: 1.45; overflow-wrap: anywhere; }
+.cmp-ex small { display: block; font-family: var(--font-ui); font-size: 12px; color: var(--muted); }
+.cmp-take { margin: 9px 0 0; padding-top: 8px; border-top: 1px solid var(--line); font-size: 12px; line-height: 1.5; color: var(--muted); }
+.pit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pit-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 13px; }
+.pit-title { margin: 0 0 4px; font-size: 14px; font-weight: 700; letter-spacing: -.01em; }
+.pit-summary { margin: 0 0 9px; font-size: 12.5px; line-height: 1.5; color: var(--muted); }
+.pit-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.pit-wrong, .pit-right {
+  padding: 7px 9px; border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  font-family: var(--font-jp); font-size: 13px; line-height: 1.45;
+}
+.pit-wrong { background: var(--persimmon-soft); border-color: var(--persimmon-line); }
+.pit-right { background: var(--teal-soft); border-color: var(--teal-line); }
+.pit-wrong b, .pit-right b {
+  display: block; margin-bottom: 2px;
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em;
+}
+.pit-wrong b { color: var(--persimmon-text); }
+.pit-right b { color: var(--teal-text); }
+.pit-note { margin: 8px 0 0; font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+/* ---------- Latihan ---------- */
+.quiz-layout { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 16px; align-items: start; }
+.quiz-main { min-width: 0; }
+.quiz-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--line);
+}
+.quiz-title { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.quiz-title h2 { margin: 0; font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
+.quiz-score {
+  display: flex; align-items: baseline; gap: 6px;
+  font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+}
+.quiz-score b { font-size: 20px; font-weight: 700; color: var(--ink); letter-spacing: -.03em; }
+.quiz-progress { padding: 0 18px 12px; }
+.quiz-progress .bar { height: 6px; }
+.quiz-progress-top { display: flex; justify-content: space-between; gap: 10px; margin: 9px 0 7px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.quiz-body { padding: 20px 22px 22px; }
+.q-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.q-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 7px; border: 1px solid var(--line); border-radius: 3px;
+  background: var(--surface-2); color: var(--muted);
+  font-family: var(--font-mono); font-size: 12px;
+}
+.q-chip.q-chip--cat { color: var(--cobalt); border-color: var(--cobalt-line); background: var(--cobalt-soft); }
+.q-prompt {
+  margin: 2px 0 4px;
+  font-family: var(--font-jp);
+  font-size: clamp(25px, 3vw, 36px);
+  font-weight: 600; line-height: 1.42; letter-spacing: .005em;
+  overflow-wrap: anywhere;
+}
+.q-prompt.is-word { font-size: clamp(42px, 6vw, 62px); line-height: 1.1; }
+.q-prompt.is-id { font-family: var(--font-ui); font-size: clamp(24px, 3vw, 32px); font-weight: 700; letter-spacing: -.02em; }
+.q-promptid { margin: 2px 0 12px; font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
+.blank {
+  display: inline-block; min-width: 1.6em; margin: 0 2px;
+  border-bottom: 2px solid var(--persimmon);
+  color: var(--persimmon); font-weight: 500; text-align: center;
+}
+.q-question { margin: 0 0 17px; font-size: 14px; color: var(--muted); }
+.options { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.option {
+  display: flex; align-items: center; gap: 11px;
+  width: 100%; min-height: 58px; padding: 9px 13px;
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--ink);
+  text-align: left; cursor: pointer;
+  transition: background .15s ease, border-color .15s ease;
+}
+.option:hover:not(:disabled) { border-color: var(--cobalt); background: var(--cobalt-soft); }
+.option:disabled { cursor: default; opacity: 1; }
+.option .key {
+  width: 25px; height: 25px; flex: 0 0 auto;
+  display: grid; place-items: center;
+  border: 1px solid var(--line); border-radius: 3px;
+  background: var(--surface-2); color: var(--muted);
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+}
+.option .opt-label { flex: 1; min-width: 0; font-family: var(--font-jp); font-size: 17px; line-height: 1.4; overflow-wrap: anywhere; }
+.option.is-id .opt-label { font-family: var(--font-ui); font-size: 14px; }
+.option .mark { flex: 0 0 auto; width: 18px; text-align: center; font-weight: 700; }
+.option.is-correct { border-color: var(--teal); background: var(--teal-soft); }
+.option.is-correct .key { border-color: var(--teal); color: var(--teal-text); }
+.option.is-correct .mark { color: var(--teal-text); }
+.option.is-wrong { border-color: var(--persimmon); background: var(--persimmon-soft); }
+.option.is-wrong .key { border-color: var(--persimmon); color: var(--persimmon-text); }
+.option.is-wrong .mark { color: var(--persimmon-text); }
+.option.is-dim { opacity: .5; }
+.feedback {
+  margin-top: 15px;
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--teal);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--surface-2);
+  display: grid; gap: 6px;
+}
+.feedback:focus { outline: none; }
+.feedback.is-wrong { border-left-color: var(--persimmon); }
+.feedback-kicker {
+  margin: 0;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--teal-text);
+}
+.feedback.is-wrong .feedback-kicker { color: var(--persimmon-text); }
+.feedback h3 { margin: 0; font-size: 15px; letter-spacing: -.01em; line-height: 1.35; }
+.feedback-text { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.55; max-width: 72ch; }
+.feedback-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 3px; }
+.key-hint { margin: 2px 0 0; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.quiz-foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+  padding: 10px 18px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+}
+.quiz-side {
+  display: grid; gap: 12px; position: sticky; top: 72px;
+  max-height: calc(100vh - 88px); overflow-y: auto;
+  scrollbar-width: thin; padding-right: 2px;
+}
+.side-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.side-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 9px 13px;
+  border-bottom: 1px solid var(--line);
+}
+.side-body { padding: 12px 13px; }
+.side-score { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.side-score b { font-family: var(--font-mono); font-size: 24px; font-weight: 700; letter-spacing: -.03em; }
+.side-score span { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.session-map { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 3px; margin-top: 9px; }
+.session-cell { height: 8px; border-radius: 1px; background: var(--bar-track); }
+.session-cell.is-correct { background: var(--teal); }
+.session-cell.is-wrong { background: var(--persimmon); }
+.session-cell.is-current { background: var(--cobalt); box-shadow: 0 0 0 1px var(--cobalt); }
+.mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+.mode-btn {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 1px;
+  min-height: 44px; padding: 6px 8px;
+  border: 1px solid var(--line); border-radius: 3px;
+  background: var(--surface); color: var(--ink);
+  text-align: left; cursor: pointer;
+}
+.mode-btn:hover { border-color: var(--line-strong); background: var(--surface-2); }
+.mode-btn[aria-pressed="true"] { border-color: var(--cobalt); background: var(--cobalt-soft); color: var(--cobalt); }
+.mode-btn-label { font-size: 12.5px; font-weight: 600; line-height: 1.2; }
+.mode-btn-meta { font-family: var(--font-mono); font-size: 12px; color: var(--muted); line-height: 1.2; }
+.mode-btn[aria-pressed="true"] .mode-btn-meta { color: var(--cobalt); }
+.count-row { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 8px; border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
+.count-btn {
+  appearance: none; border: 0; border-right: 1px solid var(--line);
+  background: var(--surface); color: var(--muted);
+  min-height: 38px; font-family: var(--font-mono); font-size: 12px; font-weight: 600;
+  cursor: pointer;
+}
+.count-btn:last-child { border-right: 0; }
+.count-btn:hover { background: var(--surface-2); color: var(--ink); }
+.count-btn[aria-pressed="true"] { background: var(--cobalt-solid); color: var(--on-cobalt); }
+.source-rows { display: grid; gap: 5px; margin-bottom: 7px; }
+.source-row {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+  padding: 4px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 12.5px; color: var(--muted);
+}
+.source-row:last-child { border-bottom: 0; }
+.source-row b { font-family: var(--font-mono); font-size: 12px; color: var(--ink); font-weight: 500; }
+.key-list { display: grid; gap: 4px; }
+.key-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12.5px; color: var(--muted); }
+kbd {
+  display: inline-block; min-width: 20px; padding: 1px 5px;
+  border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 3px;
+  background: var(--surface-2); color: var(--ink);
+  font-size: 12px; text-align: center; line-height: 1.35;
+}
+.side-note { margin: 8px 0 0; font-family: var(--font-mono); font-size: 12px; color: var(--muted); line-height: 1.45; }
+
+.result { display: grid; gap: 18px; }
+.result-top { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 22px; align-items: center; }
+.score-ring {
+  --p: 0;
+  position: relative;
+  width: 132px; height: 132px; flex: 0 0 auto;
+  border-radius: 50%;
+  background: conic-gradient(var(--cobalt) calc(var(--p) * 1%), var(--bar-track) 0);
+  display: grid; place-items: center;
+}
+.score-ring::before { content: ""; position: absolute; inset: 7px; border-radius: 50%; background: var(--surface); }
+.score-ring > div { position: relative; text-align: center; line-height: 1.05; }
+.score-ring b { display: block; font-family: var(--font-mono); font-size: 34px; font-weight: 700; letter-spacing: -.04em; }
+.score-ring span { display: block; margin-top: 2px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.result-copy h2 { margin: 0 0 4px; font-size: 26px; font-weight: 700; letter-spacing: -.03em; line-height: 1.15; }
+.result-copy p { margin: 0; color: var(--muted); font-size: 13.5px; line-height: 1.55; max-width: 58ch; }
+.result-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 13px; }
+.result-stat { padding: 9px 11px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface-2); }
+.result-stat b { display: block; font-family: var(--font-mono); font-size: 20px; font-weight: 700; line-height: 1.1; }
+.result-stat span { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.result-cats { display: grid; gap: 7px; }
+.cat-row { display: grid; grid-template-columns: 112px minmax(0, 1fr) auto; gap: 10px; align-items: center; font-size: 13px; }
+.cat-row span:first-child { font-weight: 600; }
+.cat-row .bar { height: 5px; }
+.cat-row b { font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--muted); }
+.result-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.result-note { margin: 0; font-family: var(--font-mono); font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+/* ---------- Placeholder ---------- */
+.ph-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(280px, .8fr); gap: 16px; align-items: start; }
+.ph-main .card-body { display: grid; gap: 14px; }
+.ph-copy { margin: 0; font-size: 14px; line-height: 1.65; color: var(--muted); max-width: 70ch; }
+.ph-copy b { color: var(--ink); }
+.ph-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 8px; border: 1px solid var(--persimmon-line); border-radius: 3px;
+  background: var(--persimmon-soft); color: var(--persimmon-text);
+  font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: .04em;
+}
+.ph-scope { margin: 0; padding: 0; list-style: none; display: grid; gap: 5px; }
+.ph-scope li { position: relative; padding-left: 16px; font-size: 13px; color: var(--muted); line-height: 1.5; }
+.ph-scope li::before { content: "—"; position: absolute; left: 0; color: var(--cobalt); }
+.ph-actions { display: flex; gap: 8px; flex-wrap: wrap; padding-top: 2px; }
+.ph-aside .card-body { display: grid; gap: 13px; }
+.ph-stat-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 6px 0; border-bottom: 1px dashed var(--line); }
+.ph-stat-row span { font-size: 12.5px; color: var(--muted); }
+.ph-stat-row b { font-family: var(--font-mono); font-size: 12px; color: var(--ink); font-weight: 500; }
+.ph-links { display: grid; gap: 4px; }
+.ph-link {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 6px 8px; border: 1px solid var(--line); border-radius: 3px;
+  color: var(--ink); text-decoration: none; font-size: 12.5px;
+}
+.ph-link:hover { background: var(--surface-2); border-color: var(--line-strong); }
+.ph-link span { font-family: var(--font-mono); color: var(--muted); font-size: 12px; }
+
+/* ---------- Footer aplikasi ---------- */
+.main-foot {
+  max-width: 1280px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 14px 28px 30px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+}
+.main-foot span { white-space: nowrap; }
+
+/* ---------- Bottom nav & drawer ---------- */
+.scrim { display: none; }
+.bottom-nav { display: none; }
+@media (max-width: 1023px) {
+  .app { display: block; }
+  .sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0;
+    width: min(86vw, 320px); height: 100dvh;
+    transform: translateX(-102%);
+    transition: transform .22s ease;
+    z-index: 60;
+    box-shadow: var(--shadow-pop);
+  }
+  body.drawer-open .sidebar { transform: none; }
+  body.drawer-open { overflow: hidden; }
+  .scrim {
+    display: block; position: fixed; inset: 0; z-index: 55;
+    background: var(--overlay);
+    opacity: 0; pointer-events: none;
+    transition: opacity .22s ease;
+  }
+  body.drawer-open .scrim { opacity: 1; pointer-events: auto; }
+  .mobile-close, .menu-btn, .level-chip { display: inline-flex; }
+  .nav-link, .nav-sub a, .level-seg, .level-chip, .icon-btn, .btn, .btn--sm,
+  .segmented button, .count-btn, .note-restore, .ph-link { min-height: 44px; }
+  .icon-btn { min-width: 44px; }
+  .main { background-size: 28px 28px; }
+  .topbar { padding: 0 16px; gap: 8px; }
+  .view { padding: 20px 20px 96px; }
+  .main-foot { padding: 14px 20px 96px; }
+  .bottom-nav {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    padding: 3px 4px calc(3px + env(safe-area-inset-bottom));
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+  }
+  .bottom-nav a, .bottom-nav button {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    min-height: 52px; padding: 4px 2px;
+    border: 0; border-radius: var(--radius-sm);
+    background: transparent; color: var(--muted);
+    text-decoration: none; font-size: 12px; cursor: pointer;
+  }
+  .bottom-nav a:hover, .bottom-nav button:hover { background: var(--surface-2); }
+  .bottom-nav [aria-current="page"] { color: var(--cobalt); font-weight: 600; }
+  .bn-icon { font-family: var(--font-jp); font-size: 16px; line-height: 1; }
+  .bottom-nav svg { width: 17px; height: 17px; }
+  .na-side { display: none; }
+}
+@media (max-width: 1100px) {
+  .stat { grid-column: span 6; }
+  .panel-7, .panel-5 { grid-column: span 12; }
+  .cmp-grid { grid-template-columns: 1fr 1fr; }
+  .quiz-layout { grid-template-columns: minmax(0, 1fr); }
+  .quiz-side { position: static; grid-template-columns: 1fr 1fr; }
+  .quiz-side .side-card:first-child { grid-column: span 2; }
+}
+@media (max-width: 1023px) {
+  .particle-layout { display: none; }
+  .p-cards { display: grid; gap: 8px; }
+  .mobile-only { display: block; }
+  .ph-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 700px) {
+  .eyebrow { row-gap: 2px; }
+  .eyebrow .sep:last-of-type { display: none; }
+  .page-head { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .head-side { width: 100%; justify-content: flex-start; }
+  .head-side .btn { flex: 1 1 auto; }
+  .table-wrap { display: none; }
+  .mobile-rows { display: grid; }
+  .options { grid-template-columns: 1fr; }
+  .result-top { grid-template-columns: 1fr; gap: 16px; }
+  .score-ring { width: 112px; height: 112px; }
+  .result-stats { grid-template-columns: repeat(3, 1fr); }
+  .quiz-body { padding: 16px 15px 18px; }
+  .quiz-head { padding: 12px 15px; }
+  .quiz-progress { padding: 0 15px 10px; }
+  .quiz-side { grid-template-columns: 1fr; }
+  .quiz-side .side-card:first-child { grid-column: auto; }
+  .today-body { grid-template-columns: 1fr; }
+  .today-glyph { width: 100%; height: 110px; }
+  .pit-grid { grid-template-columns: 1fr; }
+  .reading-list { grid-template-columns: 1fr 1fr; }
+  .main-foot { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .main-foot span { white-space: normal; }
+  .page-head h1 { font-size: 25px; }
+  .eyebrow { font-size: 12px; }
+  .lede { font-size: 13px; }
+  .quiz-side { gap: 10px; }
+  .feedback-actions .btn { width: 100%; }
+  .result-actions .btn { flex: 1; }
+  .topbar-date { display: none; }
+  .toast { bottom: 74px; }
+}
+@media (max-width: 560px) {
+  .view { padding: 16px 14px 96px; }
+  .dash-grid { gap: 12px; }
+  .stat { grid-column: span 6; padding: 11px 12px; min-height: 118px; }
+  .stat-value { font-size: 25px; }
+  .stat-sub { font-size: 12px; }
+  .next-action { grid-template-columns: 1fr; padding: 17px 16px; }
+  .next-action h2 { font-size: 22px; }
+  .na-actions .btn { flex: 1 1 auto; }
+  .chart-cols { gap: 4px; }
+  .chart-body { padding: 8px 8px 8px 2px; }
+  .chart-y { width: 22px; }
+  .chart-val { font-size: 12px; }
+  .cmp-grid { grid-template-columns: 1fr; }
+  .cmp-sides { grid-template-columns: 1fr 1fr; }
+  .particle-head-meta { gap: 5px; }
+  .segmented { display: flex; width: 100%; overflow-x: auto; flex-wrap: nowrap; scrollbar-width: thin; }
+  .segmented button { white-space: nowrap; }
+  .filter-note { width: 100%; }
+  .note-menu > div { grid-template-columns: 80px minmax(0, 1fr); }
+  .p-card-head { grid-template-columns: 36px 38px minmax(0, 1fr) auto; gap: 8px; }
+  .p-card-char { width: 38px; height: 38px; font-size: 20px; }
+  .p-detail-top { gap: 12px; }
+  .p-glyph { width: 82px; height: 82px; font-size: 46px; }
+  .p-name { font-size: 25px; }
+  .p-detail-actions { grid-column: 1 / -1; flex-direction: row; align-items: center; }
+  .related-item { grid-template-columns: 1fr; gap: 2px; }
+  .today-body { grid-template-columns: 1fr; }
+  .result-cats .cat-row { grid-template-columns: 90px minmax(0, 1fr) auto; }
+  .quiz-foot { padding: 9px 15px; }
+  .block-head h2 { font-size: 17px; }
+}
+@media (max-width: 420px) {
+  .level-chip .chip-name { display: none; }
+  .crumb-root, .crumb-slash { display: none; }
+}
+
+/* ---------- Dialog level ---------- */
+.level-dialog {
+  width: min(92vw, 420px); padding: 0;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--surface); color: var(--ink);
+  box-shadow: var(--shadow-pop);
+}
+.level-dialog::backdrop { background: var(--overlay); }
+.dialog-head {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.dialog-head h2 { margin: 2px 0 0; font-size: 18px; font-weight: 700; letter-spacing: -.02em; }
+.level-choices { display: grid; }
+.level-choice {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  width: 100%; min-height: 58px; padding: 10px 16px;
+  border: 0; border-top: 1px solid var(--line);
+  background: transparent; color: var(--ink);
+  text-align: left; cursor: pointer;
+}
+.level-choice:first-child { border-top: 0; }
+.level-choice:hover { background: var(--surface-2); }
+.level-choice[aria-current="true"] { background: var(--cobalt-soft); }
+.level-choice[data-soon="1"] { color: var(--muted); cursor: pointer; }
+.level-choice-main { display: flex; align-items: baseline; gap: 10px; }
+.level-choice-id { font-family: var(--font-mono); font-size: 15px; font-weight: 600; }
+.level-choice-name { font-size: 13px; }
+.level-choice-extra { font-family: var(--font-jp); font-size: 13px; color: var(--muted); }
+.level-dialog-foot { margin: 0; padding: 10px 16px 13px; border-top: 1px solid var(--line); font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.dialog-level-note { margin: 0; padding: 0 16px 10px; font-size: 12px; color: var(--persimmon-text); min-height: 0; }
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed; left: 50%; bottom: 24px;
+  transform: translateX(-50%) translateY(8px);
+  z-index: 120;
+  max-width: min(90vw, 420px);
+  padding: 9px 14px;
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--ink); color: var(--paper);
+  font-size: 12.5px; font-weight: 600; text-align: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
+}
+.toast.is-on { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#view" id="skipLink">Lewati ke konten</a>
+
+<!-- CATATAN DESAIN — terlihat saat dibuka, terpisah dari shell aplikasi -->
+<section class="design-note" id="designNote" aria-labelledby="designNoteTitle">
+  <div class="note-top">
+    <div class="note-mark" aria-hidden="true"><span>ARAH</span><b>設計</b></div>
+    <div class="note-title">
+      <p class="note-kicker">Lembar spesifikasi · Manabi redesign 2026 · Arah 02 / 03</p>
+      <h2 id="designNoteTitle">「設計」Blueprint / Kokpit Data</h2>
+      <p class="note-tagline">Presisi, sejuk, terstruktur — alat ukur, bukan buku cerita.</p>
+    </div>
+    <div class="note-actions">
+      <p class="note-file">design-preview/arah-2.html<br>CSS + JS inline · tanpa build</p>
+      <button class="btn btn--sm" id="hideNoteBtn" type="button">Sembunyikan catatan</button>
+    </div>
+  </div>
+  <div class="note-body">
+    <div class="note-col">
+      <h3>01 · Karakter</h3>
+      <p><strong>Presisi, sejuk, terstruktur.</strong> Permukaan terang berpola grid halus, garis 1px tegas, radius 4–8px, dan hampir tanpa bayangan: kedalaman datang dari kepadatan informasi, bukan efek.</p>
+      <p>Kobalt menandai aksi dan data aktif; persimmon menandai peringatan dan titik perhatian; hijau-teal menandai capaian. Tipografi UI sans geometris, label dan angka memakai mono dengan angka tabular; teks Jepang mendapat Noto Sans JP.</p>
+      <div class="note-swatches" aria-label="Palet warna arah 2">
+        <span class="swatch" style="background:#F3F5F8" title="Kertas #F3F5F8"></span>
+        <span class="swatch" style="background:#0E1526" title="Tinta #0E1526"></span>
+        <span class="swatch" style="background:#2547D0" title="Kobalt #2547D0"></span>
+        <span class="swatch" style="background:#E2542C" title="Persimmon #E2542C"></span>
+        <span class="swatch" style="background:#0F7A6C" title="Teal #0F7A6C"></span>
+        <span class="swatch" style="background:#D6DCE6" title="Garis #D6DCE6"></span>
+      </div>
+    </div>
+    <div class="note-col">
+      <h3>02 · Struktur menu</h3>
+      <dl class="note-menu">
+        <div><dt>Tanpa judul</dt><dd><b>Dasbor</b></dd></div>
+        <div><dt>Materi</dt><dd><b>Kana &amp; Menulis</b> (Tabel Kana · Latihan Menulis) · <b>Kosakata</b> · <b>Kanji &amp; Bacaan</b> (Kanji · Perubahan Bacaan) · <b>Tata Bahasa</b> · <b>Partikel</b> · <b>Mendengar</b> · <b>Membaca</b> · <b>Konteks &amp; Etiket</b></dd></div>
+        <div><dt>Latihan</dt><dd><b>Ulasan</b> · <b>Latihan Soal</b> · <b>Simulasi Ujian</b></dd></div>
+        <div><dt>Referensi</dt><dd><b>Kamus</b> · <b>Pengaturan</b> · <b>Tentang</b></dd></div>
+      </dl>
+      <p class="mono-note" style="margin-top:8px">Level: N5 aktif; N4–N1 tampil nonaktif dengan label “Segera”.</p>
+    </div>
+    <div class="note-col">
+      <h3>03 · Keputusan penamaan</h3>
+      <ol class="note-reasons">
+        <li><b>Bank Soal keluar dari menu.</b> Ia lapisan data; Latihan Soal dan Simulasi Ujian mengambil butir acak tanpa pengulangan dari sana.</li>
+        <li><b>Kana + Menulis → “Kana &amp; Menulis”.</b> Dua kegiatan untuk satu keterampilan aksara.</li>
+        <li><b>Kanji + Bacaan Kanji → “Kanji &amp; Bacaan”.</b> Perubahan bacaan adalah lapisan dari kanji, bukan mata pelajaran terpisah.</li>
+        <li><b>Ulasan naik ke kelompok Latihan.</b> SRS adalah aksi harian terpenting dan menjadi hub lintas dek.</li>
+        <li><b>“Latihan Soal” dan “Simulasi Ujian”</b> memisahkan latihan singkat dari simulasi berdurasi, serta dari ulasan SRS.</li>
+        <li><b>“Mendengar” dan “Membaca”</b>, bukan Listening/Reading: konsisten bahasa Indonesia.</li>
+        <li><b>Konteks &amp; Etiket tetap satu menu.</b> Materinya kebiasaan dan kesopanan, bukan tata bahasa.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="note-foot">
+    <span>TOKEN · KERTAS #F3F5F8 · TINTA #0E1526 · KOBALT #2547D0 · PERSIMMON #E2542C · TEAL #0F7A6C</span>
+    <span>DESKTOP 1440 · TABLET 834 · MOBILE 390 · TERANG + GELAP · SENTUH 44px</span>
+  </div>
+</section>
+<button class="note-restore" id="noteRestore" type="button" hidden>Tampilkan catatan desain ↗</button>
+
+<div class="app" id="app">
+  <div class="scrim" id="scrim" aria-hidden="true"></div>
+
+  <aside class="sidebar" id="sidebar" aria-label="Navigasi utama Manabi">
+    <div class="sidebar-brand">
+      <a class="brand-link" href="#dasbor" aria-label="Manabi — kembali ke dasbor">
+        <span class="brand-mark" aria-hidden="true">学</span>
+        <span class="brand-copy">
+          <span class="brand-name">manabi</span>
+          <span class="brand-sub">JLPT · N5 · 2026</span>
+        </span>
+      </a>
+      <button class="icon-btn mobile-close" id="drawerClose" type="button" aria-label="Tutup menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+
+    <div class="level-switch">
+      <div class="level-switch-top">
+        <span class="mono-label">Level</span>
+        <span class="level-hours">±150 jam</span>
+      </div>
+      <div class="level-segments" id="levelSegments" role="group" aria-label="Pilih level JLPT"></div>
+      <div class="level-meta">
+        <span><b>N5</b> · Dasar</span>
+        <span lang="ja">初級</span>
+      </div>
+      <p class="level-soon">N4–N1 segera</p>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav" aria-label="Menu materi, latihan, dan referensi"></nav>
+
+    <div class="sidebar-progress">
+      <div class="ring" style="--p:45" aria-hidden="true"><span><b>45%</b><em>N5</em></span></div>
+      <div class="sp-copy">
+        <p class="mono-label">Progres kosakata</p>
+        <p class="sp-line"><b>318</b> / 708 kosakata</p>
+        <div class="bar"><i style="width:45%"></i></div>
+        <p class="sp-meta">12 hari beruntun · 2.480 XP</p>
+      </div>
+    </div>
+    <p class="sr-only" id="levelNote" aria-live="polite"></p>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="sidebar">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <div class="crumb">
+        <span class="crumb-root">MANABI</span>
+        <span class="crumb-slash" aria-hidden="true">/</span>
+        <span id="crumbCurrent">DASBOR</span>
+      </div>
+      <div class="topbar-spacer"></div>
+      <button class="level-chip" id="levelChip" type="button" aria-haspopup="dialog" aria-controls="levelDialog">
+        <span class="chip-level">N5</span><span class="chip-name">· Dasar</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <p class="topbar-date">KAMIS · 12 NOV 2026</p>
+      <button class="icon-btn theme-btn" id="themeBtn" type="button" aria-label="Aktifkan mode gelap" aria-pressed="false" title="Mode gelap">
+        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
+      </button>
+    </header>
+
+    <main id="view" tabindex="-1"></main>
+
+    <footer class="main-foot">
+      <span>MANABI · ARAH 2 — 設計 / BLUEPRINT</span>
+      <span>N5 · 708 KOSAKATA · 111 KANJI · 48 TATA BAHASA · 18 PARTIKEL · 10 BACAAN · 12 DIALOG</span>
+      <span>KAMIS, 12 NOVEMBER 2026</span>
+    </footer>
+
+    <nav class="bottom-nav" aria-label="Navigasi cepat">
+      <a href="#dasbor" data-route="dasbor"><span class="bn-icon" aria-hidden="true">学</span><span>Dasbor</span></a>
+      <a href="#materi/partikel" data-route="materi/partikel"><span class="bn-icon" aria-hidden="true">助</span><span>Partikel</span></a>
+      <a href="#latihan" data-route="latihan"><span class="bn-icon" aria-hidden="true">問</span><span>Latihan</span></a>
+      <a href="#modul/ulasan" data-route="modul/ulasan"><span class="bn-icon" aria-hidden="true">復</span><span>Ulasan</span></a>
+      <button type="button" id="bottomMenu" aria-label="Buka menu lengkap">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <span>Menu</span>
+      </button>
+    </nav>
+  </div>
+</div>
+
+<dialog class="level-dialog" id="levelDialog" aria-labelledby="levelDialogTitle">
+  <div class="dialog-head">
+    <div>
+      <p class="mono-label">Pilih level</p>
+      <h2 id="levelDialogTitle">Kurikulum Manabi</h2>
+    </div>
+    <button class="icon-btn" id="levelClose" type="button" aria-label="Tutup dialog level">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="level-choices" id="levelChoices"></div>
+  <p class="dialog-level-note" id="dialogLevelNote" aria-live="polite"></p>
+  <p class="level-dialog-foot">N5 punya materi lengkap di preview ini. Level lain disiapkan bertahap.</p>
+</dialog>
+
+<div class="toast" id="toast" aria-hidden="true"></div>
+<div class="sr-only" id="live" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   1. DATA KURIKULUM (struktur menu persis brief)
+   ============================================================ */
+const CURRICULUM = {
+  levels: [
+    { id: "N5", name: "Dasar", jp: "初級", status: "active", hours: "±150 jam" },
+    { id: "N4", name: "Dasar Lanjut", jp: "初中級", status: "soon" },
+    { id: "N3", name: "Menengah", jp: "中級", status: "soon" },
+    { id: "N2", name: "Menengah Atas", jp: "中上級", status: "soon" },
+    { id: "N1", name: "Mahir", jp: "上級", status: "soon" }
+  ],
+  groups: [
+    {
+      label: null,
+      items: [
+        { id: "dasbor", icon: "学", label: "Dasbor", href: "#dasbor" }
+      ]
+    },
+    {
+      label: "Materi",
+      items: [
+        {
+          id: "kana-menulis", icon: "あ", label: "Kana & Menulis", href: "#modul/kana-menulis",
+          sub: [
+            { id: "tabel-kana", label: "Tabel Kana", href: "#modul/tabel-kana" },
+            { id: "latihan-menulis", label: "Latihan Menulis", href: "#modul/latihan-menulis" }
+          ]
+        },
+        { id: "kosakata", icon: "語", label: "Kosakata", href: "#modul/kosakata" },
+        {
+          id: "kanji", icon: "漢", label: "Kanji & Bacaan", href: "#modul/kanji",
+          sub: [
+            { id: "kanji-dasar", label: "Kanji", href: "#modul/kanji-dasar" },
+            { id: "perubahan-bacaan", label: "Perubahan Bacaan", href: "#modul/perubahan-bacaan" }
+          ]
+        },
+        { id: "tata-bahasa", icon: "文", label: "Tata Bahasa", href: "#modul/tata-bahasa" },
+        { id: "partikel", icon: "助", label: "Partikel", href: "#materi/partikel" },
+        { id: "mendengar", icon: "聴", label: "Mendengar", href: "#modul/mendengar" },
+        { id: "membaca", icon: "読", label: "Membaca", href: "#modul/membaca" },
+        { id: "konteks", icon: "敬", label: "Konteks & Etiket", href: "#modul/konteks" }
+      ]
+    },
+    {
+      label: "Latihan",
+      items: [
+        { id: "ulasan", icon: "復", label: "Ulasan", href: "#modul/ulasan", badge: "24" },
+        { id: "latihan", icon: "問", label: "Latihan Soal", href: "#latihan" },
+        { id: "ujian", icon: "試", label: "Simulasi Ujian", href: "#modul/ujian" }
+      ]
+    },
+    {
+      label: "Referensi",
+      items: [
+        { id: "kamus", icon: "辞", label: "Kamus", href: "#modul/kamus" },
+        { id: "pengaturan", icon: "設", label: "Pengaturan", href: "#modul/pengaturan" },
+        { id: "tentang", icon: "情", label: "Tentang", href: "#modul/tentang" }
+      ]
+    }
+  ]
+};
+
+/* ============================================================
+   2. DATA DASBOR (angka kanonik brief)
+   ============================================================ */
+const DASH = {
+  xp: 2480, xpLevel: 9, intoLevel: 80, xpNeed: 300,
+  streak: 12, dailyGoal: 20, todayActions: 14,
+  due: { vocab: 14, kanji: 6, grammar: 4, total: 24 },
+  fresh: 32, accuracy: 86,
+  activity: [
+    { label: "Sen", value: 12 }, { label: "Sel", value: 20 }, { label: "Rab", value: 0 },
+    { label: "Kam", value: 18 }, { label: "Jum", value: 25 }, { label: "Sab", value: 14 },
+    { label: "Min", value: 14 }
+  ],
+  modules: [
+    { name: "Kosakata", done: 318, total: 708, href: "#modul/kosakata", status: "Berjalan" },
+    { name: "Kanji", done: 47, total: 111, href: "#modul/kanji-dasar", status: "Berjalan" },
+    { name: "Tata Bahasa", done: 21, total: 48, href: "#modul/tata-bahasa", status: "Berjalan" },
+    { name: "Membaca", done: 4, total: 10, href: "#modul/membaca", status: "Berjalan" },
+    { name: "Mendengar", done: 5, total: 12, href: "#modul/mendengar", status: "Berjalan" },
+    { name: "Partikel", done: 9, total: 18, href: "#materi/partikel", status: "Berjalan" },
+    { name: "Kana", done: 208, total: 208, href: "#modul/kana-menulis", status: "Selesai" }
+  ],
+  history: [
+    { date: "12 NOV", mode: "Campuran", score: "9 / 12", acc: 75, dur: "6 mnt" },
+    { date: "11 NOV", mode: "Partikel", score: "8 / 10", acc: 80, dur: "4 mnt" },
+    { date: "10 NOV", mode: "Kanji", score: "7 / 8", acc: 88, dur: "3 mnt" },
+    { date: "09 NOV", mode: "Tata Bahasa", score: "5 / 6", acc: 83, dur: "4 mnt" },
+    { date: "08 NOV", mode: "Membaca", score: "4 / 5", acc: 80, dur: "5 mnt" }
+  ]
+};
+
+/* ============================================================
+   3. PARTIKEL — 18 entri nyata
+   ============================================================ */
+const PARTICLES = [
+  {
+    id: "wa", char: "は", romaji: "wa", tier: "dasar", name: "penanda topik",
+    explanation: "は (dibaca “wa”) menandai topik yang sedang dibicarakan, biasanya sesuatu yang sudah diketahui pendengar. Setelah は, kalimat menjelaskan sesuatu tentang topik itu.",
+    examples: [
+      { jp: "わたしは学生です。", idn: "Saya pelajar.", note: "Topiknya “saya”, lalu dijelaskan status saya." },
+      { jp: "この店は安いです。", idn: "Toko ini murah." },
+      { jp: "きょうは日曜日です。", idn: "Hari ini hari Minggu." }
+    ],
+    trap: "Jangan tertukar dengan が: は untuk topik yang sudah jelas, が untuk menekankan pelaku baru."
+  },
+  {
+    id: "ga", char: "が", romaji: "ga", tier: "dasar", name: "penanda subjek",
+    explanation: "が menandai subjek kalimat, terutama ketika informasinya baru atau ingin ditekankan. Pada kalimat tanya seperti “siapa yang…”, jawabannya memakai が.",
+    examples: [
+      { jp: "ねこがいます。", idn: "Ada kucing.", note: "Yang pertama kali disebut adalah kucing, jadi memakai が." },
+      { jp: "だれが来ますか。", idn: "Siapa yang datang?" },
+      { jp: "田中さんが先生です。", idn: "Tanaka-lah yang guru." }
+    ],
+    trap: "Kata 好き, 分かる, 上手 memakai が untuk hal yang disukai/dipahami, bukan を."
+  },
+  {
+    id: "wo", char: "を", romaji: "o", tier: "dasar", name: "objek langsung",
+    explanation: "を (dibaca “o”) menandai objek langsung dari kata kerja — apa yang dikenai tindakan. Posisinya sebelum kata kerja.",
+    examples: [
+      { jp: "ごはんを食べます。", idn: "Saya makan nasi." },
+      { jp: "本を読みます。", idn: "Saya membaca buku." },
+      { jp: "音楽を聞きます。", idn: "Saya mendengarkan musik." }
+    ],
+    trap: "Kata kerja perpindahan yang meninggalkan tempat juga memakai を: 家を出ます."
+  },
+  {
+    id: "ni", char: "に", romaji: "ni", tier: "dasar", name: "waktu, tujuan, keberadaan",
+    explanation: "に menandai titik waktu yang spesifik (jam, tanggal), tujuan perpindahan, dan tempat keberadaan saat memakai います / あります.",
+    examples: [
+      { jp: "七時に起きます。", idn: "Saya bangun jam tujuh.", note: "Waktu yang spesifik selalu memakai に." },
+      { jp: "学校に行きます。", idn: "Saya pergi ke sekolah." },
+      { jp: "家にねこがいます。", idn: "Di rumah ada kucing.", note: "Keberadaan memakai に, bukan で." }
+    ],
+    trap: "Untuk tempat berlangsungnya aktivitas pakai で, bukan に."
+  },
+  {
+    id: "de", char: "で", romaji: "de", tier: "dasar", name: "tempat aktivitas, alat",
+    explanation: "で menandai tempat terjadinya tindakan (bukan sekadar keberadaan) dan alat atau cara yang dipakai untuk melakukan sesuatu.",
+    examples: [
+      { jp: "学校で勉強します。", idn: "Saya belajar di sekolah.", note: "Belajar adalah aktivitas, jadi memakai で." },
+      { jp: "電車で行きます。", idn: "Pergi dengan kereta.", note: "Kereta adalah alat." },
+      { jp: "日本語で話します。", idn: "Berbicara dalam bahasa Jepang." }
+    ],
+    trap: "Jangan pakai で untuk keberadaan: 家にいます (bukan 家でいます)."
+  },
+  {
+    id: "e", char: "へ", romaji: "e", tier: "inti", name: "arah tujuan",
+    explanation: "へ (dibaca “e”) menandai arah perpindahan. Artinya mirip に untuk tujuan, tetapi へ lebih menekankan arah perjalanan daripada titik akhirnya.",
+    examples: [
+      { jp: "日本へ行きます。", idn: "Saya pergi ke Jepang." },
+      { jp: "学校へ来ました。", idn: "Saya datang ke sekolah." },
+      { jp: "東京へ帰ります。", idn: "Saya pulang ke Tokyo." }
+    ],
+    trap: "Untuk tujuan perpindahan, に dan へ hampir selalu bisa menggantikan satu sama lain."
+  },
+  {
+    id: "no", char: "の", romaji: "no", tier: "inti", name: "kepemilikan & penghubung",
+    explanation: "の menghubungkan dua kata benda. Gunanya bisa kepemilikan (“milik”), asal, bahan, atau sekadar menerangkan kata benda di belakangnya.",
+    examples: [
+      { jp: "わたしの本です。", idn: "Ini buku saya." },
+      { jp: "日本語の先生。", idn: "Guru bahasa Jepang." },
+      { jp: "これは田中さんのかばんです。", idn: "Ini tas Tanaka." }
+    ],
+    trap: "Urutan penting: pemilik dulu, baru の, baru benda yang dimiliki."
+  },
+  {
+    id: "to", char: "と", romaji: "to", tier: "inti", name: "dan, bersama",
+    explanation: "と menyambung dua kata benda secara lengkap (“A dan B”) dan menandai lawan yang melakukan sesuatu bersama kita.",
+    examples: [
+      { jp: "友だちと映画を見ます。", idn: "Menonton film bersama teman.", note: "Di sini と berarti “bersama”." },
+      { jp: "パンとたまごを買いました。", idn: "Saya membeli roti dan telur." },
+      { jp: "父と母が来ます。", idn: "Ayah dan ibu datang." }
+    ],
+    trap: ""
+  },
+  {
+    id: "mo", char: "も", romaji: "mo", tier: "inti", name: "juga",
+    explanation: "も menggantikan は atau が untuk menyatakan “juga”. Jika ingin mengatakan hal yang sama berlaku untuk subjek lain, pakai も.",
+    examples: [
+      { jp: "わたしも学生です。", idn: "Saya juga pelajar." },
+      { jp: "これもおいしいです。", idn: "Ini juga enak." },
+      { jp: "日曜日も働きます。", idn: "Hari Minggu pun saya bekerja." }
+    ],
+    trap: "も tidak digabung dengan は; pilih salah satu."
+  },
+  {
+    id: "ka", char: "か", romaji: "ka", tier: "inti", name: "pertanyaan & pilihan",
+    explanation: "か di akhir kalimat menjadikannya pertanyaan. Di tengah kalimat, か menghubungkan dua pilihan (“A atau B”).",
+    examples: [
+      { jp: "学生ですか。", idn: "Apakah Anda pelajar?" },
+      { jp: "コーヒーか紅茶を飲みます。", idn: "Minum kopi atau teh." },
+      { jp: "どこに行きますか。", idn: "Mau pergi ke mana?" }
+    ],
+    trap: "Dalam percakapan santai, か di akhir kalimat bisa terdengar tegas; naikkan intonasi sebagai gantinya."
+  },
+  {
+    id: "kara", char: "から", romaji: "kara", tier: "menengah", name: "dari, karena",
+    explanation: "から punya dua fungsi: menandai titik awal (waktu atau tempat) dan menyatakan sebab (“karena”). Bedanya dengan ので: から lebih langsung.",
+    examples: [
+      { jp: "九時から勉強します。", idn: "Belajar mulai jam sembilan." },
+      { jp: "日本から来ました。", idn: "Saya datang dari Jepang." },
+      { jp: "雨だから行きません。", idn: "Karena hujan, saya tidak pergi." }
+    ],
+    trap: ""
+  },
+  {
+    id: "made", char: "まで", romaji: "made", tier: "menengah", name: "sampai",
+    explanation: "まで menandai batas akhir, baik waktu maupun tempat. Sering berpasangan dengan から: から … まで …",
+    examples: [
+      { jp: "五時まで働きます。", idn: "Bekerja sampai jam lima." },
+      { jp: "駅まで歩きます。", idn: "Berjalan sampai stasiun." },
+      { jp: "月曜日から金曜日まで学校です。", idn: "Dari Senin sampai Jumat ada sekolah." }
+    ],
+    trap: ""
+  },
+  {
+    id: "ya", char: "や", romaji: "ya", tier: "menengah", name: "dan (antara lain)",
+    explanation: "や menyebutkan beberapa contoh dari sekumpulan benda, dengan nuansa “antara lain”. Berbeda dengan と yang berarti daftarnya lengkap.",
+    examples: [
+      { jp: "本やペンを買います。", idn: "Membeli buku, pulpen, dan lain-lain." },
+      { jp: "りんごやバナナがあります。", idn: "Ada apel, pisang, dan sebagainya." },
+      { jp: "コーヒーや紅茶が好きです。", idn: "Saya suka kopi, teh, dan yang semacamnya." }
+    ],
+    trap: "Kalau daftarnya memang hanya dua dan lengkap, pakai と."
+  },
+  {
+    id: "ne", char: "ね", romaji: "ne", tier: "menengah", name: "meminta persetujuan",
+    explanation: "ね di akhir kalimat mencari persetujuan pendengar, seperti “ya kan?”. Nada kalimatnya naik sedikit.",
+    examples: [
+      { jp: "いいですね。", idn: "Bagus, ya." },
+      { jp: "今日は寒いですね。", idn: "Hari ini dingin, ya." },
+      { jp: "おいしいですね。", idn: "Enak, ya." }
+    ],
+    trap: ""
+  },
+  {
+    id: "yo", char: "よ", romaji: "yo", tier: "menengah", name: "penegasan & informasi baru",
+    explanation: "よ menegaskan pendapat atau memberi tahu hal yang belum diketahui pendengar. Berbeda dengan ね yang mencari persetujuan.",
+    examples: [
+      { jp: "おいしいですよ。", idn: "Enak, lho." },
+      { jp: "あの店は安いですよ。", idn: "Toko itu murah, lho." },
+      { jp: "明日は休みですよ。", idn: "Besok libur, lho." }
+    ],
+    trap: ""
+  },
+  {
+    id: "yori", char: "より", romaji: "yori", tier: "menengah", name: "perbandingan",
+    explanation: "より menandai pembanding dalam kalimat perbandingan. Polanya: A は B より … = A lebih … daripada B.",
+    examples: [
+      { jp: "夏より冬が好きです。", idn: "Saya lebih suka musim dingin daripada musim panas." },
+      { jp: "電車より歩くほうが速いです。", idn: "Jalan kaki lebih cepat daripada naik kereta." },
+      { jp: "今年は去年より暑いです。", idn: "Tahun ini lebih panas daripada tahun lalu." }
+    ],
+    trap: ""
+  },
+  {
+    id: "hodo", char: "ほど", romaji: "hodo", tier: "menengah", name: "sebatas, sejauh",
+    explanation: "ほど menyatakan tingkat atau perkiraan. Dalam bentuk negatif (ほど〜ない) artinya “tidak se…”. Bisa juga untuk perkiraan jumlah.",
+    examples: [
+      { jp: "駅まで十分ほどかかります。", idn: "Ke stasiun sekitar sepuluh menit." },
+      { jp: "それほど高くないです。", idn: "Tidak semahal itu." },
+      { jp: "今日は昨日ほど寒くないです。", idn: "Hari ini tidak sedingin kemarin." }
+    ],
+    trap: "Pola “A は B ほど … ない” sering tertukar dengan より. より dipakai untuk menyatakan lebih, ほど untuk tidak se-."
+  },
+  {
+    id: "dake", char: "だけ", romaji: "dake", tier: "menengah", name: "hanya",
+    explanation: "だけ menandai batas: “hanya” atau “sekadar”. Bisa mengikuti kata benda, jumlah, atau kata kerja.",
+    examples: [
+      { jp: "水だけ飲みます。", idn: "Saya hanya minum air." },
+      { jp: "一人だけ来ました。", idn: "Hanya satu orang yang datang." },
+      { jp: "少しだけ休みます。", idn: "Saya beristirahat sebentar saja." }
+    ],
+    trap: "だけ menekankan batas atas; しか dipakai dengan bentuk negatif dan menekankan kekurangan."
+  }
+];
+
+const COMPARISONS = [
+  {
+    id: "wa-ga", title: "は vs が", question: "Topik yang sudah dibicarakan, atau pelaku yang ingin ditekankan?",
+    left: { char: "は", summary: "Topik yang sudah diketahui pendengar.", jp: "田中さんは先生です。", idn: "Tanaka adalah guru." },
+    right: { char: "が", summary: "Subjek/pelaku, terutama informasi baru.", jp: "田中さんが先生です。", idn: "Tanaka-lah yang guru." },
+    takeaway: "Kalau informasi pelaku baru, pakai が. Kalau topiknya sudah sama-sama tahu, pakai は."
+  },
+  {
+    id: "ni-de", title: "に vs で", question: "Tempat keberadaan, atau tempat berlangsungnya aktivitas?",
+    left: { char: "に", summary: "Titik keberadaan dan titik waktu.", jp: "学校にいます。", idn: "Saya berada di sekolah." },
+    right: { char: "で", summary: "Tempat aktivitas, serta alat/cara.", jp: "学校で勉強します。", idn: "Belajar di sekolah." },
+    takeaway: "Ada di sana? に. Sedang melakukan sesuatu di sana? で."
+  },
+  {
+    id: "ni-e", title: "に vs へ", question: "Titik tujuan, atau arah perjalanan?",
+    left: { char: "に", summary: "Menekankan titik akhir tujuan.", jp: "日本に行きます。", idn: "Pergi ke Jepang." },
+    right: { char: "へ", summary: "Menekankan arah perjalanan.", jp: "日本へ行きます。", idn: "Pergi ke arah Jepang." },
+    takeaway: "Untuk perpindahan, keduanya biasanya bisa saling menggantikan. Bedanya hanya nuansa."
+  },
+  {
+    id: "wa-mo", title: "は vs も", question: "Topik biasa, atau “juga” seperti yang sebelumnya?",
+    left: { char: "は", summary: "Topik netral.", jp: "わたしは学生です。", idn: "Saya pelajar." },
+    right: { char: "も", summary: "Hal yang sama berlaku untuk topik ini juga.", jp: "わたしも学生です。", idn: "Saya juga pelajar." },
+    takeaway: "も menggantikan は — jangan menulis わたしはも."
+  },
+  {
+    id: "wo-ga", title: "を vs が", question: "Objek dari tindakan, atau hal yang disukai/dipahami?",
+    left: { char: "を", summary: "Objek dari kata kerja tindakan.", jp: "音楽を聞きます。", idn: "Mendengarkan musik." },
+    right: { char: "が", summary: "Dipakai untuk 好き, 分かる, 上手.", jp: "音楽が好きです。", idn: "Saya suka musik." },
+    takeaway: "好き dan 分かる bukan tindakan, jadi memakai が."
+  },
+  {
+    id: "to-ya", title: "と vs や", question: "Daftar lengkap, atau beberapa contoh saja?",
+    left: { char: "と", summary: "Menyambung daftar yang lengkap.", jp: "パンとたまごを買いました。", idn: "Membeli roti dan telur." },
+    right: { char: "や", summary: "Menyebut sebagian contoh: antara lain.", jp: "パンやたまごを買いました。", idn: "Membeli roti, telur, dan lain-lain." },
+    takeaway: "Lengkap dan hanya itu → と. Contoh dan masih ada yang lain → や."
+  }
+];
+
+const PITFALLS = [
+  {
+    id: "suki-ga", title: "好き dan 分かる memakai が",
+    summary: "Dalam bahasa Indonesia “menyukai” terasa seperti tindakan, jadi pembelajar cenderung memakai を. Dalam bahasa Jepang, 好き adalah keadaan.",
+    wrong: "音楽を好きです。", right: "音楽が好きです。", idn: "Saya suka musik.",
+    note: "Kalau ingin memakai を, ubah kata kerjanya: 音楽を好む (lebih formal)."
+  },
+  {
+    id: "zokuzai-ni", title: "Keberadaan memakai に",
+    summary: "Tempat berlangsungnya aktivitas memakai で, tetapi tempat keberadaan (います / あります) memakai に.",
+    wrong: "家でねこがいます。", right: "家にねこがいます。", idn: "Di rumah ada kucing.",
+    note: "Uji cepat: kalau ada います/あります dan tidak ada tindakan, pakai に."
+  },
+  {
+    id: "deru-wo", title: "Meninggalkan tempat memakai を",
+    summary: "Kata kerja yang meninggalkan tempat (出ます, 卒業します, 降ります) memakai を walaupun bukan objek tindakan.",
+    wrong: "七時に家から出ます。", right: "七時に家を出ます。", idn: "Keluar rumah jam tujuh.",
+    note: "から juga dipakai untuk titik awal, tetapi dengan 出ます bentuk yang wajar adalah を."
+  },
+  {
+    id: "ni-e-copy", title: "に dan へ sering saling menggantikan",
+    summary: "Untuk tujuan perpindahan, keduanya benar. Jangan menghabiskan waktu memilih ketika keduanya diterima — yang penting bukan で.",
+    wrong: "学校で行きます。", right: "学校に行きます。", idn: "Pergi ke sekolah.",
+    note: "学校へ行きます juga benar. で salah karena 行きます bukan aktivitas di tempat itu."
+  }
+];
+
+/* ============================================================
+   4. KOSAKATA, KANJI, TATA BAHASA (bank generator)
+   ============================================================ */
+const VOCAB = [
+  { kanji: "私", kana: "わたし", romaji: "watashi", meaning: "saya" },
+  { kanji: "学生", kana: "がくせい", romaji: "gakusei", meaning: "pelajar / mahasiswa" },
+  { kanji: "学校", kana: "がっこう", romaji: "gakkou", meaning: "sekolah" },
+  { kanji: "日本", kana: "にほん", romaji: "nihon", meaning: "Jepang" },
+  { kanji: "水", kana: "みず", romaji: "mizu", meaning: "air" },
+  { kanji: "電車", kana: "でんしゃ", romaji: "densha", meaning: "kereta listrik" },
+  { kanji: "友達", kana: "ともだち", romaji: "tomodachi", meaning: "teman" },
+  { kanji: "時間", kana: "じかん", romaji: "jikan", meaning: "waktu / jam" },
+  { kanji: "食べる", kana: "たべる", romaji: "taberu", meaning: "makan" },
+  { kanji: "飲む", kana: "のむ", romaji: "nomu", meaning: "minum" },
+  { kanji: "行く", kana: "いく", romaji: "iku", meaning: "pergi" },
+  { kanji: "読む", kana: "よむ", romaji: "yomu", meaning: "membaca" },
+  { kanji: "書く", kana: "かく", romaji: "kaku", meaning: "menulis" },
+  { kanji: "買う", kana: "かう", romaji: "kau", meaning: "membeli" },
+  { kanji: "分かる", kana: "わかる", romaji: "wakaru", meaning: "mengerti" },
+  { kanji: "大きい", kana: "おおきい", romaji: "ookii", meaning: "besar" },
+  { kanji: "新しい", kana: "あたらしい", romaji: "atarashii", meaning: "baru" },
+  { kanji: "忙しい", kana: "いそがしい", romaji: "isogashii", meaning: "sibuk" },
+  { kanji: "好き", kana: "すき", romaji: "suki", meaning: "suka" },
+  { kanji: "美味しい", kana: "おいしい", romaji: "oishii", meaning: "enak / lezat" }
+];
+
+const KANJI = [
+  { c: "日", meaning: "hari / matahari", on: "ニチ, ジツ", kun: "ひ, か", strokes: 4, radical: "日" },
+  { c: "月", meaning: "bulan", on: "ゲツ, ガツ", kun: "つき", strokes: 4, radical: "月" },
+  { c: "火", meaning: "api", on: "カ", kun: "ひ", strokes: 4, radical: "火" },
+  { c: "水", meaning: "air", on: "スイ", kun: "みず", strokes: 4, radical: "水" },
+  { c: "木", meaning: "pohon / kayu", on: "モク, ボク", kun: "き", strokes: 4, radical: "木" },
+  { c: "金", meaning: "emas / uang / logam", on: "キン, コン", kun: "かね", strokes: 8, radical: "金" },
+  { c: "土", meaning: "tanah", on: "ド, ト", kun: "つち", strokes: 3, radical: "土" },
+  { c: "人", meaning: "orang", on: "ジン, ニン", kun: "ひと", strokes: 2, radical: "人" },
+  { c: "山", meaning: "gunung", on: "サン", kun: "やま", strokes: 3, radical: "山" },
+  { c: "学", meaning: "belajar / ilmu", on: "ガク", kun: "まな.ぶ", strokes: 8, radical: "子" },
+  { c: "生", meaning: "hidup / lahir / murid", on: "セイ, ショウ", kun: "い.きる, う.まれる", strokes: 5, radical: "生" },
+  { c: "先", meaning: "dahulu / depan", on: "セン", kun: "さき", strokes: 6, radical: "儿" }
+];
+
+const GRAMMAR = [
+  { pattern: "A は B です。", title: "Kalimat nominal です", note: "Negatif ではありません · lampau でした.", jp: "私は学生です。", idn: "Saya adalah pelajar." },
+  { pattern: "A は …", title: "Partikel topik は", note: "Menandai topik; yang sudah jelas bisa dihilangkan.", jp: "この店は安いです。", idn: "Toko ini murah." },
+  { pattern: "… を [kata kerja]", title: "Partikel objek を", note: "Objek langsung, posisi sebelum kata kerja.", jp: "ご飯を食べます。", idn: "Saya makan nasi." },
+  { pattern: "waktu / tempat に …", title: "Partikel に", note: "Titik waktu, keberadaan, tujuan perpindahan.", jp: "七時に起きます。", idn: "Saya bangun jam tujuh." },
+  { pattern: "tempat / alat で …", title: "Partikel で", note: "Tempat aksi dan alat/cara.", jp: "図書館で勉強します。", idn: "Saya belajar di perpustakaan." },
+  { pattern: "KK stem + ます / ません", title: "Bentuk sopan ます", note: "Lampau ました / ませんでした.", jp: "毎日日本語を勉強します。", idn: "Setiap hari saya belajar bahasa Jepang." },
+  { pattern: "[KK bentuk て] ください", title: "Permintaan てください", note: "Bentuk て juga menyambung aksi.", jp: "ちょっと待ってください。", idn: "Tolong tunggu sebentar." },
+  { pattern: "[stem KK] たいです", title: "Keinginan たい", note: "Untuk keinginan pembicara sendiri.", jp: "日本に行きたいです。", idn: "Saya ingin pergi ke Jepang." }
+];
+
+/* ============================================================
+   5. BANK SOAL MODE (nyata dari repo)
+   ============================================================ */
+const PARTICLE_Q = [
+  { prompt: "わたし ___ インドネシア人です。", idn: "Saya orang Indonesia.", answer: "は", options: ["は", "を", "で", "が"], explanation: "“わたし” adalah topik yang dibicarakan, jadi memakai は." },
+  { prompt: "毎日、七時 ___ 起きます。", idn: "Setiap hari saya bangun jam tujuh.", answer: "に", options: ["で", "に", "を", "へ"], explanation: "Waktu yang spesifik memakai に." },
+  { prompt: "学校 ___ 日本語を勉強します。", idn: "Saya belajar bahasa Jepang di sekolah.", answer: "で", options: ["で", "に", "へ", "を"], explanation: "Belajar adalah aktivitas yang berlangsung di sekolah, jadi memakai で." },
+  { prompt: "パン ___ 食べます。", idn: "Saya makan roti.", answer: "を", options: ["が", "を", "に", "と"], explanation: "Roti adalah objek langsung dari 食べます, jadi memakai を." },
+  { prompt: "友だち ___ 映画を見ます。", idn: "Menonton film bersama teman.", answer: "と", options: ["と", "の", "も", "に"], explanation: "と di sini berarti “bersama”." },
+  { prompt: "わたし ___ コーヒーも好きです。", idn: "Saya juga suka kopi.", answer: "も", options: ["を", "も", "へ", "と"], explanation: "も menyatakan “juga”, menggantikan は." },
+  { prompt: "日本 ___ 行きます。", idn: "Saya pergi ke Jepang.", answer: "へ", options: ["を", "で", "へ", "が"], explanation: "へ menandai arah tujuan. に juga benar." },
+  { prompt: "これはわたし ___ 本です。", idn: "Ini buku saya.", answer: "の", options: ["の", "が", "に", "を"], explanation: "の menyatakan kepemilikan." },
+  { prompt: "家 ___ ねこがいます。", idn: "Di rumah ada kucing.", answer: "に", options: ["で", "に", "を", "へ"], explanation: "Keberadaan (います) memakai に." },
+  { prompt: "音楽 ___ 好きです。", idn: "Saya suka musik.", answer: "が", options: ["を", "が", "で", "に"], explanation: "好き adalah keadaan, jadi hal yang disukai memakai が." },
+  { prompt: "九時 ___ 勉強します。", idn: "Belajar mulai jam sembilan.", answer: "から", options: ["から", "まで", "より", "ほど"], explanation: "から menandai titik awal waktu." },
+  { prompt: "五時 ___ 働きます。", idn: "Bekerja sampai jam lima.", answer: "まで", options: ["まで", "から", "ほど", "だけ"], explanation: "まで menandai batas akhir." },
+  { prompt: "本 ___ ペンなどを買いました。", idn: "Membeli buku, pulpen, dan lain-lain.", answer: "や", options: ["や", "と", "も", "の"], explanation: "や menyebut beberapa contoh, bukan daftar lengkap." },
+  { prompt: "本当においしいです ___ 。", idn: "Sungguh enak, ya.", answer: "ね", options: ["ね", "よ", "か", "の"], explanation: "ね mencari persetujuan pendengar, seperti “ya kan?”." },
+  { prompt: "でも、あの店は安いです ___ 。", idn: "Tapi toko itu murah, lho.", answer: "よ", options: ["よ", "ね", "の", "か"], explanation: "よ menegaskan informasi yang belum diketahui pendengar." },
+  { prompt: "夏 ___ 冬が好きです。", idn: "Saya lebih suka musim dingin daripada musim panas.", answer: "より", options: ["より", "ほど", "まで", "だけ"], explanation: "より menandai pembanding dalam perbandingan." },
+  { prompt: "水 ___ 飲みます。", idn: "Saya hanya minum air.", answer: "だけ", options: ["だけ", "しか", "ほど", "より"], explanation: "だけ berarti “hanya” dan dipakai dengan bentuk positif." },
+  { prompt: "駅まで十分 ___ かかります。", idn: "Ke stasiun sekitar sepuluh menit.", answer: "ほど", options: ["ほど", "だけ", "より", "から"], explanation: "ほど di sini menyatakan perkiraan jumlah." },
+  { prompt: "毎朝、七時に家 ___ 出て、学校へ行きます。", idn: "Setiap pagi keluar rumah jam tujuh lalu pergi ke sekolah.", answer: "を", options: ["を", "が", "に", "で"], explanation: "Kata kerja 出ます (meninggalkan tempat) memakai を." },
+  { prompt: "コーヒー ___ 紅茶、どちらにしますか。", idn: "Kopi atau teh, mau yang mana?", answer: "か", options: ["か", "と", "や", "の"], explanation: "か di antara dua kata benda menyatakan pilihan “atau”." }
+];
+
+const READING_TITLES = [
+  { title: "わたしの一日", short: "Rutinitas dari bangun sampai tidur", summary: "Rutinitas dari bangun jam enam, sekolah, membaca buku, sampai tidur jam sebelas." },
+  { title: "わたしの家族", short: "Keluarga empat orang di Tokyo", summary: "Keluarga empat orang di Tokyo: ayah pegawai, ibu guru, kakak mahasiswi." },
+  { title: "日本のコンビニ", short: "Minimarket 24 jam yang terang dan aman", summary: "Buka 24 jam, bisa beli bento dan minuman, terang dan aman sampai malam." },
+  { title: "私の部屋", short: "Kamar di lantai dua yang terang", summary: "Kamar di lantai dua, tidak luas tapi terang, tiga buku dan kursi di dekat jendela." },
+  { title: "週末の予定", short: "Rencana menonton film dan beristirahat", summary: "Sabtu menonton film lalu makan malam; Minggu beristirahat santai di rumah." },
+  { title: "日本の電車", short: "Kereta tepat waktu dan penuh saat pagi", summary: "Tepat waktu, penuh saat pagi, dan dilarang menelepon di dalam kereta." },
+  { title: "好きな食べ物", short: "Suka sushi dan ramen, memasak di rumah", summary: "Suka sushi dan ramen tetapi hanya seminggu sekali; di rumah memasak sendiri." },
+  { title: "日本の四季", short: "Empat musim dari sakura sampai salju", summary: "Empat musim: sakura, panas dan hujan, daun merah, lalu salju." },
+  { title: "私の学校", short: "Sekolah besar dengan seribu siswa", summary: "Sekolah besar dengan seribu siswa; pelajaran jam delapan lewat tiga puluh sampai jam tiga." },
+  { title: "買い物", short: "Belanja sepatu dan topi lalu minum kopi", summary: "Belanja sepatu dan topi lima ribu yen di department store, lalu minum kopi." }
+];
+
+const LISTENING_TITLES = [
+  { title: "あいさつ — Salam Perkenalan", short: "Salam pagi sampai malam dengan bentuk sopan", summary: "Dialog salam pagi sampai malam, dengan bentuk sopan." },
+  { title: "カフェで注文 — Memesan di Kafe", short: "Memesan minuman dan makanan di kafe", summary: "Memesan minuman dan makanan di kafe, plus menanyakan harga." },
+  { title: "道を聞く — Menanyakan Jalan", short: "Bertanya arah ke stasiun", summary: "Bertanya arah ke stasiun dan memahami petunjuk sederhana." },
+  { title: "自己紹介 — Perkenalan Diri", short: "Memperkenalkan nama, asal, dan pekerjaan", summary: "Memperkenalkan nama, asal, pekerjaan, dan kesukaan." },
+  { title: "食堂で — Di Kantin", short: "Memesan makanan di kantin sekolah", summary: "Memesan makanan di kantin sekolah dan menanyakan menu." },
+  { title: "デパートで — Di Department Store", short: "Menanyakan lokasi dan ukuran barang", summary: "Menanyakan lokasi barang dan ukuran." },
+  { title: "電話で — Berbicara di Telepon", short: "Menelepon teman dan meninggalkan pesan", summary: "Menelepon teman dan meninggalkan pesan." },
+  { title: "天気の話 — Membicarakan Cuaca", short: "Membicarakan cuaca hari ini dan besok", summary: "Percakapan ringan tentang cuaca hari ini dan besok." },
+  { title: "週末の予定 — Rencana Akhir Pekan", short: "Mengajak teman bepergian akhir pekan", summary: "Mengajak teman bepergian dan membicarakan waktu pertemuan." },
+  { title: "病院で — Di Dokter", short: "Menjelaskan keluhan kesehatan", summary: "Menjelaskan keluhan kesehatan dan menerima saran dokter." }
+];
+
+const ORDER_Q = [
+  { prompt: "これは きょねん わたし ＿＿ ＿＿ ★ ＿＿ ＿＿ しゃしんです。", fragments: ["が", "で", "海", "とった"], star: "で", full: "これは きょねん わたしが 海で とった しゃしんです。", idn: "Ini foto yang saya ambil di laut tahun lalu." },
+  { prompt: "わたしは ＿＿ ＿＿ ★ ＿＿ ＿＿ ノートに 書きました。", fragments: ["聞いた", "きのう", "先生に", "ことを"], star: "先生に", full: "わたしは きのう 先生に 聞いた ことを ノートに 書きました。", idn: "Kemarin saya menulis hal yang saya dengar dari guru." },
+  { prompt: "母は ＿＿ ＿＿ ★ ＿＿ ＿＿ 食べました。", fragments: ["全部", "料理を", "わたしが", "作った"], star: "料理を", full: "母は わたしが 作った 料理を 全部 食べました。", idn: "Ibu menghabiskan semua masakan yang saya buat." },
+  { prompt: "きのう ＿＿ ＿＿ ★ ＿＿ ＿＿ 返しました。", fragments: ["本を", "図書館に", "友だちに", "借りた"], star: "本を", full: "きのう 友だちに 借りた 本を 図書館に 返しました。", idn: "Kemarin saya mengembalikan buku pinjaman ke perpustakaan." },
+  { prompt: "＿＿ ＿＿ ★ ＿＿ ＿＿ 友だちに あげました。", fragments: ["かわいい", "おみやげを", "日本で", "買った"], star: "日本で", full: "日本で 買った かわいい おみやげを 友だちに あげました。", idn: "Saya memberikan oleh-oleh lucu yang dibeli di Jepang kepada teman." },
+  { prompt: "きのうは ＿＿ ＿＿ ★ ＿＿ ＿＿ 出かけませんでした。", fragments: ["が", "ずっと", "雨", "ふったので"], star: "雨", full: "きのうは ずっと 雨が ふったので 出かけませんでした。", idn: "Kemarin tidak pergi keluar karena hujan turun terus." },
+  { prompt: "＿＿ ＿＿ ★ ＿＿ ＿＿ です。", fragments: ["安くて", "この店の", "おいしい", "ラーメンは"], star: "安くて", full: "この店の ラーメンは 安くて おいしいです。", idn: "Ramen di toko ini murah dan enak." },
+  { prompt: "わたしは ＿＿ ＿＿ ★ ＿＿ ＿＿ ほしいです。", fragments: ["カメラ", "とても", "が", "新しい"], star: "とても", full: "わたしは とても 新しい カメラが ほしいです。", idn: "Saya sangat ingin kamera baru." },
+  { prompt: "＿＿ ＿＿ ★ ＿＿ ＿＿ ください。", fragments: ["ここに", "名前と", "電話番号を", "書いて"], star: "電話番号を", full: "ここに 名前と 電話番号を 書いて ください。", idn: "Tolong tulis nama dan nomor telepon di sini." },
+  { prompt: "わたしは ＿＿ ＿＿ ★ ＿＿ ＿＿ あげました。", fragments: ["母に", "きれいな", "花を", "たくさん"], star: "花を", full: "わたしは 母に きれいな 花を たくさん あげました。", idn: "Saya memberikan banyak bunga cantik kepada ibu." },
+  { prompt: "あそこに ＿＿ ＿＿ ★ ＿＿ ＿＿ 学校です。", fragments: ["ある", "建物は", "わたしの", "古い"], star: "建物は", full: "あそこに ある 古い 建物は わたしの 学校です。", idn: "Bangunan tua di sana adalah sekolah saya." },
+  { prompt: "わたしは 毎朝 ＿＿ ＿＿ ★ ＿＿ ＿＿ 学校へ 行きます。", fragments: ["ご飯を", "食べてから", "歯を", "みがいて"], star: "歯を", full: "わたしは 毎朝 ご飯を 食べてから 歯を みがいて 学校へ 行きます。", idn: "Setiap pagi saya sarapan, menyikat gigi, lalu pergi ke sekolah." }
+];
+
+/* 10 soal kanonik untuk sesi Campuran — persis brief */
+const CANON = [
+  {
+    id: "c1", cat: "Kosakata", kind: "Arti kata", prompt: "学生", promptId: "がくせい · gakusei", promptLang: "ja",
+    question: "Apa arti kata ini?", options: ["guru / dosen", "pelajar / mahasiswa", "sekolah", "sahabat"], answer: 1, optLang: "id",
+    explanation: "学生 (がくせい) = pelajar / mahasiswa. Termasuk kata benda N5 untuk orang."
+  },
+  {
+    id: "c2", cat: "Kanji", kind: "Arti kanji", prompt: "水", promptId: "みず · mizu", promptLang: "ja",
+    question: "4 goresan · radikal 水 — apa arti kanji ini?", options: ["api", "tanah", "air", "kayu"], answer: 2, optLang: "id",
+    explanation: "水 (みず) = air. On’yomi スイ; muncul di 水曜日 (すいようび)."
+  },
+  {
+    id: "c3", cat: "Tata Bahasa", kind: "Pola kalimat", prompt: "私は学生です。", promptId: "Saya adalah pelajar.", promptLang: "ja",
+    question: "Pola mana yang dipakai?", options: ["A が B を …", "A は B です。", "A に B が あります", "A で B を …"], answer: 1, optLang: "ja",
+    explanation: "A は B です menandai topik 私 dengan は, lalu menjelaskan identitasnya dengan kopula です."
+  },
+  {
+    id: "c4", cat: "Partikel", kind: "Isi celah", prompt: "毎日、七時 ___ 起きます。", promptId: "Setiap hari saya bangun jam tujuh.", promptLang: "ja",
+    question: "Partikel apa yang tepat?", options: ["で", "に", "を", "へ"], answer: 1, optLang: "ja",
+    explanation: "Waktu yang spesifik memakai に. で untuk tempat aktivitas atau alat."
+  },
+  {
+    id: "c5", cat: "Kosakata", kind: "Arti kata", prompt: "食べる", promptId: "たべる · taberu", promptLang: "ja",
+    question: "Apa arti kata ini?", options: ["minum", "melihat", "makan", "membaca"], answer: 2, optLang: "id",
+    explanation: "食べる (たべる) = makan. Bentuk sopan: 食べます."
+  },
+  {
+    id: "c6", cat: "Kanji", kind: "Arti kanji", prompt: "日", promptId: "ひ · にち", promptLang: "ja",
+    question: "4 goresan · radikal 日 — apa arti kanji ini?", options: ["orang", "air", "buku", "hari / matahari"], answer: 3, optLang: "id",
+    explanation: "日 = hari / matahari. On’yomi ニチ・ジツ; kun’yomi ひ・か."
+  },
+  {
+    id: "c7", cat: "Tata Bahasa", kind: "Pola kalimat", prompt: "毎日日本語を勉強します。", promptId: "Setiap hari saya belajar bahasa Jepang.", promptLang: "ja",
+    question: "Pola mana yang dipakai?", options: ["A は B です", "kata kerja (stem) + ます / ません", "A より B のほうが …", "A を B に …"], answer: 1, optLang: "ja",
+    explanation: "Bentuk sopan kata kerja: stem + ます (positif) atau ません (negatif)."
+  },
+  {
+    id: "c8", cat: "Partikel", kind: "Isi celah", prompt: "学校 ___ 日本語を勉強します。", promptId: "Saya belajar bahasa Jepang di sekolah.", promptLang: "ja",
+    question: "Partikel apa yang tepat?", options: ["に", "へ", "で", "を"], answer: 2, optLang: "ja",
+    explanation: "で menandai tempat berlangsungnya aktivitas. に menandai keberadaan atau tujuan."
+  },
+  {
+    id: "c9", cat: "Kosakata", kind: "Arti kata", prompt: "学校", promptId: "がっこう · gakkou", promptLang: "ja",
+    question: "Apa arti kata ini?", options: ["rumah", "sekolah", "stasiun", "kantor"], answer: 1, optLang: "id",
+    explanation: "学校 (がっこう) = sekolah. Contoh: 学校へ行きます."
+  },
+  {
+    id: "c10", cat: "Kanji", kind: "Arti kanji", prompt: "人", promptId: "ひと · じん", promptLang: "ja",
+    question: "2 goresan · radikal 人 — apa arti kanji ini?", options: ["orang", "masuk", "keluar", "besar"], answer: 0, optLang: "id",
+    explanation: "人 = orang. On’yomi ジン・ニン; kun’yomi ひと. Muncul di 日本人 (にほんじん)."
+  }
+];
+
+const MODE_DEFS = [
+  { key: "campuran", label: "Campuran", jp: "混合", material: 867 },
+  { key: "kosakata", label: "Kosakata", jp: "語彙", material: 708 },
+  { key: "kanji", label: "Kanji", jp: "漢字", material: 111 },
+  { key: "tata-bahasa", label: "Tata Bahasa", jp: "文法", material: 48 },
+  { key: "partikel", label: "Partikel", jp: "助詞", material: 18 },
+  { key: "membaca", label: "Membaca", jp: "読解", material: 16 },
+  { key: "mendengar", label: "Mendengar", jp: "聴解", material: 24 },
+  { key: "menyusun", label: "Menyusun", jp: "組み立て", material: 12 }
+];
+
+/* ============================================================
+   6. INFO MODUL PLACEHOLDER
+   ============================================================ */
+const MODULE_INFO = {
+  "kana-menulis": {
+    desc: "Dua latihan untuk satu keterampilan: membaca aksara dan menuliskannya. 208 huruf hiragana dan katakana, termasuk dakuten dan yōon.",
+    stat: "208 / 208 huruf", scope: ["Tabel kana per baris, hiragana dan katakana", "Latihan menulis dengan kanvas goresan", "Uji baca kana acak dua arah"]
+  },
+  "tabel-kana": {
+    desc: "27 baris kana dalam satu tabel acuan: vokal, konsonan, dakuten, handakuten, dan yōon.",
+    stat: "27 baris · 208 huruf", scope: ["Baris kana berurutan dengan romaji", "Penanda dakuten, handakuten, dan yōon", "Pencarian cepat per baris"]
+  },
+  "latihan-menulis": {
+    desc: "Latihan menulis huruf dengan urutan goresan dan umpan balik kanvas.",
+    stat: "208 huruf", scope: ["Kanvas goresan per huruf", "Urutan goresan dan arah pena", "Riwayat latihan menulis"]
+  },
+  "kosakata": {
+    desc: "708 kata N5 dengan kanji, kana, romaji, arti, dan contoh kalimat. Kosakata juga masuk ke ulasan SRS dan Latihan Soal.",
+    stat: "318 / 708 diulas", scope: ["Daftar kata dengan furigana", "Contoh kalimat dan audio", "Status SRS per kata"]
+  },
+  "kanji": {
+    desc: "111 kanji N5: arti, on’yomi, kun’yomi, goresan, radikal, dan kata turunan.",
+    stat: "47 / 111 dikuasai", scope: ["Kartu kanji dan urutan goresan", "Kata turunan per kanji", "Ulasan kanji lintas level"]
+  },
+  "kanji-dasar": {
+    desc: "Daftar kanji N5 dengan arti, bacaan, radikal, dan contoh kata. Halaman ini menjadi pintu masuk untuk Perubahan Bacaan.",
+    stat: "47 / 111 dikuasai", scope: ["Kartu kanji lengkap", "Filter berdasarkan radikal", "Tandai kanji yang sudah matang"]
+  },
+  "perubahan-bacaan": {
+    desc: "Empat aturan bacaan kanji N5 — 何, 今, 日, 人 — plus 24 entri kata yang berubah bunyi, termasuk jukujikun dan rendaku.",
+    stat: "4 aturan · 24 kata", scope: ["Empat aturan bacaan dengan contoh", "Jukujikun: 今日, 明日, 今朝", "Rendaku: 花火, 誕生日"]
+  },
+  "tata-bahasa": {
+    desc: "48 pola tata bahasa N5, dari kalimat nominal です sampai bentuk permintaan てください.",
+    stat: "21 / 48 dipelajari", scope: ["Pola, penjelasan, dan contoh kalimat", "Latihan memilih pola", "Catatan konjugasi"]
+  },
+  "partikel": {
+    desc: "18 partikel N5, 6 pasangan yang sering tertukar, dan 4 jebakan umum.",
+    stat: "9 / 18 diulas", scope: ["Indeks partikel dengan filter tier", "Contoh dan jebakan", "Pasangan yang sering tertukar"]
+  },
+  "mendengar": {
+    desc: "12 dialog N5 dengan pelafalan Jepang dan pertanyaan pemahaman. Mode Latihan Soal memakai bank mendengar tersendiri.",
+    stat: "5 / 12 dialog", scope: ["Dialog dengan pemutar audio", "Pertanyaan pemahaman", "Ulangi dialog sesuai kebutuhan"]
+  },
+  "membaca": {
+    desc: "10 bacaan pendek N5 dengan furigana, terjemahan, dan 16 soal pemahaman.",
+    stat: "4 / 10 bacaan", scope: ["Bacaan bertema sehari-hari", "Furigana di atas kanji", "Soal pemahaman setelah membaca"]
+  },
+  "konteks": {
+    desc: "42 kartu kebiasaan, situasi unik, dan etiket praktis. Ditambah 6 skenario register dan 14 verba keigo.",
+    stat: "42 kartu", scope: ["Kebiasaan harian Jepang", "Skenario register: akrab sampai atasan", "Verba keigo tiga lapis"]
+  },
+  "ulasan": {
+    desc: "Hub ulasan SRS lintas dek: kosakata, kanji, tata bahasa, konteks, dan partikel. 24 kartu jatuh tempo hari ini.",
+    stat: "24 jatuh tempo · 32 baru", scope: ["Ulasan lintas dek dalam satu alur", "Rating again / hard / good", "Jadwal SRS yang tersimpan lokal"]
+  },
+  "ujian": {
+    desc: "Dua simulasi berdurasi: JLPT N5 (90 menit, 75 butir) dan JFT-Basic (60 menit, 50 butir) dengan pita CEFR.",
+    stat: "2 jenis simulasi", scope: ["JLPT N5: Bahasa & Membaca + Mendengar", "JFT-Basic: empat seksi", "Hasil dan pembahasan setelah sesi"]
+  },
+  "kamus": {
+    desc: "Kamus N5 dua arah: Jepang–Indonesia dan Indonesia–Jepang, dari data kosakata yang sama dengan modul.",
+    stat: "708 entri", scope: ["Pencarian kanji, kana, romaji, arti", "Kelas kata dan contoh", "Tautan ke ulasan"]
+  },
+  "pengaturan": {
+    desc: "Preferensi belajar: tema, target harian, audio, dan bentuk jawaban latihan.",
+    stat: "5 preferensi", scope: ["Tema terang/gelap", "Target harian dan pengingat", "Bentuk jawaban: terjemahan, romaji, kana"]
+  },
+  "tentang": {
+    desc: "Manabi adalah aplikasi belajar bahasa Jepang N5 dengan materi lokal, SRS, dan latihan soal dari bank terkurasi.",
+    stat: "N5 aktif", scope: ["Filosofi dan sumber materi", "Status versi dan data", "Kredit dan lisensi"]
+  }
+};
+
+/* ============================================================
+   7. STATE & UTIL
+   ============================================================ */
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+const view = $("#view");
+const sidebarNav = $("#sidebarNav");
+const bottomNav = $(".bottom-nav");
+const themeBtn = $("#themeBtn");
+const live = $("#live");
+const toast = $("#toast");
+const scrim = $("#scrim");
+const sidebar = $("#sidebar");
+const menuBtn = $("#menuBtn");
+const levelDialog = $("#levelDialog");
+
+const state = {
+  route: "dasbor",
+  tier: "semua",
+  particleId: "wa",
+  quiz: null,
+  known: new Set()
+};
+
+try {
+  const raw = localStorage.getItem("manabi-arah2-known");
+  if (raw) JSON.parse(raw).forEach((id) => state.known.add(id));
+} catch (e) { /* abaikan */ }
+
+function shuffle(list) {
+  const copy = list.slice();
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = copy[i]; copy[i] = copy[j]; copy[j] = tmp;
+  }
+  return copy;
+}
+function pad(n) { return String(n).padStart(2, "0"); }
+function pct(done, total) { return Math.round((done / total) * 100); }
+function esc(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+function makeOptions(answer, pool) {
+  const unique = Array.from(new Set(pool.filter((item) => item !== answer)));
+  const distractors = shuffle(unique).slice(0, 3);
+  while (distractors.length < 3) distractors.push("—");
+  const options = shuffle([answer].concat(distractors));
+  return { options, answer: options.indexOf(answer) };
+}
+function announce(msg) {
+  live.textContent = "";
+  window.requestAnimationFrame(() => { live.textContent = msg; });
+}
+let toastTimer = null;
+function notify(msg) {
+  toast.textContent = msg;
+  toast.classList.add("is-on");
+  announce(msg);
+  window.clearTimeout(toastTimer);
+  toastTimer = window.setTimeout(() => toast.classList.remove("is-on"), 2600);
+}
+function focusSoon(selector) {
+  window.requestAnimationFrame(() => {
+    const el = document.querySelector(selector);
+    if (el) el.focus({ preventScroll: true });
+  });
+}
+function motionBehavior() {
+  try {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+  } catch (e) {
+    return "auto";
+  }
+}
+
+/* ============================================================
+   8. THEME
+   ============================================================ */
+function syncThemeChrome() {
+  const dark = document.documentElement.getAttribute("data-theme") === "dark";
+  themeBtn.setAttribute("aria-label", dark ? "Aktifkan mode terang" : "Aktifkan mode gelap");
+  themeBtn.setAttribute("aria-pressed", String(dark));
+  themeBtn.setAttribute("title", dark ? "Mode terang" : "Mode gelap");
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute("content", dark ? "#0B0F17" : "#F3F5F8");
+}
+function setTheme(theme, persist) {
+  document.documentElement.setAttribute("data-theme", theme);
+  if (persist) {
+    try { localStorage.setItem("manabi-preview-theme", theme); } catch (e) { /* abaikan */ }
+  }
+  syncThemeChrome();
+  notify(theme === "dark" ? "Mode gelap aktif. Pilihan tersimpan." : "Mode terang aktif. Pilihan tersimpan.");
+}
+themeBtn.addEventListener("click", () => {
+  const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  setTheme(next, true);
+});
+syncThemeChrome();
+
+/* ============================================================
+   9. LEVEL & DRAWER
+   ============================================================ */
+function levelSegmentsTemplate() {
+  return CURRICULUM.levels.map((level) => {
+    if (level.status === "active") {
+      return `<button class="level-seg" type="button" data-level="${level.id}" aria-current="true">${level.id}</button>`;
+    }
+    return `<button class="level-seg" type="button" data-level="${level.id}" data-soon="1" aria-disabled="true" aria-label="Level ${level.id} — segera" title="${level.name} — segera">${level.id}</button>`;
+  }).join("");
+}
+function levelChoicesTemplate() {
+  return CURRICULUM.levels.map((level) => {
+    const active = level.status === "active";
+    const main = `<span class="level-choice-main"><span class="level-choice-id">${level.id}</span><span class="level-choice-name">${level.name}</span></span>`;
+    const extra = active
+      ? `<span class="badge badge--cobalt">Aktif</span>`
+      : `<span class="level-choice-extra" lang="ja">${level.jp}</span><span class="badge">Segera</span>`;
+    return `<button class="level-choice" type="button" data-level="${level.id}" ${active ? 'aria-current="true"' : 'data-soon="1" aria-disabled="true"'}>${main}<span style="display:flex;align-items:center;gap:6px">${extra}</span></button>`;
+  }).join("");
+}
+$("#levelSegments").innerHTML = levelSegmentsTemplate();
+$("#levelChoices").innerHTML = levelChoicesTemplate();
+
+function explainSoon(levelId) {
+  const level = CURRICULUM.levels.find((item) => item.id === levelId);
+  if (!level) return;
+  const message = `Level ${level.id} — ${level.name} segera hadir. Preview ini memakai materi N5.`;
+  $("#levelNote").textContent = message;
+  $("#dialogLevelNote").textContent = message;
+  notify(message);
+}
+document.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-level]");
+  if (!button) return;
+  const levelId = button.getAttribute("data-level");
+  const level = CURRICULUM.levels.find((item) => item.id === levelId);
+  if (!level) return;
+  if (level.status === "active") {
+    notify("Level N5 aktif. Materi N5 sudah lengkap.");
+    if (levelDialog.open) levelDialog.close();
+    return;
+  }
+  explainSoon(levelId);
+});
+$("#levelClose").addEventListener("click", () => levelDialog.close());
+levelDialog.addEventListener("click", (event) => {
+  if (event.target === levelDialog) levelDialog.close();
+});
+$("#levelChip").addEventListener("click", () => {
+  if (typeof levelDialog.showModal === "function") levelDialog.showModal();
+  else levelDialog.setAttribute("open", "");
+});
+function openDrawer() {
+  document.body.classList.add("drawer-open");
+  menuBtn.setAttribute("aria-expanded", "true");
+  $("#drawerClose").focus();
+}
+function closeDrawer(restoreFocus) {
+  if (!document.body.classList.contains("drawer-open")) return;
+  document.body.classList.remove("drawer-open");
+  menuBtn.setAttribute("aria-expanded", "false");
+  if (restoreFocus) menuBtn.focus();
+}
+menuBtn.addEventListener("click", openDrawer);
+$("#bottomMenu").addEventListener("click", openDrawer);
+$("#drawerClose").addEventListener("click", () => closeDrawer(true));
+scrim.addEventListener("click", () => closeDrawer(true));
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && document.body.classList.contains("drawer-open")) {
+    closeDrawer(true);
+  }
+});
+window.addEventListener("resize", () => {
+  if (window.innerWidth >= 1024) closeDrawer(false);
+});
+
+/* ============================================================
+   10. NAV & ROUTER
+   ============================================================ */
+function navTemplate() {
+  return CURRICULUM.groups.map((group) => {
+    const label = group.label ? `<p class="nav-group-label">${group.label}</p>` : "";
+    const items = group.items.map((item) => {
+      const badge = item.badge ? `<span class="nav-badge">${item.badge}</span>` : "";
+      const sub = item.sub
+        ? `<div class="nav-sub">${item.sub.map((child) => `<a href="${child.href}" data-nav="${child.id}">${child.label}</a>`).join("")}</div>`
+        : "";
+      return `<a class="nav-link" href="${item.href}" data-nav="${item.id}">
+        <span class="nav-icon" aria-hidden="true">${item.icon}</span>
+        <span>${item.label}</span>${badge}
+      </a>${sub}`;
+    }).join("");
+    return `<div class="nav-group">${label}${items}</div>`;
+  }).join("");
+}
+sidebarNav.innerHTML = navTemplate();
+
+function findNav(route) {
+  for (const group of CURRICULUM.groups) {
+    for (const item of group.items) {
+      if (item.href === "#" + route) return { item, group };
+      if (item.sub) {
+        for (const child of item.sub) {
+          if (child.href === "#" + route) return { item: child, group, parent: item };
+        }
+      }
+    }
+  }
+  return null;
+}
+function routeLabel(route) {
+  if (route === "dasbor") return "Dasbor";
+  if (route === "materi/partikel") return "Partikel";
+  if (route === "latihan") return "Latihan Soal";
+  if (route.indexOf("modul/") === 0) {
+    const found = findNav(route);
+    if (found) return found.item.label;
+    const id = route.slice("modul/".length);
+    return id.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+  return "Dasbor";
+}
+function updateNav() {
+  $$("[data-nav]").forEach((link) => {
+    if (link.getAttribute("href") === "#" + state.route) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  });
+  $$(".bottom-nav [data-route]").forEach((link) => {
+    if (link.getAttribute("data-route") === state.route) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  });
+  $("#crumbCurrent").textContent = routeLabel(state.route).toUpperCase();
+  document.title = routeLabel(state.route) + " · Manabi / 設計";
+}
+function routeFromHash() {
+  const raw = (location.hash || "").replace(/^#/, "");
+  if (!raw) return "dasbor";
+  if (raw === "dasbor" || raw === "latihan" || raw === "materi/partikel") return raw;
+  if (raw.indexOf("modul/") === 0) return raw;
+  return "dasbor";
+}
+window.addEventListener("hashchange", () => {
+  state.route = routeFromHash();
+  render();
+  closeDrawer(false);
+  const app = $("#app");
+  if (app) window.scrollTo({ top: app.offsetTop, behavior: "auto" });
+  announce(routeLabel(state.route) + " dibuka.");
+  focusSoon("#view");
+});
+
+/* ============================================================
+   11. DASHBOARD
+   ============================================================ */
+function dashView() {
+  const chartValues = DASH.activity;
+  const maxValue = 25;
+  const chart = `
+    <div class="chart" role="img" aria-label="Aktivitas tujuh hari: Senin 12, Selasa 20, Rabu 0, Kamis 18, Jumat 25, Sabtu 14, Minggu 14. Total 103 aksi.">
+      <div class="chart-y" aria-hidden="true"><span>25</span><span>13</span><span>0</span></div>
+      <div class="chart-plot" aria-hidden="true">
+        <div class="chart-grid"><i></i><i></i><i></i></div>
+        <div class="chart-cols">
+          ${chartValues.map((day) => `
+            <div class="chart-col${day.value === 0 ? " is-zero" : ""}">
+              <span class="chart-val">${day.value}</span>
+              <span class="chart-bar" style="height:${Math.max(2, Math.round((day.value / maxValue) * 118))}px"></span>
+              <span class="chart-day">${day.label}</span>
+            </div>`).join("")}
+        </div>
+      </div>
+    </div>`;
+  const moduleRows = DASH.modules.map((mod) => {
+    const value = pct(mod.done, mod.total);
+    const statusClass = mod.status === "Selesai" ? "badge badge--ok" : "badge";
+    return `<tr>
+      <td><strong>${mod.name}</strong></td>
+      <td><div class="tbl-progress"><div class="bar"><i style="width:${value}%"></i></div><b>${mod.done} / ${mod.total}</b></div></td>
+      <td class="num">${value}%</td>
+      <td><span class="${statusClass}">${mod.status}</span></td>
+      <td><a class="row-link" href="${mod.href}">Buka →</a></td>
+    </tr>`;
+  }).join("");
+  const moduleMobile = DASH.modules.map((mod) => {
+    const value = pct(mod.done, mod.total);
+    const statusClass = mod.status === "Selesai" ? "badge badge--ok" : "badge";
+    return `<a class="mobile-row" href="${mod.href}">
+      <div class="mr-top"><span>${mod.name}</span><span class="${statusClass}">${mod.status}</span></div>
+      <div class="bar"><i style="width:${value}%"></i></div>
+      <div class="mr-sub"><span>${mod.done} / ${mod.total}</span><b>${value}%</b></div>
+    </a>`;
+  }).join("");
+  const historyRows = DASH.history.map((row) => `<tr>
+    <td class="num" style="text-align:left">${row.date}</td>
+    <td><strong>${row.mode}</strong></td>
+    <td class="num">${row.score}</td>
+    <td><span class="acc-bar"><span class="bar"><i style="width:${row.acc}%"></i></span><b>${row.acc}%</b></span></td>
+    <td class="num">${row.dur}</td>
+  </tr>`).join("");
+  const historyMobile = DASH.history.map((row) => `<div class="mobile-row" style="cursor:default">
+    <div class="mr-top"><span>${row.mode}</span><span class="badge">${row.score}</span></div>
+    <div class="mr-sub"><span>${row.date} · ${row.dur}</span><b>${row.acc}% akurasi</b></div>
+  </div>`).join("");
+
+  return `
+  <div class="view">
+    <div class="page-head">
+      <div>
+        <p class="eyebrow">Dasbor <span class="sep">/</span> N5 · Dasar <span class="sep">/</span> Kamis, 12 November 2026</p>
+        <h1>Kokpit hari ini</h1>
+        <p class="lede">Ringkasan aksi hari ini: ulasan SRS, progres modul, dan riwayat latihan terakhir. Semua angka mengikuti store lokal N5.</p>
+      </div>
+      <div class="head-side">
+        <span class="badge badge--cobalt">N5 AKTIF</span>
+        <a class="btn btn--primary" href="#modul/ulasan">Mulai ulasan <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      <section class="next-action" aria-labelledby="nextTitle">
+        <div class="na-main">
+          <p class="na-kicker"><span class="dot"></span> 01 · Aksi berikutnya · Ulasan SRS</p>
+          <h2 id="nextTitle">24 kartu menunggu ulasan</h2>
+          <p class="na-meta">Kosakata 14 · Kanji 6 · Tata bahasa 4 · perkiraan 9 menit</p>
+          <div class="na-actions">
+            <a class="btn btn--on-cobalt" href="#modul/ulasan">Mulai ulasan <span aria-hidden="true">→</span></a>
+            <a class="btn btn--on-cobalt-ghost" href="#latihan">Latihan soal</a>
+          </div>
+        </div>
+        <div class="na-side">
+          <div class="ring ring--lg"><span><b>86%</b><em>akurasi</em></span></div>
+          <p>target harian<b>14 / 20</b></p>
+        </div>
+      </section>
+
+      <article class="stat">
+        <div class="stat-top"><span class="mono-label">XP total</span><span class="stat-index">01</span></div>
+        <p class="stat-value">2.480</p>
+        <p class="stat-sub">Level 9 · 80 / 300 menuju level 10</p>
+        <div class="bar"><i style="width:27%"></i></div>
+      </article>
+
+      <article class="stat">
+        <div class="stat-top"><span class="mono-label">Streak</span><span class="stat-index">02</span></div>
+        <p class="stat-value">12<small>hari</small></p>
+        <p class="stat-sub">Beruntun sejak 1 November</p>
+        <div class="dot-days" aria-hidden="true">
+          <span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="today"></span>
+        </div>
+      </article>
+
+      <article class="stat">
+        <div class="stat-top"><span class="mono-label">Jatuh tempo</span><span class="stat-index">03</span></div>
+        <p class="stat-value">24<small>kartu</small></p>
+        <p class="stat-sub">14 kosakata · 6 kanji · 4 tata bahasa</p>
+        <div class="bar bar--seg" aria-hidden="true">
+          <i style="width:58%"></i><i style="width:25%"></i><i style="width:17%"></i>
+        </div>
+      </article>
+
+      <article class="stat">
+        <div class="stat-top"><span class="mono-label">Target harian</span><span class="stat-index">04</span></div>
+        <p class="stat-value">14<small>/ 20</small></p>
+        <p class="stat-sub">6 aksi lagi untuk menutup hari</p>
+        <div class="bar"><i style="width:70%"></i></div>
+      </article>
+
+      <section class="card panel-7" aria-labelledby="activityTitle">
+        <div class="card-head">
+          <div><p class="mono-label">Aktivitas 7 hari</p><h2 id="activityTitle">103 aksi</h2></div>
+          <p class="head-stat">RATA-RATA <b>14,7</b> / HARI</p>
+        </div>
+        <div class="card-body chart-body">${chart}</div>
+        <div class="card-foot"><span>Tertinggi Jumat · 25 aksi</span><span>Rabu kosong · 0 aksi</span></div>
+      </section>
+
+      <section class="card panel-5" aria-labelledby="deckTitle">
+        <div class="card-head">
+          <div><p class="mono-label">Ulasan per dek</p><h2 id="deckTitle">24 jatuh tempo</h2></div>
+          <span class="badge badge--warn">+32 BARU</span>
+        </div>
+        <div class="card-body">
+          <div class="deck-list">
+            <div class="deck-row">
+              <div class="deck-top"><span class="deck-name">Kosakata</span><span class="deck-num">14 <em>kartu</em></span></div>
+              <div class="bar"><i style="width:100%"></i></div>
+              <div class="deck-sub"><span>318 / 708 dikuasai</span><span>baru 18</span></div>
+            </div>
+            <div class="deck-row">
+              <div class="deck-top"><span class="deck-name">Kanji</span><span class="deck-num">6 <em>kartu</em></span></div>
+              <div class="bar"><i style="width:43%"></i></div>
+              <div class="deck-sub"><span>47 / 111 dikuasai</span><span>baru 9</span></div>
+            </div>
+            <div class="deck-row">
+              <div class="deck-top"><span class="deck-name">Tata bahasa</span><span class="deck-num">4 <em>kartu</em></span></div>
+              <div class="bar"><i style="width:29%"></i></div>
+              <div class="deck-sub"><span>21 / 48 dikuasai</span><span>baru 5</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="card-foot"><span>Akurasi 86% · SRS aktif</span><a href="#modul/ulasan">Buka ulasan →</a></div>
+      </section>
+
+      <section class="card panel-7" aria-labelledby="modulesTitle">
+        <div class="card-head">
+          <div><p class="mono-label">Progres modul</p><h2 id="modulesTitle">N5 · 7 modul berprogres</h2></div>
+          <span class="badge">55% TOTAL</span>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <caption class="sr-only">Tabel progres 7 modul N5; Konteks &amp; Etiket belum masuk hitungan progres</caption>
+            <thead><tr><th scope="col">Modul</th><th scope="col">Progres</th><th scope="col" class="num">Capaian</th><th scope="col">Status</th><th scope="col"><span class="sr-only">Aksi</span></th></tr></thead>
+            <tbody>${moduleRows}</tbody>
+          </table>
+        </div>
+        <div class="mobile-rows">${moduleMobile}</div>
+        <div class="card-foot"><span>8 modul materi · Konteks &amp; Etiket belum berprogres</span><a href="#modul/konteks">Buka Konteks &amp; Etiket →</a></div>
+      </section>
+
+      <section class="card panel-5 today-card" aria-labelledby="todayTitle">
+        <div class="card-head">
+          <div><p class="mono-label">Kartu hari ini</p><h2 id="todayTitle">Kanji 日</h2></div>
+          <span class="badge">N5 · KANJI</span>
+        </div>
+        <div class="card-body today-body">
+          <div class="today-glyph" lang="ja" aria-hidden="true">日</div>
+          <div class="today-info">
+            <p class="today-meaning">hari / matahari</p>
+            <dl class="reading-list">
+              <div><dt>ON’YOMI</dt><dd lang="ja">ニチ · ジツ</dd></div>
+              <div><dt>KUN’YOMI</dt><dd lang="ja">ひ · か</dd></div>
+              <div><dt>GORESAN</dt><dd>4</dd></div>
+              <div><dt>RADIKAL</dt><dd lang="ja">日</dd></div>
+            </dl>
+            <div class="word-chips"><span lang="ja">日本</span><span lang="ja">日曜日</span><span lang="ja">毎日</span></div>
+            <p class="today-note"><b>Mnemonic.</b> “Kotak dengan garis tengah — seperti jendela yang memandang matahari.”</p>
+            <div class="today-progress"><span class="mono-label">Matang</span><div class="bar"><i style="width:42%"></i></div><b>47 / 111</b></div>
+          </div>
+        </div>
+        <div class="card-foot"><button class="btn btn--sm audio-btn" type="button" data-audio="日">▶ Putar audio</button><a href="#modul/kanji-dasar">Lihat kanji →</a></div>
+      </section>
+
+      <section class="card panel-7" aria-labelledby="historyTitle">
+        <div class="card-head">
+          <div><p class="mono-label">Riwayat latihan</p><h2 id="historyTitle">5 sesi terakhir</h2></div>
+          <span class="badge">RATA-RATA 81%</span>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <caption class="sr-only">Riwayat lima latihan terakhir</caption>
+            <thead><tr><th scope="col">Tanggal</th><th scope="col">Latihan</th><th scope="col" class="num">Skor</th><th scope="col">Akurasi</th><th scope="col" class="num">Durasi</th></tr></thead>
+            <tbody>${historyRows}</tbody>
+          </table>
+        </div>
+        <div class="mobile-rows">${historyMobile}</div>
+      </section>
+
+      <section class="card panel-5" aria-labelledby="noteTitle">
+        <div class="card-head"><div><p class="mono-label">Catatan data</p><h2 id="noteTitle">Angka kanonik</h2></div><span class="badge">12 NOV 2026</span></div>
+        <div class="card-body" style="display:grid;gap:10px">
+          <p class="mono-note">Kokpit membaca store lokal: XP, streak, target, dan jadwal SRS. Tidak ada data yang ditulis dari preview ini.</p>
+          <div class="source-rows" style="margin:0">
+            <div class="source-row"><span>Materi N5</span><b>708 · 111 · 48 · 18</b></div>
+            <div class="source-row"><span>Bacaan · dialog</span><b>10 · 12</b></div>
+            <div class="source-row"><span>Bank soal terkurasi</span><b>23 butir</b></div>
+            <div class="source-row"><span>Kana</span><b>208 huruf</b></div>
+          </div>
+          <a class="btn btn--sm" href="#latihan">Buka Latihan Soal</a>
+        </div>
+      </section>
+    </div>
+  </div>`;
+}
+
+/* ============================================================
+   12. PARTIKEL
+   ============================================================ */
+function tierLabel(tier) {
+  return tier === "dasar" ? "Dasar" : tier === "inti" ? "Inti" : "Menengah";
+}
+function highlightExample(sentence, target) {
+  if (!target) return esc(sentence);
+  const index = sentence.indexOf(target);
+  if (index < 0) return esc(sentence);
+  return esc(sentence.slice(0, index)) + '<span class="hl">' + esc(target) + "</span>" + esc(sentence.slice(index + target.length));
+}
+function pDetailTop(p, isMobile) {
+  const known = state.known.has(p.id);
+  return `<div class="p-detail-top">
+    <div class="p-glyph" lang="ja" aria-hidden="true">${p.char}</div>
+    <div class="p-detail-info">
+      <p class="p-romaji-big">Partikel ${pad(PARTICLES.indexOf(p) + 1)} · ${p.romaji}</p>
+      <h2 class="p-name">${p.char} <span class="romaji">${p.romaji}</span></h2>
+      <p class="p-role">${p.name}</p>
+      <div class="p-badges">
+        <span class="badge"><span class="tier-dot tier--${p.tier}" aria-hidden="true"></span>${tierLabel(p.tier)}</span>
+        <span class="badge">${p.examples.length} contoh</span>
+      </div>
+    </div>
+    <div class="p-detail-actions">
+      <button class="btn btn--sm audio-btn" type="button" data-audio="${p.char}" aria-label="Putar audio partikel ${p.char}">▶ Audio</button>
+      <button class="btn btn--sm known-btn" type="button" data-known="${p.id}" aria-pressed="${known}">${known ? "✓ Sudah dipelajari" : "Tandai dipelajari"}</button>
+    </div>
+  </div>`;
+}
+function pDetailContent(p) {
+  const related = COMPARISONS.filter((cmp) => cmp.left.char === p.char || cmp.right.char === p.char);
+  const examples = p.examples.map((example, index) => `<li class="example">
+    <span class="ex-num">${pad(index + 1)}</span>
+    <div class="ex-main">
+      <p class="ex-jp" lang="ja">${highlightExample(example.jp, example.target || p.char)}</p>
+      <p class="ex-id">${example.idn}</p>
+      ${example.note ? `<p class="ex-note">${example.note}</p>` : ""}
+    </div>
+    <button class="icon-btn audio-btn" type="button" data-audio="${p.char}" aria-label="Putar contoh ${index + 1}">▶</button>
+  </li>`).join("");
+  return `${pDetailTop(p, false)}
+    <p class="p-explain">${p.explanation}</p>
+    ${p.trap ? `<div class="caution"><p class="caution-title">Jebakan</p><p>${p.trap}</p></div>` : ""}
+    <section class="p-section">
+      <div class="p-section-head"><p class="mono-label">Contoh · ${pad(p.examples.length)}</p><span class="mono-note">Kalimat utuh + terjemahan</span></div>
+      <ol class="example-list" style="list-style:none;margin:0;padding:0">${examples}</ol>
+    </section>
+    <section class="p-section">
+      <div class="p-section-head"><p class="mono-label">Pasangan terkait</p><span class="mono-note">${related.length} pasangan</span></div>
+      ${related.length ? `<div class="related-list">${related.map((cmp) => `<div class="related-item"><b>${cmp.title}</b><span>${cmp.takeaway}</span></div>`).join("")}</div>` : `<p class="mono-note">Belum ada pasangan khusus untuk partikel ini. Lihat seksi jebakan umum di bawah.</p>`}
+    </section>`;
+}
+function particleView() {
+  const counts = {
+    semua: PARTICLES.length,
+    dasar: PARTICLES.filter((p) => p.tier === "dasar").length,
+    inti: PARTICLES.filter((p) => p.tier === "inti").length,
+    menengah: PARTICLES.filter((p) => p.tier === "menengah").length
+  };
+  const visible = PARTICLES.filter((p) => state.tier === "semua" || p.tier === state.tier);
+  if (!visible.some((p) => p.id === state.particleId)) state.particleId = visible[0].id;
+  const selected = visible.find((p) => p.id === state.particleId) || visible[0];
+
+  const tiers = [
+    { key: "semua", label: "Semua" },
+    { key: "dasar", label: "Dasar" },
+    { key: "inti", label: "Inti" },
+    { key: "menengah", label: "Menengah" }
+  ];
+
+  const index = PARTICLES.filter((p) => state.tier === "semua" || p.tier === state.tier).map((p) => `
+    <button class="p-index-item${p.id === selected.id ? " is-active" : ""}" type="button" data-particle="${p.id}" aria-pressed="${p.id === selected.id}">
+      <span class="p-index-num">${pad(PARTICLES.indexOf(p) + 1)}</span>
+      <span class="p-index-char" lang="ja" aria-hidden="true">${p.char}</span>
+      <span class="p-index-meta"><span class="p-index-romaji">${p.romaji}</span><span class="p-index-role">${p.name}</span></span>
+      <span class="tier-dot tier--${p.tier}" title="Tier ${tierLabel(p.tier)}"></span>
+    </button>`).join("");
+
+  const cards = visible.map((p) => {
+    const active = p.id === selected.id;
+    const controls = active ? ` aria-controls="pcard-${p.id}"` : "";
+    return `<article class="p-card${active ? " is-active" : ""}">
+      <button class="p-card-head" type="button" data-particle="${p.id}" aria-expanded="${active}"${controls}>
+        <span class="p-card-char" lang="ja" aria-hidden="true">${p.char}</span>
+        <span class="tier-dot tier--${p.tier}" aria-hidden="true"></span>
+        <span class="p-card-meta"><b>${p.romaji} · ${p.char}</b><span>${p.name} · ${tierLabel(p.tier)}</span></span>
+        <svg class="p-card-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      ${active ? `<div class="p-card-body" id="pcard-${p.id}">${pDetailContent(p)}</div>` : ""}
+    </article>`;
+  }).join("");
+
+  const cmpCards = COMPARISONS.map((cmp) => `<article class="cmp-card">
+    <h3 class="cmp-title" lang="ja">${cmp.title}</h3>
+    <p class="cmp-question">${cmp.question}</p>
+    <div class="cmp-sides">
+      <div class="cmp-side"><span class="cmp-char" lang="ja">${cmp.left.char}</span><b>${cmp.left.summary}</b><p class="cmp-ex" lang="ja">${cmp.left.jp}<small>${cmp.left.idn}</small></p></div>
+      <div class="cmp-side"><span class="cmp-char" lang="ja">${cmp.right.char}</span><b>${cmp.right.summary}</b><p class="cmp-ex" lang="ja">${cmp.right.jp}<small>${cmp.right.idn}</small></p></div>
+    </div>
+    <p class="cmp-take">${cmp.takeaway}</p>
+  </article>`).join("");
+
+  const pitCards = PITFALLS.map((pit) => `<article class="pit-card">
+    <h3 class="pit-title">${pit.title}</h3>
+    <p class="pit-summary">${pit.summary}</p>
+    <div class="pit-pair">
+      <div class="pit-wrong"><b>✕ SALAH</b><span lang="ja">${pit.wrong}</span></div>
+      <div class="pit-right"><b>✓ BENAR</b><span lang="ja">${pit.right}</span></div>
+    </div>
+    <p class="pit-note">${pit.idn} · ${pit.note}</p>
+  </article>`).join("");
+
+  return `
+  <div class="view">
+    <div class="page-head">
+      <div>
+        <p class="eyebrow">Materi <span class="sep">/</span> Partikel <span class="sep">/</span> N5</p>
+        <h1>Partikel N5</h1>
+        <p class="lede">18 penanda fungsi kalimat, 6 pasangan yang sering tertukar, dan 4 jebakan umum. Pilih partikel di indeks untuk membaca fungsi, contoh, dan jebakannya.</p>
+        <div class="particle-head-meta">
+          <span class="meta-chip"><b>18</b> partikel</span>
+          <span class="meta-chip"><b>6</b> pasangan</span>
+          <span class="meta-chip"><b>4</b> jebakan</span>
+          <span class="meta-chip"><b>20</b> soal isi celah</span>
+        </div>
+      </div>
+      <div class="head-side"><a class="btn btn--primary" href="#latihan">Latihan partikel <span aria-hidden="true">→</span></a></div>
+    </div>
+
+    <div class="filter-row">
+      <div class="segmented" role="group" aria-label="Filter tingkat partikel">
+        ${tiers.map((tier) => `<button type="button" data-tier="${tier.key}" aria-pressed="${state.tier === tier.key}">${tier.label} <span class="seg-count">${counts[tier.key]}</span></button>`).join("")}
+      </div>
+      <p class="filter-note">Menampilkan <b>${visible.length}</b> dari ${PARTICLES.length} partikel${state.tier !== "semua" ? " · tier " + tierLabel(state.tier) : ""}</p>
+    </div>
+
+    <div class="particle-layout">
+      <div class="particle-index" aria-label="Indeks partikel">
+        <div class="p-index-head"><span class="mono-label">Indeks partikel</span><span class="mono">${pad(visible.length)}</span></div>
+        <div class="p-index-list">${index}</div>
+      </div>
+      <article class="particle-detail" aria-live="off">${pDetailContent(selected)}</article>
+    </div>
+
+    <div class="p-cards">${cards}</div>
+
+    <section class="block" aria-labelledby="cmpTitle">
+      <div class="block-head">
+        <div><p class="eyebrow">Pasangan</p><h2 id="cmpTitle">Enam pasangan yang paling sering tertukar</h2></div>
+        <span class="mono-label">6 PASANGAN</span>
+      </div>
+      <div class="cmp-grid">${cmpCards}</div>
+    </section>
+
+    <section class="block" aria-labelledby="pitTitle">
+      <div class="block-head">
+        <div><p class="eyebrow">Jebakan</p><h2 id="pitTitle">Empat jebakan yang perlu diingat</h2></div>
+        <span class="mono-label">WRONG → RIGHT</span>
+      </div>
+      <div class="pit-grid">${pitCards}</div>
+    </section>
+  </div>`;
+}
+
+/* ============================================================
+   13. BANK SOAL & SESI LATIHAN
+   ============================================================ */
+function buildVocabBank() {
+  const bank = [];
+  VOCAB.forEach((word, index) => {
+    const meanings = VOCAB.filter((_, i) => i !== index).map((item) => item.meaning);
+    let made = makeOptions(word.meaning, meanings);
+    bank.push({
+      id: "vocab-a-" + index, cat: "Kosakata", kind: "Arti kata",
+      prompt: word.kanji, promptId: `${word.kana} · ${word.romaji}`, promptLang: "ja",
+      question: "Apa arti kata ini?", options: made.options, answer: made.answer, optLang: "id",
+      explanation: `${word.kanji} (${word.kana}) = ${word.meaning}.`
+    });
+    made = makeOptions(word.kanji, VOCAB.filter((_, i) => i !== index).map((item) => item.kanji));
+    bank.push({
+      id: "vocab-b-" + index, cat: "Kosakata", kind: "Kata Jepang",
+      prompt: word.meaning, promptId: `${word.kana} · ${word.romaji}`, promptLang: "id",
+      question: "Kata Jepang mana yang sesuai?", options: made.options, answer: made.answer, optLang: "ja",
+      explanation: `${word.kanji} (${word.kana}) = ${word.meaning}.`
+    });
+  });
+  return bank;
+}
+function buildKanjiBank() {
+  const bank = [];
+  KANJI.forEach((kanji) => {
+    let made = makeOptions(kanji.meaning, KANJI.filter((item) => item.c !== kanji.c).map((item) => item.meaning));
+    bank.push({
+      id: "kanji-a-" + kanji.c, cat: "Kanji", kind: "Arti kanji",
+      prompt: kanji.c, promptId: `${kanji.strokes} goresan · radikal ${kanji.radical}`, promptLang: "ja",
+      question: "Apa arti kanji ini?", options: made.options, answer: made.answer, optLang: "id",
+      explanation: `${kanji.c} = ${kanji.meaning}. On’yomi ${kanji.on}; kun’yomi ${kanji.kun}.`
+    });
+    made = makeOptions(kanji.c, KANJI.filter((item) => item.c !== kanji.c).map((item) => item.c));
+    bank.push({
+      id: "kanji-b-" + kanji.c, cat: "Kanji", kind: "Bentuk kanji",
+      prompt: kanji.meaning, promptId: `${kanji.strokes} goresan · radikal ${kanji.radical}`, promptLang: "id",
+      question: "Kanji mana yang sesuai?", options: made.options, answer: made.answer, optLang: "ja",
+      explanation: `${kanji.c} = ${kanji.meaning}. On’yomi ${kanji.on}; kun’yomi ${kanji.kun}.`
+    });
+  });
+  return bank;
+}
+function buildGrammarBank() {
+  const bank = [];
+  GRAMMAR.forEach((grammar, index) => {
+    let made = makeOptions(grammar.pattern, GRAMMAR.filter((_, i) => i !== index).map((item) => item.pattern));
+    bank.push({
+      id: "grammar-a-" + index, cat: "Tata Bahasa", kind: "Pola kalimat",
+      prompt: grammar.jp, promptId: grammar.idn, promptLang: "ja",
+      question: "Pola mana yang dipakai?", options: made.options, answer: made.answer, optLang: "ja",
+      explanation: `${grammar.pattern} — ${grammar.note}`
+    });
+    made = makeOptions(grammar.jp, GRAMMAR.filter((_, i) => i !== index).map((item) => item.jp));
+    bank.push({
+      id: "grammar-b-" + index, cat: "Tata Bahasa", kind: "Contoh kalimat",
+      prompt: grammar.pattern, promptId: grammar.title, promptLang: "ja",
+      question: "Kalimat mana yang memakai pola ini?", options: made.options, answer: made.answer, optLang: "ja",
+      explanation: `${grammar.pattern} — ${grammar.idn} (${grammar.jp}).`
+    });
+  });
+  return bank;
+}
+function buildParticleBank() {
+  return PARTICLE_Q.map((item, index) => ({
+    id: "particle-" + index, cat: "Partikel", kind: "Isi celah",
+    prompt: item.prompt, promptId: item.idn, promptLang: "ja",
+    question: "Partikel apa yang tepat?", options: item.options, answer: item.options.indexOf(item.answer), optLang: "ja",
+    explanation: item.explanation
+  }));
+}
+function buildReadingBank() {
+  return READING_TITLES.map((reading, index) => {
+    const made = makeOptions(reading.short, READING_TITLES.filter((_, i) => i !== index).map((item) => item.short));
+    return {
+      id: "reading-" + index, cat: "Membaca", kind: "Topik bacaan",
+      prompt: reading.title, promptId: "Bacaan N5 · ringkasan", promptLang: "ja",
+      question: "Bacaan ini membahas apa?", options: made.options, answer: made.answer, optLang: "id",
+      explanation: reading.summary
+    };
+  });
+}
+function buildListeningBank() {
+  return LISTENING_TITLES.map((audio, index) => {
+    const made = makeOptions(audio.short, LISTENING_TITLES.filter((_, i) => i !== index).map((item) => item.short));
+    return {
+      id: "listening-" + index, cat: "Mendengar", kind: "Situasi dialog",
+      prompt: audio.title, promptId: "Dialog N5 · audio", promptLang: "ja",
+      question: "Dialog ini berlangsung dalam situasi apa?", options: made.options, answer: made.answer, optLang: "id",
+      explanation: audio.summary
+    };
+  });
+}
+function buildOrderBank() {
+  return ORDER_Q.map((item, index) => ({
+    id: "order-" + index, cat: "Menyusun", kind: "Susun kalimat",
+    prompt: item.prompt, promptId: item.idn, promptLang: "ja",
+    question: "Fragmen mana yang mengisi ★ (celah ketiga)?", options: item.fragments.slice(),
+    answer: item.fragments.indexOf(item.star), optLang: "ja",
+    explanation: `Urutan benar: ${item.full} — ${item.idn}`
+  }));
+}
+const BANKS = {};
+function bankFor(mode) {
+  if (BANKS[mode]) return BANKS[mode];
+  let bank = [];
+  if (mode === "kosakata") bank = buildVocabBank();
+  else if (mode === "kanji") bank = buildKanjiBank();
+  else if (mode === "tata-bahasa") bank = buildGrammarBank();
+  else if (mode === "partikel") bank = buildParticleBank();
+  else if (mode === "membaca") bank = buildReadingBank();
+  else if (mode === "mendengar") bank = buildListeningBank();
+  else if (mode === "menyusun") bank = buildOrderBank();
+  else bank = CANON.slice();
+  BANKS[mode] = bank;
+  return bank;
+}
+function startSession(mode, requested) {
+  let questions;
+  if (mode === "campuran") {
+    questions = CANON.slice();
+    if (requested > questions.length) {
+      questions = questions.concat(shuffle(buildVocabBank()).slice(0, requested - questions.length));
+    }
+  } else {
+    const pool = bankFor(mode);
+    questions = shuffle(pool).slice(0, requested);
+  }
+  state.route = "latihan";
+  state.quiz = {
+    mode,
+    requested,
+    questions,
+    index: 0,
+    answers: new Array(questions.length).fill(null),
+    finished: false
+  };
+}
+function quizStats() {
+  const quiz = state.quiz;
+  let correct = 0;
+  quiz.answers.forEach((answer) => { if (answer && answer.correct) correct += 1; });
+  return { correct, answered: quiz.answers.filter(Boolean).length, total: quiz.questions.length };
+}
+function currentQuestion() {
+  if (!state.quiz) return null;
+  return state.quiz.questions[state.quiz.index];
+}
+function answerQuestion(picked) {
+  const quiz = state.quiz;
+  if (!quiz || quiz.finished) return;
+  const question = quiz.questions[quiz.index];
+  if (!question || quiz.answers[quiz.index]) return;
+  quiz.answers[quiz.index] = { picked, correct: picked === question.answer };
+  render();
+  const nextButton = document.querySelector("[data-next]");
+  if (nextButton) {
+    nextButton.focus({ preventScroll: true });
+  }
+  announce(quiz.answers[quiz.index].correct ? "Benar. " + question.explanation : "Belum tepat. Kunci: " + question.options[question.answer] + ". " + question.explanation);
+}
+function nextQuestion() {
+  const quiz = state.quiz;
+  if (!quiz) return;
+  if (quiz.index >= quiz.questions.length - 1) {
+    quiz.finished = true;
+    render();
+    focusSoon(".result h2");
+    const stats = quizStats();
+    announce(`Sesi selesai. Skor ${stats.correct} dari ${stats.total}.`);
+    return;
+  }
+  quiz.index += 1;
+  render();
+  focusSoon(".q-prompt");
+  announce(`Soal ${quiz.index + 1} dari ${quiz.questions.length}.`);
+}
+
+function modePanel() {
+  const quiz = state.quiz;
+  return `<div class="mode-grid">
+    ${MODE_DEFS.map((mode) => `<button class="mode-btn" type="button" data-mode="${mode.key}" aria-pressed="${quiz.mode === mode.key}">
+      <span class="mode-btn-label">${mode.label}</span>
+      <span class="mode-btn-meta">${mode.jp} · ${mode.material}</span>
+    </button>`).join("")}
+  </div>
+  <div class="count-row" role="group" aria-label="Jumlah soal">
+    ${[10, 20, 30].map((count) => `<button class="count-btn" type="button" data-count="${count}" aria-pressed="${quiz.requested === count}">${count}</button>`).join("")}
+  </div>
+  <p class="side-note">Mengubah mode atau jumlah memulai sesi baru. Jumlah bisa lebih kecil bila bank mode terbatas.</p>`;
+}
+function sessionMap() {
+  const quiz = state.quiz;
+  return `<div class="session-map" aria-hidden="true">
+    ${quiz.questions.map((_, index) => {
+      const answer = quiz.answers[index];
+      let cls = "session-cell";
+      if (answer) cls += answer.correct ? " is-correct" : " is-wrong";
+      else if (index === quiz.index && !quiz.finished) cls += " is-current";
+      return `<span class="${cls}" title="Butir ${index + 1}"></span>`;
+    }).join("")}
+  </div>`;
+}
+function sideStatus() {
+  const quiz = state.quiz;
+  const stats = quizStats();
+  return `<div class="side-score"><b>${pad(stats.answered)}<span style="font-size:13px;color:var(--muted)"> / ${pad(stats.total)}</span></b><span>BENAR ${pad(stats.correct)}</span></div>
+    <div class="bar"><i style="width:${Math.round((stats.answered / stats.total) * 100)}%"></i></div>
+    ${sessionMap()}
+    <p class="side-note">${quiz.finished ? "Sesi selesai. Ulangi untuk mengacak ulang." : "Sel hijau benar, persimmon salah, kobalt posisi sekarang."}</p>`;
+}
+function sideSources() {
+  const quiz = state.quiz;
+  return `<div class="source-rows">
+      <div class="source-row"><span>Bank terkurasi N5</span><b>23 butir</b></div>
+      <div class="source-row"><span>Generator materi</span><b>N5</b></div>
+      <div class="source-row"><span>Butir sesi ini</span><b>${pad(quiz.questions.length)}</b></div>
+      <div class="source-row"><span>Pengulangan</span><b>0</b></div>
+    </div>
+    <p class="side-note">Butir diambil acak tanpa pengulangan. Mode Campuran memakai 10 butir contoh; mode lain memakai bank masing-masing.</p>`;
+}
+function sideKeys() {
+  return `<div class="key-list">
+      <div class="key-row"><span>Pilih jawaban</span><span><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd></span></div>
+      <div class="key-row"><span>Lanjut</span><kbd>Enter</kbd></div>
+      <div class="key-row"><span>Ulangi sesi</span><kbd>R</kbd></div>
+    </div>`;
+}
+
+function quizResultView() {
+  const quiz = state.quiz;
+  const stats = quizStats();
+  const accuracy = Math.round((stats.correct / stats.total) * 100);
+  let message = "Satu putaran lagi akan menguatkan pola yang belum stabil.";
+  if (accuracy >= 90) message = "Presisi tinggi. Pertahankan ritme dan naikkan jumlah soal.";
+  else if (accuracy >= 70) message = "Di jalur yang benar. Periksa pembahasan pada butir yang salah.";
+  const byCat = {};
+  quiz.questions.forEach((question, index) => {
+    if (!byCat[question.cat]) byCat[question.cat] = { correct: 0, total: 0 };
+    byCat[question.cat].total += 1;
+    if (quiz.answers[index] && quiz.answers[index].correct) byCat[question.cat].correct += 1;
+  });
+  const catRows = Object.keys(byCat).map((cat) => {
+    const data = byCat[cat];
+    const value = Math.round((data.correct / data.total) * 100);
+    return `<div class="cat-row"><span>${cat}</span><div class="bar"><i style="width:${value}%"></i></div><b>${data.correct} / ${data.total}</b></div>`;
+  }).join("");
+  return `<div class="result">
+    <p class="mono-label">Hasil sesi · ${MODE_DEFS.find((mode) => mode.key === quiz.mode).label}</p>
+    <div class="result-top">
+      <div class="score-ring" style="--p:${accuracy}" role="img" aria-label="Akurasi ${accuracy} persen"><div><b>${accuracy}%</b><span>${stats.correct} / ${stats.total}</span></div></div>
+      <div class="result-copy">
+        <h2 tabindex="-1">${accuracy >= 70 ? "Sesi selesai — " + accuracy + "% akurasi" : "Sesi selesai — perlu satu putaran lagi"}</h2>
+        <p>${message}</p>
+        <div class="result-stats">
+          <div class="result-stat"><b>${pad(stats.correct)}</b><span>BENAR</span></div>
+          <div class="result-stat"><b>${pad(stats.total - stats.correct)}</b><span>SALAH</span></div>
+          <div class="result-stat"><b>${pad(stats.total)}</b><span>TOTAL</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="result-cats">${catRows}</div>
+    <div class="result-actions">
+      <button class="btn btn--primary" type="button" data-restart>Ulangi sesi</button>
+      <a class="btn" href="#dasbor">Kembali ke dasbor</a>
+      <a class="btn" href="#materi/partikel">Baca partikel</a>
+    </div>
+    <p class="result-note">Tekan Enter atau R untuk mengulangi. Butir sesi baru akan diacak lagi dari bank mode.</p>
+  </div>`;
+}
+
+function quizView() {
+  const quiz = state.quiz;
+  if (!quiz) return "";
+  if (quiz.finished) {
+    return `<div class="view">
+      <div class="page-head">
+        <div><p class="eyebrow">Latihan <span class="sep">/</span> Latihan Soal <span class="sep">/</span> Hasil</p><h1>Hasil latihan</h1><p class="lede">Satu sesi selesai. Skor dihitung dari ${quiz.questions.length} butir mode ${MODE_DEFS.find((mode) => mode.key === quiz.mode).label}, termasuk pembahasan setiap butir.</p></div>
+        <div class="head-side"><span class="badge badge--cobalt">SESI SELESAI</span></div>
+      </div>
+      <div class="quiz-layout">
+        <section class="card quiz-main"><div class="quiz-body">${quizResultView()}</div></section>
+        <aside class="quiz-side" aria-label="Panel sesi">
+          <div class="side-card"><div class="side-head"><span class="mono-label">Status sesi</span><span class="badge">SELESAI</span></div><div class="side-body">${sideStatus()}</div></div>
+          <div class="side-card"><div class="side-head"><span class="mono-label">Mode latihan</span><span class="mono">${MODE_DEFS.length} MODE</span></div><div class="side-body">${modePanel()}</div></div>
+          <div class="side-card"><div class="side-head"><span class="mono-label">Sumber butir</span><span class="badge">BANK N5</span></div><div class="side-body">${sideSources()}</div></div>
+          <div class="side-card"><div class="side-head"><span class="mono-label">Pintasan keyboard</span></div><div class="side-body">${sideKeys()}</div></div>
+        </aside>
+      </div>
+    </div>`;
+  }
+
+  const question = currentQuestion();
+  const answer = quiz.answers[quiz.index];
+  const isWord = question.prompt.length <= 6 && question.promptLang === "ja";
+  const promptText = question.prompt.replace(/___/g, '<span class="blank">＿</span>');
+  const optionButtons = question.options.map((option, index) => {
+    let cls = "option" + (question.optLang === "id" ? " is-id" : "");
+    let mark = "";
+    let sr = "";
+    if (answer) {
+      if (index === question.answer) { cls += " is-correct"; mark = "✓"; sr = "Jawaban benar"; }
+      else if (index === answer.picked) { cls += " is-wrong"; mark = "×"; sr = "Jawaban Anda, salah"; }
+      else { cls += " is-dim"; }
+    }
+    return `<button class="${cls}" type="button" data-answer="${index}" ${answer ? "disabled" : ""}>
+      <span class="key" aria-hidden="true">${index + 1}</span>
+      <span class="opt-label" ${question.optLang === "ja" ? 'lang="ja"' : ""}>${esc(option)}</span>
+      <span class="mark" aria-hidden="true">${mark}</span>
+      <span class="sr-only">${sr}</span>
+    </button>`;
+  }).join("");
+
+  let feedback = "";
+  if (answer) {
+    const ok = answer.correct;
+    feedback = `<div class="feedback${ok ? "" : " is-wrong"}" tabindex="-1" role="status" aria-live="polite">
+      <p class="feedback-kicker">${ok ? "Tepat" : "Belum tepat"}</p>
+      <h3>${ok ? "Jawaban tepat — " + esc(question.options[question.answer]) : "Kunci: " + esc(question.options[question.answer])}</h3>
+      <p class="feedback-text">${question.explanation}</p>
+      <div class="feedback-actions">
+        <button class="btn btn--primary" type="button" data-next>${quiz.index === quiz.questions.length - 1 ? "Lihat hasil" : "Soal berikutnya"} <span aria-hidden="true">→</span></button>
+      </div>
+      <p class="key-hint">Enter untuk lanjut · 1–4 untuk memilih</p>
+    </div>`;
+  }
+
+  const stats = quizStats();
+  const modeInfo = MODE_DEFS.find((mode) => mode.key === quiz.mode);
+  return `<div class="view">
+    <div class="page-head">
+      <div><p class="eyebrow">Latihan <span class="sep">/</span> Latihan Soal <span class="sep">/</span> N5</p><h1>Latihan Soal</h1><p class="lede">Sesi dari Bank Soal N5: 23 butir terkurasi dan generator materi. Butir diambil acak tanpa pengulangan; jawaban langsung dinilai dengan pembahasan.</p></div>
+      <div class="head-side"><span class="badge badge--cobalt">${modeInfo.label.toUpperCase()}</span><button class="btn btn--sm" type="button" data-restart>Ulangi sesi</button></div>
+    </div>
+    <div class="quiz-layout">
+      <section class="card quiz-main" aria-labelledby="quizHeading">
+        <header class="quiz-head">
+          <div class="quiz-title"><h2 id="quizHeading">Soal ${pad(quiz.index + 1)} / ${pad(quiz.questions.length)}</h2><span class="badge">BANK N5</span></div>
+          <div class="quiz-score"><span>SKOR</span><b>${pad(stats.correct)}</b><span>/ ${pad(quiz.questions.length)}</span></div>
+        </header>
+        <div class="quiz-progress">
+          <div class="quiz-progress-top"><span>${stats.answered} dijawab · ${quiz.questions.length - stats.answered} tersisa</span><span>${Math.round((stats.answered / quiz.questions.length) * 100)}%</span></div>
+          <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="${quiz.questions.length}" aria-valuenow="${stats.answered}" aria-label="Progres sesi"><i style="width:${(stats.answered / quiz.questions.length) * 100}%"></i></div>
+        </div>
+        <div class="quiz-body">
+          <div class="q-meta">
+            <span class="q-chip q-chip--cat">${question.cat}</span>
+            <span class="q-chip">${question.kind}</span>
+            <span class="q-chip">${quiz.index + 1} / ${quiz.total || quiz.questions.length}</span>
+          </div>
+          <p class="q-prompt${isWord ? " is-word" : ""}${question.promptLang === "id" ? " is-id" : ""}" lang="${question.promptLang}" tabindex="-1">${question.promptLang === "ja" ? promptText : esc(promptText)}</p>
+          ${question.promptId ? `<p class="q-promptid">${esc(question.promptId)}</p>` : ""}
+          <p class="q-question">${question.question}</p>
+          <div class="options" role="group" aria-label="Pilihan jawaban">${optionButtons}</div>
+          ${feedback}
+        </div>
+        <div class="quiz-foot"><span>${modeInfo.label} · ${question.cat} · tanpa pengulangan</span><span>1–4 pilih · Enter lanjut</span></div>
+      </section>
+      <aside class="quiz-side" aria-label="Panel status latihan">
+        <div class="side-card"><div class="side-head"><span class="mono-label">Status sesi</span><span class="badge">${quiz.finished ? "SELESAI" : "BERJALAN"}</span></div><div class="side-body">${sideStatus()}</div></div>
+        <div class="side-card"><div class="side-head"><span class="mono-label">Mode latihan</span><span class="mono">${MODE_DEFS.length} MODE</span></div><div class="side-body">${modePanel()}</div></div>
+        <div class="side-card"><div class="side-head"><span class="mono-label">Sumber butir</span><span class="badge">BANK N5</span></div><div class="side-body">${sideSources()}</div></div>
+        <div class="side-card"><div class="side-head"><span class="mono-label">Pintasan keyboard</span></div><div class="side-body">${sideKeys()}</div></div>
+      </aside>
+    </div>
+  </div>`;
+}
+
+/* ============================================================
+   14. PLACEHOLDER MODUL
+   ============================================================ */
+function placeholderView(route) {
+  const found = findNav(route);
+  const id = route.indexOf("modul/") === 0 ? route.slice("modul/".length) : route;
+  const info = MODULE_INFO[id] || {
+    desc: "Halaman ini bagian dari aplikasi Manabi. Preview Arah 2 memusatkan tiga tampilan nyata dan menyisakan modul lain sebagai placeholder yang bisa ditelusuri.",
+    stat: "—",
+    scope: ["Ringkasan modul", "Daftar butir materi", "Status progres lokal"]
+  };
+  const label = found ? found.item.label : id.replace(/-/g, " ");
+  const group = found ? (found.parent ? found.parent.label : found.group.label) || "Materi" : "Modul";
+  return `<div class="view">
+    <div class="page-head">
+      <div>
+        <p class="eyebrow">${group} <span class="sep">/</span> ${label}</p>
+        <h1>${label}</h1>
+        <p class="lede">${info.desc}</p>
+      </div>
+      <div class="head-side"><a class="btn" href="#dasbor">← Dasbor</a></div>
+    </div>
+    <div class="ph-grid">
+      <section class="card ph-main">
+        <div class="card-head"><div><p class="mono-label">Halaman modul</p><h2>Di luar contoh preview</h2></div><span class="ph-badge">PLACEHOLDER</span></div>
+        <div class="card-body">
+          <p class="ph-copy">Preview Arah 2 memusatkan tiga tampilan: <b>Dasbor</b>, <b>Partikel</b>, dan <b>Latihan Soal</b>. Menu ini tetap bisa dibuka dan mempertahankan struktur informasi aplikasi; isi detailnya akan mengikuti pola visual yang sama saat dibangun.</p>
+          <p class="mono-label">Ruang lingkup</p>
+          <ul class="ph-scope">${info.scope.map((item) => `<li>${item}</li>`).join("")}</ul>
+          <div class="ph-actions">
+            <a class="btn btn--primary" href="#latihan">Coba Latihan Soal</a>
+            <a class="btn" href="#materi/partikel">Buka Partikel</a>
+            <a class="btn" href="#dasbor">Kembali ke Dasbor</a>
+          </div>
+        </div>
+      </section>
+      <aside class="card ph-aside">
+        <div class="card-head"><div><p class="mono-label">Penanda modul</p><h2>${label}</h2></div><span class="badge">N5</span></div>
+        <div class="card-body">
+          <div class="source-rows" style="margin:0">
+            <div class="ph-stat-row"><span>Progres</span><b>${info.stat}</b></div>
+            <div class="ph-stat-row"><span>Level</span><b>N5</b></div>
+            <div class="ph-stat-row"><span>Data</span><b>LOKAL</b></div>
+          </div>
+          <p class="mono-note">Angka pada preview ini mengikuti data contoh di brief desain, bukan store pengguna.</p>
+          <p class="mono-label">Tampilan lain</p>
+          <div class="ph-links">
+            <a class="ph-link" href="#dasbor">Dasbor <span>学 →</span></a>
+            <a class="ph-link" href="#materi/partikel">Partikel <span>助 →</span></a>
+            <a class="ph-link" href="#latihan">Latihan Soal <span>問 →</span></a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>`;
+}
+
+/* ============================================================
+   15. RENDER & EVENT DELEGATION
+   ============================================================ */
+function render() {
+  state.route = state.route || routeFromHash();
+  if (state.route === "dasbor") view.innerHTML = dashView();
+  else if (state.route === "materi/partikel") view.innerHTML = particleView();
+  else if (state.route === "latihan") {
+    if (!state.quiz) startSession("campuran", 10);
+    view.innerHTML = quizView();
+  } else {
+    view.innerHTML = placeholderView(state.route);
+  }
+  updateNav();
+  levelDialog.close && levelDialog.close();
+}
+
+document.addEventListener("click", (event) => {
+  const particleButton = event.target.closest("[data-particle]");
+  if (particleButton) {
+    const id = particleButton.getAttribute("data-particle");
+    if (id && id !== state.particleId) {
+      state.particleId = id;
+      const scrollY = window.scrollY;
+      render();
+      window.scrollTo(0, scrollY);
+      focusSoon('[data-particle="' + id + '"]');
+      const particle = PARTICLES.find((item) => item.id === id);
+      announce("Partikel " + particle.char + " — " + particle.name + ".");
+    }
+    return;
+  }
+
+  const tierButton = event.target.closest("[data-tier]");
+  if (tierButton) {
+    state.tier = tierButton.getAttribute("data-tier");
+    const scrollY = window.scrollY;
+    render();
+    window.scrollTo(0, scrollY);
+    focusSoon('[data-tier="' + state.tier + '"]');
+    announce("Filter " + tierLabel(state.tier) + " ditampilkan.");
+    return;
+  }
+
+  const knownButton = event.target.closest("[data-known]");
+  if (knownButton) {
+    const id = knownButton.getAttribute("data-known");
+    if (state.known.has(id)) {
+      state.known.delete(id);
+      notify("Tanda dipelajari dilepas.");
+    } else {
+      state.known.add(id);
+      notify("Partikel ditandai sudah dipelajari.");
+    }
+    try { localStorage.setItem("manabi-arah2-known", JSON.stringify(Array.from(state.known))); } catch (e) { /* abaikan */ }
+    const scrollY = window.scrollY;
+    render();
+    window.scrollTo(0, scrollY);
+    focusSoon('[data-known="' + id + '"]');
+    return;
+  }
+
+  const answerButton = event.target.closest("[data-answer]");
+  if (answerButton) {
+    answerQuestion(Number(answerButton.getAttribute("data-answer")));
+    return;
+  }
+
+  const nextButton = event.target.closest("[data-next]");
+  if (nextButton) {
+    nextQuestion();
+    return;
+  }
+
+  const restartButton = event.target.closest("[data-restart]");
+  if (restartButton) {
+    const quiz = state.quiz;
+    startSession(quiz ? quiz.mode : "campuran", quiz ? quiz.requested : 10);
+    render();
+    focusSoon(".q-prompt");
+    announce("Sesi baru dimulai. Soal 1 dari " + state.quiz.questions.length + ".");
+    return;
+  }
+
+  const modeButton = event.target.closest("[data-mode]");
+  if (modeButton) {
+    const quiz = state.quiz;
+    startSession(modeButton.getAttribute("data-mode"), quiz ? quiz.requested : 10);
+    render();
+    focusSoon(".q-prompt");
+    announce("Mode " + MODE_DEFS.find((mode) => mode.key === state.quiz.mode).label + " dimulai.");
+    return;
+  }
+
+  const countButton = event.target.closest("[data-count]");
+  if (countButton) {
+    const quiz = state.quiz;
+    startSession(quiz ? quiz.mode : "campuran", Number(countButton.getAttribute("data-count")));
+    render();
+    focusSoon(".q-prompt");
+    announce("Sesi " + state.quiz.questions.length + " soal dimulai.");
+    return;
+  }
+
+  const audioButton = event.target.closest("[data-audio]");
+  if (audioButton) {
+    notify("Audio contoh: di aplikasi memakai Web Speech API.");
+  }
+});
+
+/* Keyboard: quiz 1–4 / Enter / R */
+document.addEventListener("keydown", (event) => {
+  if (state.route !== "latihan") return;
+  if (document.body.classList.contains("drawer-open")) return;
+  if (levelDialog.open) return;
+  const tag = (event.target && event.target.tagName || "").toLowerCase();
+  if (tag === "input" || tag === "textarea" || tag === "select") return;
+  const interactive = event.target && event.target.closest ? event.target.closest("a, button") : null;
+  if (event.key === "Enter" && interactive) return;
+  const quiz = state.quiz;
+  if (!quiz) return;
+  if (quiz.finished) {
+    if (event.key === "Enter" || event.key.toLowerCase() === "r") {
+      event.preventDefault();
+      startSession(quiz.mode, quiz.requested);
+      render();
+      focusSoon(".q-prompt");
+      announce("Sesi baru dimulai.");
+    }
+    return;
+  }
+  const answer = quiz.answers[quiz.index];
+  if (!answer && /^[1-4]$/.test(event.key)) {
+    event.preventDefault();
+    answerQuestion(Number(event.key) - 1);
+    return;
+  }
+  if (answer && event.key === "Enter") {
+    event.preventDefault();
+    nextQuestion();
+  }
+});
+
+/* ============================================================
+   16. NOTE & BOOT
+   ============================================================ */
+const designNote = $("#designNote");
+const noteRestore = $("#noteRestore");
+const hideNoteBtn = $("#hideNoteBtn");
+const noteOff = document.documentElement.getAttribute("data-note") === "off";
+if (noteOff) {
+  designNote.hidden = true;
+  noteRestore.hidden = true;
+} else {
+  try {
+    if (localStorage.getItem("manabi-arah2-note") === "1") {
+      designNote.hidden = true;
+      noteRestore.hidden = false;
+    }
+  } catch (e) { /* abaikan */ }
+}
+$("#skipLink").addEventListener("click", (event) => {
+  event.preventDefault();
+  view.focus({ preventScroll: true });
+  view.scrollIntoView({ behavior: motionBehavior(), block: "start" });
+  announce("Konten utama difokuskan.");
+});
+hideNoteBtn.addEventListener("click", () => {
+  designNote.hidden = true;
+  noteRestore.hidden = false;
+  try { localStorage.setItem("manabi-arah2-note", "1"); } catch (e) { /* abaikan */ }
+  announce("Catatan desain disembunyikan.");
+  noteRestore.focus();
+});
+noteRestore.addEventListener("click", () => {
+  designNote.hidden = false;
+  noteRestore.hidden = true;
+  try { localStorage.setItem("manabi-arah2-note", "0"); } catch (e) { /* abaikan */ }
+  designNote.scrollIntoView({ behavior: motionBehavior(), block: "start" });
+  hideNoteBtn.focus({ preventScroll: true });
+  announce("Catatan desain ditampilkan.");
+});
+
+state.route = routeFromHash();
+render();
+if (state.route === "latihan") announce("Latihan Soal siap. Pilih jawaban dengan 1 sampai 4.");
+</script>
+</body>
+</html>

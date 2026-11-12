@@ -404,7 +404,7 @@ export const QuizRunner = forwardRef<QuizRunnerHandle, QuizRunnerProps>(function
           </p>
 
           {current.passage ? (
-            <div className="mt-3 rounded-lg border border-border bg-surface-muted/60 p-4">
+            <div className="mt-3 rounded-2xl border border-border bg-surface-muted/60 p-4">
               <p className="label-micro">Bacaan</p>
               <p
                 lang="ja"
@@ -434,7 +434,7 @@ export const QuizRunner = forwardRef<QuizRunnerHandle, QuizRunnerProps>(function
             </Button>
           ) : null}
 
-          <div className="mt-6 space-y-2" role="group" aria-label="Pilihan jawaban">
+          <div className="mt-6 space-y-2.5" role="group" aria-label="Pilihan jawaban">
             {current.options.map((option, optionIndex) => {
               const isSelected = selected === optionIndex;
               const showCorrect = checked && optionIndex === current.answer;
@@ -449,7 +449,7 @@ export const QuizRunner = forwardRef<QuizRunnerHandle, QuizRunnerProps>(function
                   aria-label={`Pilihan ${optionIndex + 1}: ${option}`}
                   onClick={() => setSelected(optionIndex)}
                   className={cn(
-                    "flex w-full items-start gap-3 rounded-lg border px-3.5 py-3 text-left text-caption transition-colors duration-150",
+                    "flex min-h-12 w-full items-start gap-3 rounded-2xl border px-4 py-3.5 text-left text-body transition-colors duration-150",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper",
                     "disabled:cursor-default",
                     !checked && "border-border bg-surface hover:border-border-strong hover:bg-surface-muted",
@@ -461,7 +461,7 @@ export const QuizRunner = forwardRef<QuizRunnerHandle, QuizRunnerProps>(function
                   <span
                     aria-hidden="true"
                     className={cn(
-                      "tnum mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-md border font-semibold",
+                      "tnum mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg border text-caption font-extrabold",
                       !checked && "border-border bg-surface-muted text-fg-muted",
                       !checked && isSelected && "border-level bg-level text-level-contrast",
                       showCorrect && "border-success bg-success text-accent-contrast",
@@ -493,7 +493,7 @@ export const QuizRunner = forwardRef<QuizRunnerHandle, QuizRunnerProps>(function
 
           <div aria-live="polite" aria-atomic="true" className="mt-5">
             {checked ? (
-              <Callout tone={isCorrect ? "success" : "danger"} title={isCorrect ? "Benar!" : "Belum tepat."}>
+              <Callout tone={isCorrect ? "success" : "danger"} title={isCorrect ? "Benar." : "Belum tepat."}>
                 <p className="whitespace-pre-line text-sm leading-relaxed text-fg">{current.explanation}</p>
                 {isCorrect ? null : (
                   <p className="mt-1.5 text-caption text-fg-muted">

@@ -13,7 +13,7 @@ import {
   SegmentedControl,
   cn,
 } from "@manabi/ui";
-import { hiragana, katakana, kanjiByLevel, levelHref } from "@manabi/content";
+import { hiragana, katakana, kanjiByLevel, levelHref, type JlptLevel } from "@manabi/content";
 import { WritingPad } from "@/components/writing-pad";
 import { useActiveLevel } from "@/lib/level";
 
@@ -32,6 +32,49 @@ const SETS: Array<{ value: SetKey; label: string; glyph: string }> = [
 ];
 
 const KANA_TOTAL = hiragana.length + katakana.length;
+
+/* ------------------------------------------------------------------ *
+ * Tab gabungan modul aksara
+ * ------------------------------------------------------------------ */
+
+const MODULE_TABS = [
+  { key: "kana", label: "Kana", glyph: "あ", path: "kana" },
+  { key: "write", label: "Menulis", glyph: "書", path: "write" },
+] as const;
+
+type ModuleTabKey = (typeof MODULE_TABS)[number]["key"];
+
+/** Tab bar tipis di atas header: kana dan menulis adalah satu keterampilan. */
+function ModuleTabs({ level, current }: { level: JlptLevel; current: ModuleTabKey }) {
+  return (
+    <nav
+      aria-label="Modul aksara"
+      className="flex gap-1 rounded-2xl border border-border bg-surface-muted p-1"
+    >
+      {MODULE_TABS.map((tab) => {
+        const active = tab.key === current;
+        return (
+          <Link
+            key={tab.key}
+            href={levelHref(level, tab.path)}
+            aria-current={active ? "page" : undefined}
+            className={cn(
+              "inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl px-4 text-sm font-semibold transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper",
+              active
+                ? "bg-surface text-fg shadow-soft"
+                : "text-fg-muted hover:bg-surface/60 hover:text-fg",
+            )}
+          >
+            <span lang="ja" aria-hidden="true" className="jp text-base leading-none">
+              {tab.glyph}
+            </span>
+            {tab.label}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
 
 export default function WritePage() {
   const { level } = useActiveLevel();
@@ -105,6 +148,8 @@ export default function WritePage() {
 
   return (
     <div className="space-y-8 pb-8">
+      <ModuleTabs level={level} current="write" />
+
       <PageHeader
         eyebrow={
           <div className="flex flex-wrap items-center gap-2">
@@ -112,6 +157,9 @@ export default function WritePage() {
               {level}
             </Badge>
             <span className="label-micro">Menulis</span>
+            <span lang="ja" className="jp text-caption font-normal text-fg-subtle">
+              書く
+            </span>
           </div>
         }
         title="Menulis"
@@ -138,7 +186,7 @@ export default function WritePage() {
               : `${setLabel} · belum ada huruf untuk level ini`
           }
         >
-          <Card>
+          <Card className="rounded-2xl">
             <div className="p-4 sm:p-6">
               {current ? (
                 <WritingPad
@@ -165,7 +213,7 @@ export default function WritePage() {
         </Section>
 
         <div className="space-y-4">
-          <Card>
+          <Card className="rounded-2xl">
             <div className="p-4">
               <div className="flex items-center justify-between gap-2">
                 <p className="label-micro">Pemilih huruf</p>

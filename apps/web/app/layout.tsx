@@ -12,12 +12,15 @@ export const metadata: Metadata = {
   description:
     "Manabi (学び) adalah platform belajar bahasa Jepang terstruktur per level JLPT: kana, kanji, kosakata, tata bahasa, listening, reading, dan ujian — dengan sistem spaced repetition.",
   keywords: ["belajar bahasa jepang", "jlpt", "kanji", "hiragana", "katakana", "manabi"],
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#faf8f4" },
-    { media: "(prefers-color-scheme: dark)", color: "#121110" },
+    { media: "(prefers-color-scheme: light)", color: "#fff9ef" },
+    { media: "(prefers-color-scheme: dark)", color: "#171512" },
   ],
   width: "device-width",
   initialScale: 1,

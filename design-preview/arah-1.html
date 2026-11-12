@@ -1,0 +1,1811 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manabi — Arah 1 · 余白 Ma</title>
+<meta name="color-scheme" content="light dark">
+<script>
+  // Anti-flicker: pasang tema sebelum paint.
+  (function () {
+    try {
+      var t = localStorage.getItem("manabi-preview-theme");
+      if (!t) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.dataset.theme = t;
+    } catch (e) {}
+  })();
+</script>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;600&display=swap");
+
+/* ==================================================================
+   ARAH 1 — 「余白」Ma / Kertas & Tinta
+   Kertas krem, tinta hangat, vermilion. Serif Fraunces, garis rambut,
+   label mono, teks Jepang vertikal. Tenang seperti buku teks cetak.
+   ================================================================== */
+
+:root {
+  --paper: #f3eee4;
+  --surface: #fbf8f1;
+  --surface-2: #ece5d8;
+  --ink: #211d18;
+  --muted: #6d6355;
+  --subtle: #8c8272;
+  --line: #ded4c3;
+  --line-strong: #c3b6a0;
+  --accent: #b23a2e;
+  --accent-deep: #8d2a20;
+  --accent-soft: #f4ded7;
+  --accent-line: rgba(178, 58, 46, .34);
+  --on-accent: #fff8f1;
+  --moss: #5b7051;
+  --moss-soft: #e5eadc;
+  --gold: #a1742b;
+  --gold-soft: #f4e8cf;
+  --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --font-sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-jp: "Noto Sans JP", "Yu Gothic UI", "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  --font-jp-serif: "Noto Serif JP", "Yu Mincho", "Hiragino Mincho ProN", "MS PMincho", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --radius: 8px;
+  --max: 1220px;
+}
+
+html[data-theme="dark"] {
+  --paper: #161310;
+  --surface: #1e1a15;
+  --surface-2: #27221c;
+  --ink: #f0e9dc;
+  --muted: #b2a692;
+  --subtle: #8d8271;
+  --line: #393229;
+  --line-strong: #51483b;
+  --accent: #d96a5c;
+  --accent-deep: #ee8a7c;
+  --accent-soft: #3a211d;
+  --accent-line: rgba(217, 106, 92, .36);
+  --on-accent: #1b1310;
+  --moss: #9db78b;
+  --moss-soft: #25301f;
+  --gold: #d5ac63;
+  --gold-soft: #3a2f1b;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.66;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .46;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.32'/%3E%3C/svg%3E");
+}
+html[data-theme="dark"] body::before { mix-blend-mode: screen; opacity: .07; }
+
+::selection { background: var(--accent-soft); color: var(--ink); }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+h1, h2, h3, p, ul, ol, dl, dd { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+img, svg { display: block; }
+
+.jp { font-family: var(--font-jp); }
+.jp-serif { font-family: var(--font-jp-serif); }
+.mono { font-family: var(--font-mono); }
+.display { font-family: var(--font-display); }
+.label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--subtle);
+}
+.tnum { font-variant-numeric: tabular-nums; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+/* ---------- Catatan desain (di awal file) ---------- */
+.design-note {
+  position: relative;
+  z-index: 2;
+  max-width: 1220px;
+  margin: 22px auto;
+  padding: clamp(20px, 3vw, 34px);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 1px 0 var(--line);
+}
+.design-note[hidden] { display: none; }
+.design-note::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid var(--line);
+  pointer-events: none;
+}
+.design-note-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.design-note h2 {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -.02em;
+}
+.design-note-kicker { display: block; margin-bottom: 7px; }
+.design-note-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1.15fr 1.35fr;
+  gap: clamp(18px, 3vw, 40px);
+  padding-top: 20px;
+}
+.design-note-col h3 {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.design-note-col p, .design-note-col li {
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+.design-note-col li { padding-left: 18px; position: relative; margin-bottom: 5px; }
+.design-note-col li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+.design-note-menu { display: grid; gap: 3px; }
+.design-note-menu b { color: var(--ink); font-weight: 600; }
+.note-hide {
+  flex: 0 0 auto;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: .06em;
+  cursor: pointer;
+  color: var(--muted);
+}
+.note-hide:hover { color: var(--ink); border-color: var(--ink); }
+.note-reopen {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 40;
+  display: none;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+.note-reopen.show { display: block; }
+
+/* ---------- Kerangka ---------- */
+.app {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 288px minmax(0, 1fr);
+  min-height: 100vh;
+}
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 26px 22px 18px;
+  border-right: 1px solid var(--line);
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.seal {
+  position: relative;
+  width: 42px; height: 42px;
+  display: grid; place-items: center;
+  border: 1.5px solid var(--accent);
+  border-radius: 3px;
+  color: var(--accent);
+  font-family: var(--font-jp-serif);
+  font-size: 22px;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+.seal::after {
+  content: ""; position: absolute; inset: 3px;
+  border: 1px solid var(--accent-line); border-radius: 1px;
+}
+.brand-name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -.02em;
+}
+.brand-sub { display: block; margin-top: 3px; font-size: 12px; color: var(--subtle); }
+
+.level-box { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 13px 0 12px; }
+.level-box-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 9px; }
+.level-box-head .label { letter-spacing: .1em; }
+.level-row { display: grid; grid-template-columns: repeat(5, 1fr); border: 1px solid var(--line-strong); }
+.level-btn {
+  border: 0; border-left: 1px solid var(--line);
+  background: transparent; padding: 8px 0 7px;
+  font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+  cursor: pointer;
+}
+.level-btn:first-child { border-left: 0; }
+.level-btn.active { background: var(--accent); color: var(--on-accent); }
+.level-btn.soon { color: var(--subtle); opacity: .55; }
+.level-btn.soon:hover { opacity: .8; }
+.level-current { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-top: 8px; font-size: 12px; color: var(--muted); }
+.level-current b { color: var(--ink); font-weight: 600; }
+
+.nav { flex: 1 1 auto; }
+.nav-group { margin-top: 17px; }
+.nav-group:first-child { margin-top: 2px; }
+.nav-label {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 0 8px 5px;
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--subtle);
+}
+.nav-label .jp { letter-spacing: .12em; font-size: 12px; color: var(--line-strong); }
+.nav-list { display: grid; gap: 1px; }
+.nav-item {
+  position: relative;
+  display: flex; align-items: center; gap: 9px;
+  min-height: 34px; padding: 0 8px;
+  text-decoration: none; color: var(--muted); font-size: 13.5px;
+  border-radius: 4px;
+  transition: color 140ms ease, background-color 140ms ease;
+}
+.nav-item:hover { color: var(--ink); background: var(--surface-2); }
+.nav-item.active { color: var(--ink); background: var(--surface); font-weight: 600; }
+.nav-item.active::before { content: ""; position: absolute; left: 0; top: 7px; bottom: 7px; width: 2px; background: var(--accent); }
+.nav-glyph {
+  width: 24px; height: 24px; flex: 0 0 auto;
+  display: grid; place-items: center;
+  font-family: var(--font-jp-serif); font-size: 13px;
+  color: var(--subtle); border: 1px solid var(--line);
+  background: var(--paper);
+  border-radius: 3px;
+}
+.nav-item.active .nav-glyph { color: var(--accent); border-color: var(--accent-line); background: var(--accent-soft); }
+.nav-text { min-width: 0; flex: 1; }
+.nav-meta { font-family: var(--font-mono); font-size: 11.5px; color: var(--subtle); }
+.nav-sub { display: grid; gap: 1px; margin: 2px 0 4px 39px; }
+.nav-sub a {
+  display: block; padding: 4px 8px;
+  font-size: 12.5px; color: var(--subtle); text-decoration: none;
+  border-left: 1px solid var(--line);
+}
+.nav-sub a:hover { color: var(--ink); }
+.nav-sub a.active { color: var(--accent); border-left-color: var(--accent); }
+
+.side-foot { border-top: 1px solid var(--line); padding-top: 13px; }
+.side-progress-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.side-progress-head .label { letter-spacing: .08em; }
+.side-progress-head b { font-family: var(--font-mono); font-size: 12px; }
+.hairline { display: block; height: 2px; background: var(--line); margin-top: 8px; position: relative; overflow: hidden; }
+.hairline > span { position: absolute; inset: 0 auto 0 0; background: var(--accent); }
+.side-meta { display: flex; justify-content: space-between; gap: 8px; margin-top: 8px; font-size: 12px; color: var(--muted); }
+.side-note { margin-top: 8px; font-size: 12px; color: var(--subtle); }
+
+.main { min-width: 0; display: flex; flex-direction: column; }
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  height: 62px;
+  padding: 0 clamp(18px, 4vw, 52px);
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--paper) 90%, transparent);
+  backdrop-filter: blur(10px);
+}
+.topbar-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.crumb { font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--subtle); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.crumb b { color: var(--ink); font-weight: 500; }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+.icon-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  height: 36px; padding: 0 11px;
+  border: 1px solid var(--line-strong); background: transparent;
+  color: var(--muted); cursor: pointer; font-family: var(--font-mono); font-size: 12px;
+}
+.icon-btn:hover { color: var(--ink); border-color: var(--ink); }
+.icon-btn svg { width: 15px; height: 15px; }
+.menu-btn { display: none; width: 38px; height: 38px; padding: 0; place-items: center; }
+.menu-btn svg { width: 18px; height: 18px; }
+.topbar-brand { display: none; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 17px; font-weight: 600; text-decoration: none; }
+
+.view {
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 38px clamp(18px, 4vw, 52px) 86px;
+  animation: fade-up 320ms cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes fade-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* ---------- Tipografi halaman ---------- */
+.eyebrow { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--subtle); }
+.level-tag { display: inline-block; padding: 2px 7px; border: 1px solid var(--accent-line); color: var(--accent); font-size: 11.5px; letter-spacing: .1em; }
+.page-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 24px; padding-bottom: 28px; border-bottom: 1px solid var(--line); }
+.page-title { margin-top: 12px; font-family: var(--font-display); font-size: clamp(34px, 4.2vw, 54px); font-weight: 600; line-height: 1.02; letter-spacing: -.028em; }
+.page-title .jp { display: inline-block; margin-left: 12px; font-family: var(--font-jp-serif); font-size: .42em; font-weight: 500; color: var(--subtle); letter-spacing: 0; vertical-align: .28em; }
+.lede { margin-top: 14px; max-width: 66ch; font-size: 15px; line-height: 1.75; color: var(--muted); }
+.lede strong { color: var(--ink); font-weight: 600; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.vertical-jp {
+  writing-mode: vertical-rl; text-orientation: upright;
+  font-family: var(--font-jp-serif); font-size: 17px; letter-spacing: .3em;
+  color: var(--line-strong); user-select: none; white-space: nowrap;
+}
+.head-side { display: flex; align-items: flex-start; gap: 18px; justify-content: flex-end; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  min-height: 44px; padding: 0 18px;
+  border: 1px solid transparent; border-radius: 4px;
+  background: transparent; color: var(--ink);
+  font-family: var(--font-sans); font-size: 14px; font-weight: 600;
+  text-decoration: none; cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, transform 120ms ease;
+}
+.btn:active { transform: scale(.985); }
+.btn-primary { background: var(--accent); color: var(--on-accent); }
+.btn-primary:hover { background: var(--accent-deep); }
+.btn-outline { border-color: var(--line-strong); background: transparent; }
+.btn-outline:hover { border-color: var(--ink); background: var(--surface); }
+.btn-ghost { color: var(--muted); }
+.btn-ghost:hover { color: var(--ink); background: var(--surface-2); }
+.btn:disabled { opacity: .42; cursor: not-allowed; transform: none; }
+.btn .arrow { transition: transform 150ms ease; }
+.btn:hover .arrow { transform: translateX(3px); }
+
+/* ---------- Dasbor ---------- */
+.hero { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(280px, .72fr); gap: clamp(26px, 4vw, 58px); align-items: start; padding: 4px 0 34px; border-bottom: 1px solid var(--line); }
+.hero-main { min-width: 0; }
+.hero-title { margin-top: 13px; font-family: var(--font-display); font-size: clamp(36px, 4.6vw, 58px); font-weight: 600; line-height: 1.03; letter-spacing: -.03em; }
+.hero-title em { font-style: italic; color: var(--accent); }
+.hero-side { display: flex; justify-content: flex-end; gap: 16px; }
+.focus {
+  position: relative;
+  width: 100%;
+  max-width: 330px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  padding: 22px 22px 18px;
+}
+.focus::after { content: ""; position: absolute; inset: 6px; border: 1px solid var(--line); pointer-events: none; }
+.focus .label { color: var(--accent); }
+.focus-num { display: flex; align-items: baseline; gap: 8px; margin-top: 8px; }
+.focus-num b { font-family: var(--font-display); font-size: 76px; font-weight: 600; line-height: .9; letter-spacing: -.04em; }
+.focus-num span { font-size: 13px; color: var(--muted); }
+.focus-copy { margin-top: 8px; font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+.focus .hairline { margin-top: 15px; }
+.focus-foot { display: flex; justify-content: space-between; gap: 8px; margin-top: 8px; font-size: 12px; color: var(--subtle); }
+.focus-link { display: inline-flex; align-items: center; gap: 7px; margin-top: 15px; color: var(--accent); font-size: 13px; font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--accent-line); padding-bottom: 2px; }
+.focus-link:hover { border-bottom-color: var(--accent); }
+
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid var(--line); }
+.stat { padding: 21px 20px 24px 24px; border-left: 1px solid var(--line); min-width: 0; }
+.stat:first-child { border-left: 0; padding-left: 0; }
+.stat-label { font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--subtle); }
+.stat-value { margin-top: 7px; font-family: var(--font-display); font-size: clamp(28px, 3vw, 38px); font-weight: 600; line-height: 1; letter-spacing: -.02em; }
+.stat-value small { font-family: var(--font-sans); font-size: 12px; font-weight: 400; color: var(--muted); letter-spacing: 0; }
+.stat-hint { margin-top: 7px; font-size: 12px; color: var(--muted); }
+
+.section { margin-top: 44px; }
+.section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--line-strong); margin-bottom: 20px; }
+.section-title { font-family: var(--font-display); font-size: 26px; font-weight: 600; line-height: 1.15; letter-spacing: -.02em; }
+.section-title .jp { margin-left: 8px; font-family: var(--font-jp-serif); font-size: 15px; font-weight: 500; color: var(--subtle); }
+.section-note { max-width: 46ch; text-align: right; font-size: 12.5px; color: var(--muted); }
+.section-link { font-family: var(--font-mono); font-size: 12px; letter-spacing: .06em; color: var(--accent); text-decoration: none; white-space: nowrap; }
+.section-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+.split { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); gap: clamp(20px, 3vw, 40px); align-items: start; }
+.panel { border: 1px solid var(--line); background: var(--surface); padding: 22px; }
+.panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.panel-title { font-family: var(--font-display); font-size: 21px; font-weight: 600; letter-spacing: -.01em; }
+.panel-meta { font-family: var(--font-mono); font-size: 12px; color: var(--subtle); }
+
+.bars { display: flex; align-items: flex-end; gap: 10px; height: 156px; padding-top: 8px; }
+.bar-col { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 7px; }
+.bar-val { font-family: var(--font-mono); font-size: 11.5px; color: var(--subtle); }
+.bar { width: 100%; max-width: 42px; background: var(--line-strong); min-height: 2px; transition: height 300ms ease; }
+.bar.today { background: var(--accent); }
+.bar-label { font-size: 12px; color: var(--muted); }
+.bar-col.today .bar-label { color: var(--accent); font-weight: 600; }
+.goal-row { display: flex; justify-content: space-between; gap: 12px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--muted); }
+.goal-row b { color: var(--ink); font-family: var(--font-mono); font-weight: 500; }
+
+.deck-list { display: grid; }
+.deck-row { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.deck-row:last-child { border-bottom: 0; }
+.deck-glyph { width: 36px; height: 36px; display: grid; place-items: center; border: 1px solid var(--line); background: var(--paper); font-family: var(--font-jp-serif); font-size: 15px; color: var(--muted); }
+.deck-title { display: block; font-size: 14px; font-weight: 600; }
+.deck-sub { display: block; margin-top: 2px; font-size: 12px; color: var(--muted); }
+.deck-bar { width: 84px; margin-top: 7px; }
+.deck-due { text-align: right; }
+.deck-due b { display: block; font-family: var(--font-display); font-size: 25px; font-weight: 600; line-height: 1; color: var(--accent); }
+.deck-due span { font-family: var(--font-mono); font-size: 11.5px; color: var(--subtle); }
+.deck-due.zero b { color: var(--muted); }
+
+.module-grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 44px; }
+.module-row { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 12px; align-items: start; padding: 13px 0; border-bottom: 1px solid var(--line); text-decoration: none; }
+.module-row:hover .module-title { color: var(--accent); }
+.module-num { font-family: var(--font-mono); font-size: 12px; color: var(--subtle); padding-top: 2px; }
+.module-body { display: block; min-width: 0; }
+.module-title { display: block; font-size: 14.5px; font-weight: 600; transition: color 140ms ease; }
+.module-title .jp { margin-left: 7px; font-family: var(--font-jp-serif); font-size: 12.5px; font-weight: 500; color: var(--subtle); }
+.module-desc { display: block; margin-top: 2px; font-size: 12.5px; line-height: 1.5; color: var(--muted); }
+.module-progress { margin-top: 7px; display: flex; align-items: center; gap: 9px; }
+.module-progress .hairline { flex: 1; margin: 0; }
+.module-pct { font-family: var(--font-mono); font-size: 11.5px; color: var(--subtle); white-space: nowrap; }
+.module-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; padding-top: 2px; }
+.module-count { font-family: var(--font-mono); font-size: 11.5px; color: var(--subtle); white-space: nowrap; }
+.due-badge { display: inline-block; padding: 1px 6px; border: 1px solid var(--accent-line); color: var(--accent); font-family: var(--font-mono); font-size: 11px; white-space: nowrap; }
+.arrow-mini { color: var(--line-strong); font-size: 12px; }
+
+.daily-card { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 22px; background: var(--accent-soft); border: 1px solid var(--accent-line); padding: 22px; }
+.daily-glyph { font-family: var(--font-jp-serif); font-size: 84px; font-weight: 600; line-height: .85; color: var(--accent-deep); }
+.daily-kicker { font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+.daily-meaning { margin-top: 5px; font-family: var(--font-display); font-size: 22px; font-weight: 600; }
+.daily-reading { margin-top: 7px; display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12.5px; color: var(--muted); }
+.daily-reading b { color: var(--ink); font-weight: 500; }
+.daily-words { margin-top: 10px; padding-top: 9px; border-top: 1px solid var(--accent-line); font-family: var(--font-jp); font-size: 13.5px; color: var(--muted); }
+.daily-actions { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl th { padding: 0 0 8px; text-align: left; font-family: var(--font-mono); font-size: 11.5px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--subtle); border-bottom: 1px solid var(--line-strong); }
+.tbl th:last-child, .tbl td:last-child { text-align: right; }
+.tbl td { padding: 10px 0; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.tbl tr:last-child td { border-bottom: 0; }
+.tbl .t-date { font-family: var(--font-mono); font-size: 11.5px; color: var(--subtle); white-space: nowrap; }
+.tbl .t-score { font-family: var(--font-mono); font-size: 12px; color: var(--muted); white-space: nowrap; }
+.score { display: inline-block; min-width: 44px; padding: 1px 6px; border: 1px solid var(--line-strong); font-family: var(--font-mono); font-size: 11.5px; text-align: center; }
+.score.good { border-color: var(--moss); color: var(--moss); }
+.score.mid { border-color: var(--gold); color: var(--gold); }
+.score.low { border-color: var(--accent); color: var(--accent); }
+
+.levels-path { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid var(--line-strong); margin-top: 44px; }
+.level-step { padding: 16px 16px 18px; border-left: 1px solid var(--line); }
+.level-step:first-child { border-left: 0; padding-left: 0; }
+.level-step .lv { font-family: var(--font-display); font-size: 24px; font-weight: 600; line-height: 1; }
+.level-step .lv-name { margin-top: 4px; font-size: 12.5px; color: var(--muted); }
+.level-step .lv-status { margin-top: 9px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--subtle); }
+.level-step.active .lv { color: var(--accent); }
+.level-step.active .lv-status { color: var(--accent); }
+.level-step.soon { opacity: .6; }
+.level-step button { border: 0; background: transparent; padding: 0; text-align: left; cursor: pointer; }
+
+/* ---------- Partikel ---------- */
+.summary-strip { display: grid; grid-template-columns: 1.2fr .85fr .85fr; gap: 0; margin-top: 26px; border-bottom: 1px solid var(--line); }
+.summary-cell { padding: 14px 20px 18px 22px; border-left: 1px solid var(--line); }
+.summary-cell:first-child { border-left: 0; padding-left: 0; }
+.summary-cell .label { letter-spacing: .1em; }
+.summary-big { margin-top: 4px; font-family: var(--font-display); font-size: 34px; font-weight: 600; line-height: 1; }
+.summary-big small { font-family: var(--font-sans); font-size: 12px; font-weight: 400; color: var(--muted); }
+.summary-hint { margin-top: 5px; font-size: 12px; color: var(--muted); }
+.tier-bars { display: grid; gap: 7px; margin-top: 9px; }
+.tier-bar { display: grid; grid-template-columns: 62px 1fr 26px; gap: 8px; align-items: center; font-size: 12px; color: var(--muted); }
+.tier-bar .hairline { margin: 0; }
+.tier-bar b { font-family: var(--font-mono); font-size: 11.5px; color: var(--subtle); text-align: right; font-weight: 400; }
+
+.filters { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin: 26px 0 20px; border-bottom: 1px solid var(--line); }
+.filter-btn { border: 0; background: transparent; padding: 8px 11px 10px; border-bottom: 2px solid transparent; font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--subtle); cursor: pointer; }
+.filter-btn:hover { color: var(--ink); }
+.filter-btn.active { color: var(--ink); border-bottom-color: var(--accent); }
+.filter-count { margin-left: 4px; color: var(--subtle); }
+.filters-hint { margin-left: auto; font-size: 12px; color: var(--subtle); }
+
+.particle-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.p-card { display: flex; flex-direction: column; gap: 13px; border: 1px solid var(--line); background: var(--surface); padding: 20px 20px 16px; }
+.p-top { display: flex; align-items: flex-start; gap: 14px; }
+.p-char { font-family: var(--font-jp-serif); font-size: 60px; font-weight: 600; line-height: .88; letter-spacing: -.02em; }
+.p-meta { min-width: 0; flex: 1; padding-top: 2px; }
+.p-romaji { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .15em; text-transform: uppercase; color: var(--subtle); }
+.p-role { margin-top: 2px; font-family: var(--font-display); font-size: 19px; font-weight: 600; line-height: 1.2; }
+.p-index { margin-left: auto; font-family: var(--font-mono); font-size: 11.5px; color: var(--subtle); }
+.p-exp { font-size: 13px; line-height: 1.65; color: var(--muted); }
+.p-examples { border-top: 1px solid var(--line); }
+.example { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: start; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.example:last-child { border-bottom: 0; padding-bottom: 0; }
+.example-jp { font-family: var(--font-jp); font-size: 15.5px; line-height: 1.6; }
+.example-id { margin-top: 1px; font-size: 12px; color: var(--muted); }
+.example-note { margin-top: 2px; font-size: 11.5px; color: var(--subtle); }
+.audio-btn { width: 32px; height: 32px; border: 1px solid var(--line-strong); border-radius: 50%; background: transparent; display: grid; place-items: center; font-family: var(--font-jp); font-size: 12px; color: var(--muted); cursor: pointer; }
+.audio-btn:hover { color: var(--accent); border-color: var(--accent); }
+.caution { margin-top: auto; border-left: 2px solid var(--accent); background: var(--accent-soft); padding: 8px 11px; font-size: 12px; line-height: 1.55; color: var(--ink); }
+.caution b { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 2px; }
+
+.comparison-list { display: grid; gap: 18px; }
+.comparison { border: 1px solid var(--line); background: var(--surface); }
+.comparison-head { padding: 17px 20px 12px; border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; }
+.comparison-title { font-family: var(--font-display); font-size: 21px; font-weight: 600; }
+.comparison-q { font-size: 12.5px; color: var(--muted); }
+.comparison-body { display: grid; grid-template-columns: 1fr 1fr; }
+.comparison-side { padding: 16px 20px; }
+.comparison-side + .comparison-side { border-left: 1px solid var(--line); }
+.comp-char { font-family: var(--font-jp-serif); font-size: 34px; font-weight: 600; line-height: 1; }
+.comp-summary { margin-top: 6px; font-size: 12.5px; color: var(--muted); }
+.comp-examples { margin-top: 10px; display: grid; gap: 8px; }
+.comparison-foot { padding: 11px 20px; border-top: 1px solid var(--line); background: var(--paper); font-size: 12.5px; color: var(--muted); }
+.comparison-foot b { color: var(--ink); font-weight: 600; }
+
+.pitfall-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.pitfall { border: 1px solid var(--line); background: var(--surface); padding: 18px 20px; }
+.pitfall-title { font-family: var(--font-display); font-size: 18px; font-weight: 600; }
+.pitfall-summary { margin-top: 6px; font-size: 12.5px; color: var(--muted); }
+.pitfall-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.pitfall-box { padding: 9px 11px; border-left: 2px solid; }
+.pitfall-box.wrong { background: var(--accent-soft); border-color: var(--accent); }
+.pitfall-box.right { background: var(--moss-soft); border-color: var(--moss); }
+.pitfall-box .label { display: block; margin-bottom: 3px; font-size: 11px; letter-spacing: .08em; }
+.pitfall-box.wrong .label { color: var(--accent); }
+.pitfall-box.right .label { color: var(--moss); }
+.pitfall-jp { font-family: var(--font-jp); font-size: 14.5px; line-height: 1.55; }
+.pitfall-id { font-size: 11.5px; color: var(--muted); }
+.pitfall-note { margin-top: 10px; padding-top: 9px; border-top: 1px solid var(--line); font-size: 12px; color: var(--subtle); }
+
+/* ---------- Latihan Soal ---------- */
+.source-chip { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 3px 7px; padding: 5px 9px; border: 1px solid var(--line-strong); background: var(--surface); font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .05em; color: var(--muted); }
+.source-chip b { color: var(--ink); font-weight: 500; }
+.source-chip .chip-label { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--subtle); }
+.session-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 0 11px; }
+.session-left { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.session-left .label { letter-spacing: .1em; }
+.session-title { font-size: 13.5px; font-weight: 600; }
+.session-right { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 14px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.session-right span { white-space: nowrap; }
+.session-right b { color: var(--ink); font-weight: 500; }
+.track { height: 2px; background: var(--line); position: relative; overflow: hidden; }
+.track > span { position: absolute; inset: 0 auto 0 0; background: var(--accent); transition: width 300ms ease; }
+
+.quiz-layout { display: grid; grid-template-columns: minmax(0, 1fr) 304px; gap: 30px; align-items: start; margin-top: 26px; }
+.quiz-main { min-width: 0; }
+.q-card { border: 1px solid var(--line); background: var(--surface); padding: clamp(20px, 3vw, 32px); }
+.q-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.q-kind { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--accent); }
+.q-counter { font-family: var(--font-mono); font-size: 11.5px; color: var(--subtle); }
+.q-prompt { margin-top: 14px; font-family: var(--font-jp-serif); font-size: clamp(26px, 3.1vw, 38px); font-weight: 500; line-height: 1.5; letter-spacing: .01em; }
+.q-prompt .blank { display: inline-block; min-width: 1.5em; border-bottom: 2px solid var(--accent); color: var(--accent); text-align: center; }
+.q-sub { margin-top: 9px; font-size: 13px; color: var(--muted); }
+.q-context { margin-top: 12px; padding: 8px 11px; border-left: 2px solid var(--line-strong); font-size: 12.5px; color: var(--muted); background: var(--paper); }
+
+.options { display: grid; gap: 9px; margin-top: 22px; }
+.option { display: grid; grid-template-columns: 34px minmax(0, 1fr); align-items: center; gap: 11px; padding: 11px 13px; border: 1px solid var(--line-strong); background: var(--surface); text-align: left; font-family: var(--font-sans); font-size: 14.5px; color: var(--ink); cursor: pointer; transition: border-color 130ms ease, background-color 130ms ease; }
+.option:hover:not(:disabled) { border-color: var(--ink); background: var(--surface-2); }
+.option:disabled { cursor: default; }
+.option-letter { width: 26px; height: 26px; display: grid; place-items: center; border: 1px solid var(--line-strong); font-family: var(--font-mono); font-size: 11.5px; color: var(--muted); }
+.option.selected { border-color: var(--ink); background: var(--surface-2); }
+.option.correct { border-color: var(--moss); background: var(--moss-soft); }
+.option.correct .option-letter { border-color: var(--moss); color: var(--moss); }
+.option.wrong { border-color: var(--accent); background: var(--accent-soft); }
+.option.wrong .option-letter { border-color: var(--accent); color: var(--accent); }
+.option.correct .option-text { font-weight: 600; }
+
+.feedback { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 15px; }
+.feedback-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; }
+.verdict { font-family: var(--font-display); font-size: 21px; font-weight: 600; }
+.verdict.ok { color: var(--moss); }
+.verdict.no { color: var(--accent); }
+.verdict-key { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.verdict-key b { color: var(--ink); font-weight: 500; }
+.feedback p { margin-top: 8px; font-size: 13px; line-height: 1.7; color: var(--muted); }
+.feedback p b { color: var(--ink); font-weight: 600; }
+.q-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; }
+.keys-inline { font-size: 12px; color: var(--subtle); }
+kbd { display: inline-block; min-width: 20px; padding: 1px 5px; border: 1px solid var(--line-strong); background: var(--paper); font-family: var(--font-mono); font-size: 11px; text-align: center; color: var(--muted); }
+
+.quiz-aside { position: sticky; top: 84px; display: grid; gap: 14px; }
+.side-panel { border: 1px solid var(--line); background: var(--surface); padding: 16px; }
+.side-panel .label { display: block; margin-bottom: 8px; letter-spacing: .1em; }
+.side-panel p, .side-panel li { font-size: 12px; line-height: 1.6; color: var(--muted); }
+.side-panel strong { color: var(--ink); font-weight: 600; }
+.side-list { display: grid; gap: 6px; }
+.side-list li { display: flex; justify-content: space-between; gap: 10px; }
+.side-list li span:last-child { font-family: var(--font-mono); color: var(--subtle); }
+.mode-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.chip { border: 1px solid var(--line-strong); background: transparent; padding: 4px 8px; font-size: 11.5px; color: var(--muted); cursor: pointer; }
+.chip:hover { color: var(--ink); border-color: var(--ink); }
+.chip.active { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.keys { display: grid; gap: 7px; }
+.key-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--muted); }
+.key-row kbd { font-size: 11px; }
+
+.result { border: 1px solid var(--line); background: var(--surface); padding: clamp(28px, 5vw, 54px); text-align: center; }
+.result-stamp { width: 54px; height: 54px; margin: 0 auto 16px; border: 1.5px solid var(--accent); color: var(--accent); display: grid; place-items: center; font-family: var(--font-jp-serif); font-size: 24px; }
+.result .label { color: var(--accent); }
+.result-score { margin-top: 8px; font-family: var(--font-display); font-size: clamp(58px, 9vw, 88px); font-weight: 600; line-height: 1; letter-spacing: -.04em; }
+.result-score small { font-family: var(--font-sans); font-size: 20px; color: var(--muted); font-weight: 400; letter-spacing: 0; }
+.result-msg { margin-top: 10px; font-family: var(--font-display); font-size: 24px; font-weight: 600; }
+.result-copy { margin: 8px auto 0; max-width: 46ch; font-size: 13px; color: var(--muted); }
+.result-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 22px; }
+.result-breakdown { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-top: 26px; text-align: left; }
+.result-breakdown div { background: var(--paper); padding: 12px 14px; }
+.result-breakdown .label { font-size: 11px; }
+.result-breakdown b { display: block; margin-top: 3px; font-family: var(--font-display); font-size: 22px; font-weight: 600; }
+
+/* ---------- Placeholder modul ---------- */
+.placeholder { margin-top: 26px; border: 1px solid var(--line); background: var(--surface); padding: 26px; }
+.placeholder .label { color: var(--accent); }
+.placeholder h2 { margin-top: 6px; font-family: var(--font-display); font-size: 24px; font-weight: 600; }
+.placeholder p { margin-top: 8px; max-width: 64ch; font-size: 13.5px; color: var(--muted); }
+.feature-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 26px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+.feature-list li { position: relative; padding-left: 15px; font-size: 13px; color: var(--muted); }
+.feature-list li::before { content: "·"; position: absolute; left: 3px; color: var(--accent); font-weight: 700; }
+.preview-note { margin-top: 20px; padding: 12px 14px; border-left: 2px solid var(--gold); background: var(--gold-soft); font-size: 12.5px; color: var(--muted); }
+.preview-note a { color: var(--accent); }
+
+/* ---------- Footer & toast ---------- */
+.foot { margin-top: 54px; padding-top: 16px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; font-size: 12px; color: var(--subtle); }
+.foot a { color: var(--muted); text-decoration: none; }
+.foot a:hover { color: var(--ink); }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 90; background: var(--ink); color: var(--paper); padding: 10px 16px; font-size: 13px; box-shadow: 0 8px 24px rgba(0,0,0,.18); animation: toast-in 220ms ease both; }
+@keyframes toast-in { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+/* ---------- Drawer / mobile ---------- */
+.sidebar-overlay { display: none; }
+.bottom-nav { display: none; }
+@media (max-width: 1023px) {
+  .app { display: block; }
+  .sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 60;
+    width: min(320px, 88vw); height: 100dvh;
+    transform: translateX(-102%);
+    transition: transform 200ms cubic-bezier(.22,1,.36,1);
+    box-shadow: 0 0 0 1px var(--line), 24px 0 60px rgba(0,0,0,.18);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay { display: block; position: fixed; inset: 0; z-index: 55; background: rgba(20,16,12,.42); opacity: 0; pointer-events: none; transition: opacity 180ms ease; }
+  .sidebar-overlay.show { opacity: 1; pointer-events: auto; }
+  .menu-btn { display: grid; }
+  .topbar { height: 58px; }
+  .topbar-brand { display: flex; }
+  .crumb { display: none; }
+  .view { padding: 24px 18px 98px; }
+  .hero { grid-template-columns: 1fr; padding-bottom: 26px; }
+  .hero-side { justify-content: flex-start; }
+  .focus { max-width: 100%; }
+  .vertical-jp { display: none; }
+  .stats { grid-template-columns: 1fr 1fr; }
+  .stat { padding: 16px 16px 18px 0; border-left: 0; }
+  .stat:nth-child(even) { padding-left: 18px; border-left: 1px solid var(--line); }
+  .stat:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .split { grid-template-columns: 1fr; }
+  .module-grid { grid-template-columns: 1fr; }
+  .summary-strip { grid-template-columns: 1fr 1fr; }
+  .summary-cell { padding-left: 16px; }
+  .summary-cell:first-child { padding-left: 0; grid-column: 1 / -1; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+  .summary-cell:nth-child(2) { border-left: 0; padding-left: 0; }
+  .particle-grid { grid-template-columns: 1fr; }
+  .comparison-body { grid-template-columns: 1fr; }
+  .comparison-side + .comparison-side { border-left: 0; border-top: 1px solid var(--line); }
+  .pitfall-grid { grid-template-columns: 1fr; }
+  .quiz-layout { grid-template-columns: 1fr; }
+  .quiz-aside { position: static; }
+  .bottom-nav {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+    border-top: 1px solid var(--line);
+    background: color-mix(in srgb, var(--paper) 94%, transparent);
+    backdrop-filter: blur(10px);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .bn-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 56px; padding: 6px 2px; border: 0; background: transparent; color: var(--muted); font-size: 11.5px; text-decoration: none; cursor: pointer; }
+  .bn-item .bn-glyph { font-family: var(--font-jp-serif); font-size: 17px; line-height: 1; }
+  .bn-item.active { color: var(--accent); }
+  .design-note { margin: 12px; }
+  .design-note-grid { grid-template-columns: 1fr; gap: 20px; }
+  .design-note-head { flex-direction: column; gap: 10px; }
+  .foot { margin-bottom: 8px; }
+}
+@media (max-width: 639px) {
+  .page-title { font-size: 34px; }
+  .hero-title { font-size: 38px; }
+  .stats { grid-template-columns: 1fr 1fr; }
+  .section-head { align-items: flex-start; flex-direction: column; gap: 5px; }
+  .section-note { text-align: left; }
+  .summary-strip { grid-template-columns: 1fr; }
+  .summary-cell { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); }
+  .summary-cell:first-child { border-top: 0; }
+  .particle-grid { gap: 12px; }
+  .p-char { font-size: 50px; }
+  .q-prompt { font-size: 25px; }
+  .option { font-size: 14px; }
+  .result-breakdown { grid-template-columns: 1fr; }
+  .feature-list { grid-template-columns: 1fr; }
+  .levels-path { grid-template-columns: 1fr 1fr; }
+  .level-step { border-left: 0; border-top: 1px solid var(--line); padding-left: 0; }
+  .level-step:nth-child(2n) { padding-left: 16px; border-left: 1px solid var(--line); }
+  .daily-card { grid-template-columns: 1fr; gap: 12px; }
+  .daily-glyph { font-size: 64px; }
+  .filters-hint { display: none; }
+  .source-chip { width: 100%; justify-content: flex-start; line-height: 1.5; }
+  .session-left { gap: 6px; }
+}
+
+/* ---------- Gerak ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ================================================================
+     CATATAN DESAIN — ARAH 1
+     ================================================================ -->
+<section class="design-note" id="designNote" aria-labelledby="noteTitle">
+  <div class="design-note-head">
+    <div>
+      <span class="label design-note-kicker">Catatan desain · Arah 1 dari 3</span>
+      <h2 id="noteTitle">「余白」Ma — kertas, tinta, dan ruang yang membuat materi bernapas.</h2>
+    </div>
+    <button class="note-hide" id="hideNote" type="button">Sembunyikan catatan</button>
+  </div>
+  <div class="design-note-grid">
+    <div class="design-note-col">
+      <h3>Karakter desain</h3>
+      <p>Manabi terasa seperti buku teks Jepang yang dirancang serius, bukan aplikasi permainan.
+      Kertas krem hangat, tinta cokelat-hitam, dan satu aksen vermilion seperti cap hanko.
+      Judul serif Fraunces (fallback Georgia), label mono kecil, garis rambut, dan teks Jepang
+      vertikal. Layout asimetris dengan banyak ruang kosong; materi Jepang selalu menjadi bintang.</p>
+    </div>
+    <div class="design-note-col">
+      <h3>Struktur menu</h3>
+      <div class="design-note-menu">
+        <p><b>Dasbor</b> — ringkasan hari ini</p>
+        <p><b>Materi</b> — Kana &amp; Menulis · Kosakata · Kanji &amp; Bacaan · Tata Bahasa ·
+        Partikel · Mendengar · Membaca · Konteks &amp; Etiket</p>
+        <p><b>Latihan</b> — Ulasan · Latihan Soal · Simulasi Ujian</p>
+        <p><b>Referensi</b> — Kamus · Pengaturan · Tentang</p>
+      </div>
+    </div>
+    <div class="design-note-col">
+      <h3>Alasan penamaan &amp; penggabungan</h3>
+      <ul>
+        <li><b>Bank Soal bukan menu.</b> Ia lapisan data: Latihan Soal dan Simulasi Ujian mengambil
+        butir acak tanpa ulangan. Menu “Bank Soal” dihapus, isinya tetap terpakai.</li>
+        <li><b>Kana + Menulis</b> digabung karena sama-sama melatih aksara; dipisah justru membuat
+        pemula bingung harus mulai di mana.</li>
+        <li><b>Kanji + Bacaan Kanji</b> digabung: perubahan bacaan adalah lapisan dari kanji,
+        bukan mata pelajaran terpisah.</li>
+        <li><b>Ulasan</b> naik ke kelompok Latihan sebagai hub lintas dek (kosakata, kanji, tata
+        bahasa, konteks) — ini aksi harian terpenting.</li>
+        <li><b>Latihan → Latihan Soal</b> dan <b>Ujian → Simulasi Ujian</b> supaya jelas bedanya
+        dengan ulasan SRS.</li>
+        <li><b>Mendengar/Membaca</b>, bukan “Listening/Reading”, agar seluruh label berbahasa
+        Indonesia.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+<button class="note-reopen" id="reopenNote" type="button">Tampilkan catatan desain</button>
+
+<div class="app">
+  <!-- ---------- Sidebar ---------- -->
+  <aside class="sidebar" id="sidebar" aria-label="Navigasi utama">
+    <a class="brand" href="#dasbor">
+      <span class="seal" lang="ja" aria-hidden="true">学</span>
+      <span>
+        <span class="brand-name">Manabi</span>
+        <span class="brand-sub">学び · belajar bahasa Jepang</span>
+      </span>
+    </a>
+
+    <div class="level-box">
+      <div class="level-box-head">
+        <span class="label">Level</span>
+        <span class="label" style="letter-spacing:.02em;text-transform:none;">JLPT</span>
+      </div>
+      <div class="level-row" id="levelRow" role="group" aria-label="Pilih level JLPT"></div>
+      <div class="level-current"><span id="levelCurrent">N5 · Dasar</span><span lang="ja" class="jp">初級</span></div>
+    </div>
+
+    <nav class="nav" id="nav" aria-label="Menu aplikasi"></nav>
+
+    <div class="side-foot">
+      <div class="side-progress-head">
+        <span class="label">Level 9</span>
+        <b>2.480 XP</b>
+      </div>
+      <div class="hairline"><span style="width:27%"></span></div>
+      <div class="side-meta"><span>🔥 12 hari</span><span>14 / 20 aksi</span></div>
+      <div class="hairline"><span style="width:70%;background:var(--moss)"></span></div>
+      <p class="side-note">N5 · Dasar — progres tersimpan di browser ini.</p>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" hidden></div>
+
+  <!-- ---------- Main ---------- -->
+  <div class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="icon-btn menu-btn" id="menuBtn" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+        <a class="topbar-brand" href="#dasbor"><span class="seal" style="width:28px;height:28px;font-size:15px" lang="ja" aria-hidden="true">学</span>Manabi</a>
+        <span class="crumb" id="crumb"><b>N5</b> · Dasbor</span>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="Ganti tema terang atau gelap">
+          <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <span id="themeLabel">Gelap</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="view" id="view" tabindex="-1"></main>
+
+    <footer class="foot">
+      <span>Manabi · 学び — arah desain 「余白」Ma. Materi N5 asli dari aplikasi.</span>
+      <span><a href="#modul/tentang">Tentang</a> · <a href="#modul/pengaturan">Pengaturan</a> · <a href="#modul/kamus">Kamus</a></span>
+    </footer>
+  </div>
+</div>
+
+<!-- ---------- Bottom nav (mobile) ---------- -->
+<nav class="bottom-nav" aria-label="Navigasi bawah">
+  <a class="bn-item" href="#dasbor" data-bn="dasbor"><span class="bn-glyph" lang="ja" aria-hidden="true">学</span>Dasbor</a>
+  <button class="bn-item" type="button" data-open-drawer="1"><span class="bn-glyph" lang="ja" aria-hidden="true">あ</span>Materi</button>
+  <a class="bn-item" href="#latihan" data-bn="latihan"><span class="bn-glyph" lang="ja" aria-hidden="true">問</span>Latihan</a>
+  <a class="bn-item" href="#modul/ulasan" data-bn="ulasan"><span class="bn-glyph" lang="ja" aria-hidden="true">復</span>Ulasan</a>
+  <button class="bn-item" type="button" data-open-drawer="1"><span class="bn-glyph" lang="ja" aria-hidden="true">他</span>Lainnya</button>
+</nav>
+
+<script>
+/* ==================================================================
+   1. KONFIGURASI KURIKULUM — satu sumber data untuk menu & level.
+      Di aplikasi final ini pindah ke packages/content/src/curriculum.ts.
+   ================================================================== */
+const CURRICULUM = {
+  app: { name: "Manabi", jp: "学び" },
+  levels: [
+    { id: "N5", name: "Dasar", jp: "初級", status: "aktif" },
+    { id: "N4", name: "Dasar Lanjut", jp: "初中級", status: "segera" },
+    { id: "N3", name: "Menengah", jp: "中級", status: "segera" },
+    { id: "N2", name: "Menengah Atas", jp: "中上級", status: "segera" },
+    { id: "N1", name: "Mahir", jp: "上級", status: "segera" }
+  ],
+  sections: [
+    {
+      id: "utama", label: "", jp: "",
+      items: [
+        { id: "dasbor", label: "Dasbor", jp: "学", glyph: "学", href: "#dasbor", match: ["dasbor"], desc: "Ringkasan hari ini", meta: "" }
+      ]
+    },
+    {
+      id: "materi", label: "Materi", jp: "学び",
+      items: [
+        {
+          id: "aksara", label: "Kana & Menulis", jp: "かな・書", glyph: "あ", href: "#modul/kana-menulis",
+          match: ["modul/kana-menulis", "modul/kana", "modul/menulis"],
+          desc: "Hiragana, katakana, dan latihan menggores.", meta: "208 huruf",
+          progress: [208, 208],
+          sub: [
+            { id: "kana", label: "Tabel Kana", href: "#modul/kana" },
+            { id: "menulis", label: "Latihan Menulis", href: "#modul/menulis" }
+          ]
+        },
+        {
+          id: "kosakata", label: "Kosakata", jp: "語彙", glyph: "語", href: "#modul/kosakata",
+          match: ["modul/kosakata"], desc: "Kata sehari-hari dengan ulangan berjadwal.", meta: "708 kata",
+          progress: [318, 708], due: 14
+        },
+        {
+          id: "kanji", label: "Kanji & Bacaan", jp: "漢字", glyph: "漢", href: "#modul/kanji",
+          match: ["modul/kanji", "modul/bacaan"], desc: "Bentuk, arti, dan perubahan bacaan.", meta: "111 kanji",
+          progress: [47, 111], due: 6,
+          sub: [
+            { id: "kanji-dasar", label: "Kanji", href: "#modul/kanji" },
+            { id: "bacaan", label: "Perubahan Bacaan", href: "#modul/bacaan" }
+          ]
+        },
+        {
+          id: "tata-bahasa", label: "Tata Bahasa", jp: "文法", glyph: "文", href: "#modul/tata-bahasa",
+          match: ["modul/tata-bahasa"], desc: "Pola kalimat dengan contoh yang bisa diputar.", meta: "48 pola",
+          progress: [21, 48], due: 4
+        },
+        {
+          id: "partikel", label: "Partikel", jp: "助詞", glyph: "助", href: "#materi/partikel",
+          match: ["materi/partikel"], desc: "Penanda fungsi kata dan pasangan yang tertukar.", meta: "18 partikel",
+          progress: [9, 18]
+        },
+        {
+          id: "mendengar", label: "Mendengar", jp: "聴解", glyph: "聴", href: "#modul/mendengar",
+          match: ["modul/mendengar"], desc: "Dialog dengan tiga kecepatan.", meta: "12 dialog",
+          progress: [5, 12]
+        },
+        {
+          id: "membaca", label: "Membaca", jp: "読解", glyph: "読", href: "#modul/membaca",
+          match: ["modul/membaca"], desc: "Bacaan berfurigana dan pertanyaan pemahaman.", meta: "10 bacaan",
+          progress: [4, 10]
+        },
+        {
+          id: "konteks", label: "Konteks & Etiket", jp: "敬語", glyph: "敬", href: "#modul/konteks",
+          match: ["modul/konteks"], desc: "Tingkat bicara, keigo, dan kebiasaan Jepang.", meta: "5 topik"
+        }
+      ]
+    },
+    {
+      id: "latihan", label: "Latihan", jp: "練習",
+      items: [
+        {
+          id: "ulasan", label: "Ulasan", jp: "復習", glyph: "復", href: "#modul/ulasan",
+          match: ["modul/ulasan"], desc: "Antrean kartu lintas dek yang jatuh tempo.", meta: "24 jatuh tempo"
+        },
+        {
+          id: "latihan-soal", label: "Latihan Soal", jp: "練習", glyph: "問", href: "#latihan",
+          match: ["latihan"], desc: "Soal acak dari Bank Soal, dengan pembahasan.", meta: "10 soal"
+        },
+        {
+          id: "ujian", label: "Simulasi Ujian", jp: "模擬", glyph: "試", href: "#modul/ujian",
+          match: ["modul/ujian"], desc: "JLPT N5 dan JFT-Basic berdurasi.", meta: "2 paket"
+        }
+      ]
+    },
+    {
+      id: "referensi", label: "Referensi", jp: "資料",
+      items: [
+        { id: "kamus", label: "Kamus", jp: "辞書", glyph: "辞", href: "#modul/kamus", match: ["modul/kamus"], desc: "Pencarian lintas materi.", meta: "" },
+        { id: "pengaturan", label: "Pengaturan", jp: "設定", glyph: "設", href: "#modul/pengaturan", match: ["modul/pengaturan"], desc: "Tema, target, suara, furigana.", meta: "" },
+        { id: "tentang", label: "Tentang", jp: "案内", glyph: "情", href: "#modul/tentang", match: ["modul/tentang"], desc: "Metodologi, kredit, dan lisensi.", meta: "" }
+      ]
+    }
+  ]
+};
+
+/* ==================================================================
+   2. DATA MATERI — diambil dari packages/content (N5).
+   ================================================================== */
+const PARTICLES = [
+  { id:"wa", char:"は", romaji:"wa", tier:"dasar", role:"penanda topik", exp:"Menandai topik yang sedang dibicarakan — biasanya hal yang sudah diketahui pendengar.", examples:[{jp:"わたしは学生です。",id:"Saya pelajar.",note:"Topiknya “saya”, lalu dijelaskan status saya."},{jp:"この店は安いです。",id:"Toko ini murah."}], caution:"Jangan tertukar dengan が: は untuk topik yang sudah jelas, が untuk pelaku baru." },
+  { id:"ga", char:"が", romaji:"ga", tier:"dasar", role:"penanda subjek", exp:"Menandai subjek, terutama informasi baru atau pelaku yang ingin ditekankan.", examples:[{jp:"ねこがいます。",id:"Ada kucing."},{jp:"だれが来ますか。",id:"Siapa yang datang?"}], caution:"好き, 分かる, 上手 memakai が untuk hal yang disukai/dipahami, bukan を." },
+  { id:"wo", char:"を", romaji:"o", tier:"dasar", role:"penanda objek langsung", exp:"Menandai objek langsung dari kata kerja — apa yang dikenai tindakan.", examples:[{jp:"ごはんを食べます。",id:"Saya makan nasi."},{jp:"本を読みます。",id:"Saya membaca buku."}], caution:"Kata kerja yang meninggalkan tempat juga memakai を: 家を出ます." },
+  { id:"ni", char:"に", romaji:"ni", tier:"dasar", role:"waktu, tujuan, keberadaan", exp:"Menandai titik waktu, tujuan perpindahan, dan tempat keberadaan dengan います / あります.", examples:[{jp:"七時に起きます。",id:"Saya bangun jam tujuh."},{jp:"家にねこがいます。",id:"Di rumah ada kucing."}], caution:"Tempat berlangsungnya aktivitas memakai で, bukan に." },
+  { id:"de", char:"で", romaji:"de", tier:"dasar", role:"tempat aktivitas, alat", exp:"Menandai tempat terjadinya tindakan dan alat atau cara melakukan sesuatu.", examples:[{jp:"学校で勉強します。",id:"Saya belajar di sekolah."},{jp:"電車で行きます。",id:"Pergi dengan kereta."}], caution:"Jangan pakai で untuk keberadaan: 家にいます, bukan 家でいます." },
+  { id:"e", char:"へ", romaji:"e", tier:"inti", role:"arah tujuan", exp:"Menandai arah perpindahan; lebih menekankan arah daripada titik akhir.", examples:[{jp:"日本へ行きます。",id:"Saya pergi ke Jepang."},{jp:"学校へ来ました。",id:"Saya datang ke sekolah."}], caution:"Untuk tujuan perpindahan, に dan へ hampir selalu bisa saling menggantikan." },
+  { id:"no", char:"の", romaji:"no", tier:"inti", role:"kepemilikan & penghubung", exp:"Menghubungkan dua kata benda: kepemilikan, asal, bahan, atau keterangan.", examples:[{jp:"わたしの本です。",id:"Ini buku saya."},{jp:"日本語の先生。",id:"Guru bahasa Jepang."}], caution:"Urutan penting: pemilik dulu, baru の, baru benda yang dimiliki." },
+  { id:"to", char:"と", romaji:"to", tier:"inti", role:"dan, bersama", exp:"Menyambung dua kata benda secara lengkap, atau menandai lawan melakukan sesuatu bersama.", examples:[{jp:"友だちと映画を見ます。",id:"Menonton film bersama teman."},{jp:"パンとたまごを買いました。",id:"Membeli roti dan telur."}], caution:"" },
+  { id:"mo", char:"も", romaji:"mo", tier:"inti", role:"juga", exp:"Menggantikan は atau が untuk menyatakan “juga”.", examples:[{jp:"わたしも学生です。",id:"Saya juga pelajar."},{jp:"日曜日も働きます。",id:"Hari Minggu pun saya bekerja."}], caution:"も tidak digabung dengan は; pilih salah satu." },
+  { id:"ka", char:"か", romaji:"ka", tier:"inti", role:"pertanyaan & pilihan", exp:"Di akhir kalimat menjadikannya pertanyaan; di tengah kalimat menghubungkan pilihan.", examples:[{jp:"学生ですか。",id:"Apakah Anda pelajar?"},{jp:"コーヒーか紅茶を飲みます。",id:"Minum kopi atau teh."}], caution:"Dalam percakapan santai, か di akhir kalimat bisa terdengar tegas." },
+  { id:"kara", char:"から", romaji:"kara", tier:"menengah", role:"dari, karena", exp:"Menandai titik awal waktu/tempat, atau menyatakan sebab.", examples:[{jp:"九時から勉強します。",id:"Belajar mulai jam sembilan."},{jp:"雨だから行きません。",id:"Karena hujan, saya tidak pergi."}], caution:"" },
+  { id:"made", char:"まで", romaji:"made", tier:"menengah", role:"sampai", exp:"Menandai batas akhir waktu atau tempat; sering berpasangan dengan から.", examples:[{jp:"五時まで働きます。",id:"Bekerja sampai jam lima."},{jp:"駅まで歩きます。",id:"Berjalan sampai stasiun."}], caution:"" },
+  { id:"ya", char:"や", romaji:"ya", tier:"menengah", role:"dan (antara lain)", exp:"Menyebut beberapa contoh dari sekumpulan benda, dengan nuansa “antara lain”.", examples:[{jp:"本やペンを買います。",id:"Membeli buku, pulpen, dan lain-lain."},{jp:"りんごやバナナがあります。",id:"Ada apel, pisang, dan sebagainya."}], caution:"Kalau daftarnya memang hanya dua dan lengkap, pakai と." },
+  { id:"ne", char:"ね", romaji:"ne", tier:"menengah", role:"meminta persetujuan", exp:"Di akhir kalimat mencari persetujuan pendengar, seperti “ya kan?”.", examples:[{jp:"いいですね。",id:"Bagus, ya."},{jp:"今日は寒いですね。",id:"Hari ini dingin, ya."}], caution:"" },
+  { id:"yo", char:"よ", romaji:"yo", tier:"menengah", role:"penegasan & informasi baru", exp:"Menegaskan pendapat atau memberi tahu hal yang belum diketahui pendengar.", examples:[{jp:"おいしいですよ。",id:"Enak, lho."},{jp:"明日は休みですよ。",id:"Besok libur, lho."}], caution:"" },
+  { id:"yori", char:"より", romaji:"yori", tier:"menengah", role:"perbandingan", exp:"Menandai pembanding: A は B より … = A lebih … daripada B.", examples:[{jp:"夏より冬が好きです。",id:"Lebih suka musim dingin daripada musim panas."},{jp:"今年は去年より暑いです。",id:"Tahun ini lebih panas daripada tahun lalu."}], caution:"" },
+  { id:"hodo", char:"ほど", romaji:"hodo", tier:"menengah", role:"sebatas, sejauh", exp:"Menyatakan tingkat atau perkiraan; dalam bentuk negatif berarti “tidak se…”.", examples:[{jp:"駅まで十分ほどかかります。",id:"Ke stasiun sekitar sepuluh menit."},{jp:"それほど高くないです。",id:"Tidak semahal itu."}], caution:"Pola “A は B ほど … ない” sering tertukar dengan より." },
+  { id:"dake", char:"だけ", romaji:"dake", tier:"menengah", role:"hanya", exp:"Menandai batas: “hanya” atau “sekadar”.", examples:[{jp:"水だけ飲みます。",id:"Saya hanya minum air."},{jp:"少しだけ休みます。",id:"Saya beristirahat sebentar saja."}], caution:"だけ menekankan batas atas; しか dipakai dengan bentuk negatif." }
+];
+
+const COMPARISONS = [
+  {
+    title:"は vs が", q:"Topik yang sudah dibicarakan, atau pelaku yang ingin ditekankan?",
+    left:{char:"は", summary:"Topik yang sudah diketahui pendengar. Fokus ada pada keterangan setelahnya.", examples:[{jp:"わたしは学生です。",id:"Saya pelajar."}]},
+    right:{char:"が", summary:"Subjek/pelaku, terutama informasi baru atau yang ingin ditekankan.", examples:[{jp:"田中さんが先生です。",id:"Tanaka-lah yang guru."}]},
+    takeaway:"Informasi pelaku baru → が. Topik yang sudah sama-sama tahu → は."
+  },
+  {
+    title:"に vs で", q:"Tempat keberadaan, atau tempat berlangsungnya aktivitas?",
+    left:{char:"に", summary:"Titik keberadaan dengan います / あります, dan titik waktu.", examples:[{jp:"学校にいます。",id:"Saya berada di sekolah."}]},
+    right:{char:"で", summary:"Tempat terjadinya aktivitas, serta alat atau cara.", examples:[{jp:"学校で勉強します。",id:"Belajar di sekolah."}]},
+    takeaway:"Ada di sana? に. Sedang melakukan sesuatu di sana? で."
+  },
+  {
+    title:"と vs や", q:"Daftar lengkap, atau beberapa contoh saja?",
+    left:{char:"と", summary:"Menyambung daftar yang lengkap: hanya itu.", examples:[{jp:"パンとたまごを買いました。",id:"Membeli roti dan telur."}]},
+    right:{char:"や", summary:"Menyebut sebagian contoh: “antara lain”.", examples:[{jp:"パンやたまごを買いました。",id:"Membeli roti, telur, dan lain-lain."}]},
+    takeaway:"Lengkap dan hanya itu → と. Contoh dan masih ada yang lain → や."
+  }
+];
+
+const PITFALLS = [
+  {
+    title:"好き dan 分かる memakai が", summary:"“Menyukai” terasa seperti tindakan, jadi pembelajar cenderung memakai を. Dalam bahasa Jepang, 好き, 分かる, 上手 adalah keadaan, sehingga penandanya が.",
+    wrong:{jp:"音楽を好きです。",id:"Saya suka musik."}, right:{jp:"音楽が好きです。",id:"Saya suka musik."},
+    note:"Kalau ingin memakai を, ubah kata kerjanya: 音楽を好む (lebih formal)."
+  },
+  {
+    title:"Keberadaan memakai に", summary:"Tempat aktivitas memakai で, tetapi tempat keberadaan (います / あります) memakai に. Ini kesalahan paling umum.",
+    wrong:{jp:"家でねこがいます。",id:"Di rumah ada kucing."}, right:{jp:"家にねこがいます。",id:"Di rumah ada kucing."},
+    note:"Uji cepat: kalau ada います/あります dan tidak ada tindakan, pakai に."
+  }
+];
+
+const QUIZ = [
+  { kind:"Kosakata", prompt:"学生", sub:"Apa arti kata ini?", options:["pelajar / mahasiswa","guru / dosen","sekolah","sahabat"], answer:0, explanation:"学生 (がくせい) berarti pelajar atau mahasiswa. Contoh: 彼は大学生です。— Dia adalah mahasiswa." },
+  { kind:"Kanji", prompt:"水", sub:"4 goresan · radikal 水 — apa arti kanji ini?", options:["air","api","tanah","kayu"], answer:0, explanation:"水 berarti air. Kun'yomi みず; on'yomi スイ. Contoh: 水を飲みます。— Minum air." },
+  { kind:"Tata bahasa", prompt:"私は学生です。", sub:"Pola tata bahasa mana yang dipakai kalimat ini?", options:["A は B です。","A が B を …","A に B が あります","A で B を …"], answer:0, explanation:"です adalah kopula sopan (“adalah”). Pola nominal: A は B です。" },
+  { kind:"Partikel", prompt:"毎日、七時 ___ 起きます。", sub:"Pilih partikel yang tepat untuk mengisi celah.", options:["に","で","を","へ"], answer:0, explanation:"Waktu yang spesifik (jam, tanggal) memakai に. で untuk tempat aktivitas atau alat." },
+  { kind:"Kosakata", prompt:"食べる", sub:"Apa arti kata ini?", options:["makan","minum","melihat","membaca"], answer:0, explanation:"食べる (たべる) berarti makan. Contoh: 朝ごはんを食べます。— Saya makan sarapan." },
+  { kind:"Kanji", prompt:"日", sub:"4 goresan · radikal 日 — apa arti kanji ini?", options:["hari / matahari","orang","air","buku"], answer:0, explanation:"日 berarti hari atau matahari. Contoh kata: 日本, 日曜日, 毎日." },
+  { kind:"Tata bahasa", prompt:"毎日日本語を勉強します。", sub:"Pola tata bahasa mana yang dipakai kalimat ini?", options:["kata kerja (stem) + ます / ません","A は B です。","A より B のほうが …","A を B に …"], answer:0, explanation:"ます adalah bentuk sopan kata kerja. Negatifnya ません; lampau ました." },
+  { kind:"Partikel", prompt:"学校 ___ 日本語を勉強します。", sub:"Pilih partikel yang tepat untuk mengisi celah.", options:["で","に","へ","を"], answer:0, explanation:"Belajar adalah aktivitas yang berlangsung di sekolah, jadi memakai で. に menandai keberadaan atau tujuan." },
+  { kind:"Kosakata", prompt:"学校", sub:"Apa arti kata ini?", options:["sekolah","rumah","stasiun","kantor"], answer:0, explanation:"学校 (がっこう) berarti sekolah. Contoh: 毎日学校へ行きます。— Setiap hari pergi ke sekolah." },
+  { kind:"Kanji", prompt:"人", sub:"2 goresan · radikal 人 — apa arti kanji ini?", options:["orang","masuk","keluar","besar"], answer:0, explanation:"人 berarti orang. On'yomi ジン・ニン; kun'yomi ひと. Contoh: 日本人, 三人." }
+];
+
+/* ==================================================================
+   3. STATE & UTIL
+   ================================================================== */
+const state = {
+  route: "dasbor",
+  tier: "semua",
+  qIndex: 0,
+  order: QUIZ.slice(),
+  selected: null,
+  checked: false,
+  score: 0,
+  done: false,
+  mode: "Campuran"
+};
+
+const $ = (sel, root) => (root || document).querySelector(sel);
+const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
+
+function esc(text) {
+  return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+function shuffle(arr) {
+  const out = arr.slice();
+  for (let i = out.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const tmp = out[i]; out[i] = out[j]; out[j] = tmp;
+  }
+  return out;
+}
+function currentRoute() {
+  const raw = (location.hash || "#dasbor").replace(/^#/, "");
+  if (!raw) return "dasbor";
+  if (raw === "dasbor" || raw === "latihan" || raw === "materi/partikel") return raw;
+  if (raw.indexOf("modul/") === 0) return raw;
+  return "dasbor";
+}
+function routeLabel(route) {
+  if (route === "dasbor") return "Dasbor";
+  if (route === "latihan") return "Latihan Soal";
+  if (route === "materi/partikel") return "Partikel";
+  if (route.indexOf("modul/") === 0) {
+    const id = route.slice(6);
+    const found = findModule(id);
+    return found ? found.label : "Modul";
+  }
+  return "Dasbor";
+}
+function findModule(id) {
+  for (const section of CURRICULUM.sections) {
+    for (const item of section.items) {
+      if (item.match.indexOf("modul/" + id) >= 0 || item.id === id) return item;
+      if (item.sub) {
+        const hit = item.sub.find((s) => s.href === "#modul/" + id);
+        if (hit) return { id: id, label: hit.label, desc: item.desc, glyph: item.glyph, parent: item };
+      }
+    }
+  }
+  return null;
+}
+function toast(message) {
+  const old = $(".toast");
+  if (old) old.remove();
+  const el = document.createElement("div");
+  el.className = "toast";
+  el.setAttribute("role", "status");
+  el.textContent = message;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2400);
+}
+function speak(text) {
+  if (!("speechSynthesis" in window)) { toast("Browser ini tidak mendukung pelafalan."); return; }
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "ja-JP";
+  u.rate = 0.9;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(u);
+}
+
+/* ==================================================================
+   4. TEMA
+   ================================================================== */
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  try { localStorage.setItem("manabi-preview-theme", theme); } catch (e) {}
+  const label = $("#themeLabel");
+  const icon = $("#themeIcon");
+  if (label) label.textContent = theme === "dark" ? "Terang" : "Gelap";
+  if (icon) icon.innerHTML = theme === "dark"
+    ? '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'
+    : '<path d="M20.5 14.3A8.5 8.5 0 0 1 9.7 3.5 8.5 8.5 0 1 0 20.5 14.3Z"/>';
+  const btn = $("#themeBtn");
+  if (btn) btn.setAttribute("aria-label", theme === "dark" ? "Ganti ke tema terang" : "Ganti ke tema gelap");
+}
+function initTheme() {
+  let stored = null;
+  try { stored = localStorage.getItem("manabi-preview-theme"); } catch (e) {}
+  const initial = stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  applyTheme(initial);
+  const btn = $("#themeBtn");
+  if (btn) btn.addEventListener("click", () => {
+    applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
+  });
+}
+
+/* ==================================================================
+   5. SIDEBAR & NAV
+   ================================================================== */
+function isItemActive(item) {
+  return item.match.indexOf(state.route) >= 0;
+}
+function renderLevels() {
+  const row = $("#levelRow");
+  if (!row) return;
+  row.innerHTML = CURRICULUM.levels.map((level) => {
+    const active = level.status === "aktif";
+    return '<button class="level-btn ' + (active ? "active" : "soon") + '" type="button" data-level="' + level.id + '" ' +
+      (active ? 'aria-pressed="true"' : 'aria-pressed="false"') + ' title="' + (active ? "Level " + level.id + " aktif" : "Level " + level.id + " — segera") + '">' + level.id + '</button>';
+  }).join("");
+  $$("[data-level]", row).forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (btn.classList.contains("soon")) toast("Materi " + btn.dataset.level + " sedang disusun. Mulai dari N5 dulu, ya.");
+    });
+  });
+}
+function renderNav() {
+  const nav = $("#nav");
+  if (!nav) return;
+  nav.innerHTML = CURRICULUM.sections.map((section) => {
+    const heading = section.label
+      ? '<p class="nav-label"><span>' + section.label + '</span><span class="jp" lang="ja">' + section.jp + '</span></p>'
+      : "";
+    const items = section.items.map((item) => {
+      const active = isItemActive(item);
+      const subs = item.sub
+        ? '<div class="nav-sub">' + item.sub.map((sub) => {
+            const subActive = state.route === sub.href.replace(/^#/, "");
+            return '<a href="' + sub.href + '"' + (subActive ? ' class="active" aria-current="page"' : "") + '>' + sub.label + '</a>';
+          }).join("") + '</div>'
+        : "";
+      return '<li>' +
+        '<a class="nav-item' + (active ? " active" : "") + '" href="' + item.href + '"' + (active ? ' aria-current="page"' : "") + '>' +
+          '<span class="nav-glyph" lang="ja" aria-hidden="true">' + item.glyph + '</span>' +
+          '<span class="nav-text">' + item.label + '</span>' +
+          (item.due ? '<span class="nav-meta">' + item.due + '</span>' : "") +
+        '</a>' + subs +
+      '</li>';
+    }).join("");
+    return '<div class="nav-group">' + heading + '<ul class="nav-list">' + items + '</ul></div>';
+  }).join("");
+}
+function updateChrome() {
+  const crumb = $("#crumb");
+  if (crumb) crumb.innerHTML = '<b>N5</b> · ' + esc(routeLabel(state.route));
+  $$(".bn-item").forEach((el) => {
+    const key = el.dataset.bn;
+    const active = (key === "dasbor" && state.route === "dasbor") ||
+      (key === "latihan" && state.route === "latihan") ||
+      (key === "ulasan" && state.route === "modul/ulasan");
+    el.classList.toggle("active", !!active);
+    if (active) el.setAttribute("aria-current", "page"); else el.removeAttribute("aria-current");
+  });
+}
+
+/* ==================================================================
+   6. ROUTER
+   ================================================================== */
+function render() {
+  state.route = currentRoute();
+  renderNav();
+  renderLevels();
+  updateChrome();
+  const view = $("#view");
+  if (!view) return;
+  if (state.route === "dasbor") view.innerHTML = viewDashboard();
+  else if (state.route === "materi/partikel") view.innerHTML = viewPartikel();
+  else if (state.route === "latihan") view.innerHTML = viewLatihan();
+  else view.innerHTML = viewPlaceholder(state.route.replace(/^modul\//, ""));
+  bindView();
+  closeDrawer();
+  window.scrollTo({ top: 0, behavior: "auto" });
+  view.focus({ preventScroll: true });
+}
+
+/* ==================================================================
+   7. HALAMAN: DASBOR
+   ================================================================== */
+const WEEK = [
+  { day: "Sen", value: 12 }, { day: "Sel", value: 20 }, { day: "Rab", value: 0 },
+  { day: "Kam", value: 18 }, { day: "Jum", value: 25 }, { day: "Sab", value: 14 },
+  { day: "Min", value: 14, today: true }
+];
+const DECKS = [
+  { glyph: "語", title: "Kosakata", sub: "318 dari 708 kata pernah diulas", due: 14, pct: 45 },
+  { glyph: "漢", title: "Kanji", sub: "47 dari 111 kanji pernah diulas", due: 6, pct: 42 },
+  { glyph: "文", title: "Tata bahasa", sub: "21 dari 48 pola dipelajari", due: 4, pct: 44 },
+  { glyph: "敬", title: "Konteks", sub: "9 dari 18 kartu · 3 kartu baru", due: 0, pct: 50 }
+];
+const HISTORY = [
+  { label: "Latihan Campuran", date: "Hari ini · 21.14", score: "9/12", pct: 75 },
+  { label: "Latihan Partikel", date: "Kemarin · 19.02", score: "8/10", pct: 80 },
+  { label: "Latihan Kanji", date: "10 Nov · 07.40", score: "7/8", pct: 88 },
+  { label: "Tata Bahasa", date: "9 Nov · 20.11", score: "5/6", pct: 83 },
+  { label: "Latihan Membaca", date: "8 Nov · 18.25", score: "4/5", pct: 80 }
+];
+
+function moduleRows() {
+  const items = CURRICULUM.sections.find((s) => s.id === "materi").items;
+  return items.map((item, index) => {
+    const pct = item.progress ? Math.round(item.progress[0] / Math.max(1, item.progress[1]) * 100) : null;
+    return '<a class="module-row" href="' + item.href + '">' +
+      '<span class="module-num">' + String(index + 1).padStart(2, "0") + '</span>' +
+      '<span class="module-body">' +
+        '<span class="module-title">' + item.label + '<span class="jp" lang="ja">' + item.jp + '</span></span>' +
+        '<span class="module-desc">' + item.desc + '</span>' +
+        (pct !== null ? '<span class="module-progress"><span class="hairline"><span style="width:' + pct + '%"></span></span><span class="module-pct">' + pct + '%</span></span>' : "") +
+      '</span>' +
+      '<span class="module-meta">' +
+        (item.due ? '<span class="due-badge">' + item.due + " ulang</span>" : '<span class="module-count">' + item.meta + '</span>') +
+        '<span class="arrow-mini">→</span>' +
+      '</span>' +
+    '</a>';
+  }).join("");
+}
+function viewDashboard() {
+  const maxBar = Math.max.apply(null, WEEK.map((d) => d.value));
+  const total = WEEK.reduce((sum, d) => sum + d.value, 0);
+  return '' +
+  '<div class="hero">' +
+    '<div class="hero-main">' +
+      '<div class="eyebrow"><span class="level-tag">N5</span><span>Kamis, 12 November 2026</span></div>' +
+      '<h1 class="hero-title">Selamat belajar lagi<em>.</em></h1>' +
+      '<p class="lede">Ada <strong>24 kartu</strong> yang jatuh tempo dan <strong>32 kartu baru</strong> menunggu di level N5. Sepuluh menit hari ini cukup untuk menjaga semuanya tetap tinggal.</p>' +
+      '<div class="actions">' +
+        '<a class="btn btn-primary" href="#modul/ulasan">Mulai ulasan <span class="arrow" aria-hidden="true">→</span></a>' +
+        '<a class="btn btn-outline" href="#latihan">Latihan cepat</a>' +
+        '<button class="btn btn-ghost" type="button" data-speak="おかえりなさい">' +
+          '<span lang="ja" aria-hidden="true">音</span> Dengar sapaan' +
+        '</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="hero-side">' +
+      '<aside class="focus" aria-label="Fokus hari ini">' +
+        '<p class="label">Fokus hari ini</p>' +
+        '<div class="focus-num"><b>24</b><span>kartu jatuh tempo</span></div>' +
+        '<p class="focus-copy">Kosakata 14 · Kanji 6 · Tata bahasa 4. Ulasan singkat hari ini menjaga materi lama tetap tinggal.</p>' +
+        '<div class="hairline"><span style="width:60%"></span></div>' +
+        '<div class="focus-foot"><span>Target harian</span><span class="tnum">14 / 20 aksi</span></div>' +
+        '<a class="focus-link" href="#modul/ulasan">Buka antrean <span aria-hidden="true">→</span></a>' +
+      '</aside>' +
+    '</div>' +
+  '</div>' +
+
+  '<div class="stats" aria-label="Ringkasan belajar">' +
+    stat("Streak", "12", "hari", "Terakhir belajar: hari ini") +
+    stat("Level XP", "2.480", "XP", "Level 9 · 80 / 300 menuju 10") +
+    stat("Akurasi", "86", "%", "Dari 318 ulasan kosakata") +
+    stat("Kartu baru", "32", "kartu", "Siap dipelajari kapan saja") +
+  '</div>' +
+
+  '<div class="split">' +
+    '<section class="section" style="margin-top:0" aria-labelledby="actTitle">' +
+      '<div class="section-head"><h2 class="section-title" id="actTitle">Aktivitas 7 hari</h2><span class="panel-meta">' + total + ' aksi</span></div>' +
+      '<div class="panel">' +
+        '<div class="bars" role="img" aria-label="Aktivitas tujuh hari terakhir, total ' + total + ' aksi">' +
+          WEEK.map((d) => {
+            const h = d.value === 0 ? 3 : Math.max(8, Math.round(d.value / maxBar * 100));
+            return '<div class="bar-col' + (d.today ? " today" : "") + '">' +
+              '<span class="bar-val">' + (d.value || "") + '</span>' +
+              '<div class="bar' + (d.today ? " today" : "") + '" style="height:' + h + '%"></div>' +
+              '<span class="bar-label">' + d.day + '</span>' +
+            '</div>';
+          }).join("") +
+        '</div>' +
+        '<div class="goal-row"><span>Target harian</span><b>14 / 20 aksi</b></div>' +
+      '</div>' +
+    '</section>' +
+    '<section class="section" style="margin-top:0" aria-labelledby="dueTitle">' +
+      '<div class="section-head"><h2 class="section-title" id="dueTitle">Ulasan menunggu</h2><span class="panel-meta">24 kartu</span></div>' +
+      '<div class="panel">' +
+        '<div class="deck-list">' +
+          DECKS.map((d) => '<div class="deck-row">' +
+            '<span class="deck-glyph" lang="ja" aria-hidden="true">' + d.glyph + '</span>' +
+            '<span><span class="deck-title">' + d.title + '</span><span class="deck-sub">' + d.sub + '</span>' +
+              '<span class="hairline deck-bar"><span style="width:' + d.pct + '%"></span></span></span>' +
+            '<span class="deck-due' + (d.due === 0 ? " zero" : "") + '"><b>' + d.due + '</b><span>' + (d.due === 0 ? "bersih" : "jatuh tempo") + '</span></span>' +
+          '</div>').join("") +
+        '</div>' +
+        '<div style="margin-top:14px"><a class="focus-link" href="#modul/ulasan">Buka semua antrean →</a></div>' +
+      '</div>' +
+    '</section>' +
+  '</div>' +
+
+  '<section class="section" aria-labelledby="mapTitle">' +
+    '<div class="section-head">' +
+      '<h2 class="section-title" id="mapTitle">Lanjut belajar<span class="jp" lang="ja">学び</span></h2>' +
+      '<span class="section-note">Delapan modul materi N5 — semuanya terbuka langsung, tanpa urutan yang dikunci.</span>' +
+    '</div>' +
+    '<div class="module-grid">' + moduleRows() + '</div>' +
+  '</section>' +
+
+  '<div class="split">' +
+    '<section class="section" style="margin-top:0" aria-labelledby="dailyTitle">' +
+      '<div class="section-head"><h2 class="section-title" id="dailyTitle">Kartu hari ini</h2><span class="panel-meta">Bergilir tiap hari</span></div>' +
+      '<div class="daily-card">' +
+        '<div class="daily-glyph" lang="ja">日</div>' +
+        '<div>' +
+          '<p class="daily-kicker">Kanji · N5</p>' +
+          '<p class="daily-meaning">hari / matahari</p>' +
+          '<div class="daily-reading"><span><b>On</b> ニチ・ジツ</span><span><b>Kun</b> ひ・か</span><span><b>4</b> goresan</span><span><b>Radikal</b> 日</span></div>' +
+          '<p class="daily-words" lang="ja">日本 · 日曜日 · 毎日</p>' +
+          '<div class="daily-actions"><a class="focus-link" href="#modul/kanji">Buka kanji →</a><button class="audio-btn" type="button" data-speak="日本、日曜日、毎日" aria-label="Putar pelafalan contoh kata">音</button></div>' +
+        '</div>' +
+      '</div>' +
+    '</section>' +
+    '<section class="section" style="margin-top:0" aria-labelledby="histTitle">' +
+      '<div class="section-head"><h2 class="section-title" id="histTitle">Riwayat latihan</h2><a class="section-link" href="#latihan">Latihan lagi →</a></div>' +
+      '<div class="panel" style="padding-top:12px">' +
+        '<table class="tbl"><thead><tr><th>Sesi</th><th>Tanggal</th><th>Skor</th></tr></thead><tbody>' +
+          HISTORY.map((h) => '<tr><td>' + h.label + '</td><td class="t-date">' + h.date + '</td><td class="t-score">' + h.score + ' <span class="score ' + (h.pct >= 80 ? "good" : h.pct >= 60 ? "mid" : "low") + '">' + h.pct + '%</span></td></tr>').join("") +
+        '</tbody></table>' +
+      '</div>' +
+    '</section>' +
+  '</div>' +
+
+  '<section class="section" aria-labelledby="pathTitle">' +
+    '<div class="section-head"><h2 class="section-title" id="pathTitle">Jalur level</h2><span class="section-note">Satu level, satu warna, satu progres. N4–N1 menyusul.</span></div>' +
+    '<div class="levels-path">' +
+      CURRICULUM.levels.map((level, i) => '<div class="level-step ' + (level.status === "aktif" ? "active" : "soon") + '">' +
+        '<button type="button" data-level="' + level.id + '"><span class="lv">' + level.id + '</span><span class="lv-name">' + level.name + ' <span lang="ja" class="jp">' + level.jp + '</span></span><span class="lv-status">' + (level.status === "aktif" ? "Sedang dipelajari" : "Segera") + '</span></button>' +
+      '</div>').join("") +
+    '</div>' +
+  '</section>' +
+
+  '<footer class="foot"><span>Progres disimpan di localStorage browser ini · tanpa akun.</span><span>学びは一日にして成らず.</span></footer>';
+}
+function stat(label, value, unit, hint) {
+  return '<div class="stat"><p class="stat-label">' + label + '</p><p class="stat-value">' + value + (unit ? ' <small>' + unit + '</small>' : "") + '</p><p class="stat-hint">' + hint + '</p></div>';
+}
+
+/* ==================================================================
+   8. HALAMAN: PARTIKEL
+   ================================================================== */
+function particleCard(p, index) {
+  const examples = p.examples.map((ex) => '<div class="example">' +
+    '<div><p class="example-jp" lang="ja">' + ex.jp + '</p><p class="example-id">' + ex.id + '</p>' +
+      (ex.note ? '<p class="example-note">' + ex.note + '</p>' : "") + '</div>' +
+    '<button class="audio-btn" type="button" data-speak="' + esc(ex.jp) + '" aria-label="Putar pelafalan: ' + esc(ex.jp) + '">音</button>' +
+  '</div>').join("");
+  return '<article class="p-card">' +
+    '<div class="p-top">' +
+      '<span class="p-char" lang="ja">' + p.char + '</span>' +
+      '<div class="p-meta"><p class="p-romaji">' + p.romaji + ' · ' + p.tier + '</p><p class="p-role">' + p.role + '</p></div>' +
+      '<span class="p-index">' + String(index + 1).padStart(2, "0") + '</span>' +
+    '</div>' +
+    '<p class="p-exp">' + p.exp + '</p>' +
+    '<div class="p-examples">' + examples + '</div>' +
+    (p.caution ? '<div class="caution"><b>Perhatikan</b>' + p.caution + '</div>' : "") +
+  '</article>';
+}
+function viewPartikel() {
+  const tiers = [
+    { key: "semua", label: "Semua", count: PARTICLES.length },
+    { key: "dasar", label: "Dasar", count: PARTICLES.filter((p) => p.tier === "dasar").length },
+    { key: "inti", label: "Inti", count: PARTICLES.filter((p) => p.tier === "inti").length },
+    { key: "menengah", label: "Menengah", count: PARTICLES.filter((p) => p.tier === "menengah").length }
+  ];
+  const shown = state.tier === "semua" ? PARTICLES : PARTICLES.filter((p) => p.tier === state.tier);
+  return '' +
+  '<div class="page-head">' +
+    '<div>' +
+      '<div class="eyebrow"><span class="level-tag">N5</span><span>Materi · Partikel</span><span>18 partikel</span></div>' +
+      '<h1 class="page-title">Partikel<span class="jp" lang="ja">助詞</span></h1>' +
+      '<p class="lede">Penanda fungsi kata yang membuat kalimat Jepang masuk akal. Dari topik は sampai nuansa akhir kalimat よ — lengkap dengan contoh, pasangan yang sering tertukar, dan jebakan yang benar-benar dialami pemula.</p>' +
+      '<div class="actions">' +
+        '<a class="btn btn-primary" href="#latihan">Latihan partikel <span aria-hidden="true">→</span></a>' +
+        '<button class="btn btn-outline" type="button" data-speak="助詞を勉強しましょう。">Dengar contoh</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="head-side"><span class="vertical-jp" lang="ja" aria-hidden="true">助詞は文の骨</span></div>' +
+  '</div>' +
+
+  '<div class="summary-strip">' +
+    '<div class="summary-cell"><p class="label">Total</p><p class="summary-big">18 <small>partikel</small></p><p class="summary-hint">6 pasangan tertukar · 4 jebakan khusus</p></div>' +
+    '<div class="summary-cell"><p class="label">Sebaran tingkat</p><div class="tier-bars">' +
+      [["dasar","Dasar",5],["inti","Inti",5],["menengah","Menengah",8]].map(([key,label,count]) => '<div class="tier-bar"><span>' + label + '</span><span class="hairline"><span style="width:' + (count / 18 * 100) + '%"></span></span><b>' + count + '</b></div>').join("") +
+    '</div></div>' +
+    '<div class="summary-cell"><p class="label">Sudah diulas</p><p class="summary-big">9 <small>dari 18</small></p><div class="hairline" style="margin-top:10px"><span style="width:50%"></span></div><p class="summary-hint">50% — ulangi lewat menu Ulasan.</p></div>' +
+  '</div>' +
+
+  '<div class="filters" role="group" aria-label="Saring partikel menurut tingkat">' +
+    tiers.map((t) => '<button class="filter-btn' + (state.tier === t.key ? " active" : "") + '" type="button" data-tier="' + t.key + '" aria-pressed="' + (state.tier === t.key) + '">' + t.label + '<span class="filter-count">' + t.count + '</span></button>').join("") +
+    '<span class="filters-hint">Tampil ' + shown.length + ' partikel</span>' +
+  '</div>' +
+
+  '<div class="particle-grid">' + shown.map((p, i) => particleCard(p, PARTICLES.indexOf(p))).join("") + '</div>' +
+
+  '<section class="section" aria-labelledby="cmpTitle">' +
+    '<div class="section-head"><h2 class="section-title" id="cmpTitle">Sering tertukar<span class="jp" lang="ja">混同</span></h2><span class="section-note">Pasangan yang paling sering membingungkan, dengan satu pertanyaan pembeda.</span></div>' +
+    '<div class="comparison-list">' +
+      COMPARISONS.map((c) => '<article class="comparison">' +
+        '<div class="comparison-head"><h3 class="comparison-title">' + c.title + '</h3><p class="comparison-q">' + c.q + '</p></div>' +
+        '<div class="comparison-body">' +
+          [c.left, c.right].map((side) => '<div class="comparison-side">' +
+            '<p class="comp-char" lang="ja">' + side.char + '</p>' +
+            '<p class="comp-summary">' + side.summary + '</p>' +
+            '<div class="comp-examples">' + side.examples.map((ex) => '<div><p class="example-jp" lang="ja">' + ex.jp + '</p><p class="example-id">' + ex.id + '</p></div>').join("") + '</div>' +
+          '</div>').join("") +
+        '</div>' +
+        '<p class="comparison-foot"><b>Pegangan:</b> ' + c.takeaway + '</p>' +
+      '</article>').join("") +
+    '</div>' +
+  '</section>' +
+
+  '<section class="section" aria-labelledby="pitTitle">' +
+    '<div class="section-head"><h2 class="section-title" id="pitTitle">Jebakan khusus<span class="jp" lang="ja">注意</span></h2><span class="section-note">Kesalahan yang paling sering muncul, ditampilkan berdampingan.</span></div>' +
+    '<div class="pitfall-grid">' +
+      PITFALLS.map((p) => '<article class="pitfall">' +
+        '<h3 class="pitfall-title">' + p.title + '</h3>' +
+        '<p class="pitfall-summary">' + p.summary + '</p>' +
+        '<div class="pitfall-pair">' +
+          '<div class="pitfall-box wrong"><span class="label">Salah</span><p class="pitfall-jp" lang="ja">' + p.wrong.jp + '</p><p class="pitfall-id">' + p.wrong.id + '</p></div>' +
+          '<div class="pitfall-box right"><span class="label">Benar</span><p class="pitfall-jp" lang="ja">' + p.right.jp + '</p><p class="pitfall-id">' + p.right.id + '</p></div>' +
+        '</div>' +
+        '<p class="pitfall-note"><b>Catatan:</b> ' + p.note + '</p>' +
+      '</article>').join("") +
+    '</div>' +
+  '</section>' +
+
+  '<footer class="foot"><span>Materi partikel N5 · 18 partikel, 6 pasangan, 4 jebakan, 20 soal latihan.</span><a href="#latihan">Lanjut ke Latihan Soal →</a></footer>';
+}
+
+/* ==================================================================
+   9. HALAMAN: LATIHAN SOAL
+   ================================================================== */
+function quizProgress() {
+  return state.done ? 100 : Math.round((state.qIndex / state.order.length) * 100);
+}
+function viewLatihan() {
+  const modes = ["Campuran", "Kosakata", "Kanji", "Tata Bahasa", "Partikel", "Membaca", "Mendengar", "Menyusun"];
+  const q = state.order[state.qIndex];
+  const head = '<div class="page-head">' +
+    '<div>' +
+      '<div class="eyebrow"><span class="level-tag">N5</span><span>Latihan</span><span>10 soal</span></div>' +
+      '<h1 class="page-title">Latihan Soal<span class="jp" lang="ja">練習</span></h1>' +
+      '<p class="lede">Sesi singkat dari <strong>Bank Soal N5</strong>: butir terkurasi dan soal yang dihasilkan dari materi, diambil acak <strong>tanpa pengulangan</strong> dalam satu sesi. Setiap jawaban punya pembahasan.</p>' +
+      '<div class="actions"><span class="source-chip"><span class="chip-label">Sumber</span><b>Bank Soal N5</b><span>23 butir terkurasi + generator</span></span><a class="btn btn-outline" href="#modul/ujian">Simulasi ujian</a></div>' +
+    '</div>' +
+    '<div class="head-side"><span class="vertical-jp" lang="ja" aria-hidden="true">練習は力なり</span></div>' +
+  '</div>';
+
+  if (state.done) {
+    const pct = Math.round((state.score / state.order.length) * 100);
+    const msg = pct === 100 ? "完璧！ Sempurna." : pct >= 80 ? "素晴らしい！ Sangat bagus." : pct >= 60 ? "いいね！ Terus berlatih." : "もう一度！ Coba ulangi.";
+    return head + '<div class="result" style="margin-top:26px">' +
+      '<div class="result-stamp" lang="ja">合</div>' +
+      '<p class="label">Sesi selesai · ' + state.mode + '</p>' +
+      '<p class="result-score">' + state.score + '<small> / ' + state.order.length + '</small></p>' +
+      '<p class="result-msg">' + msg + '</p>' +
+      '<p class="result-copy">' + (pct >= 80 ? "Pertahankan ritme ini. Ulasan besok akan mengunci materi yang baru saja kamu jawab." : "Setiap jawaban yang salah sudah tercatat di pembahasan. Ulangi sesi dengan bank yang diacak ulang.") + '</p>' +
+      '<div class="result-breakdown">' +
+        '<div><span class="label">Benar</span><b>' + state.score + '</b></div>' +
+        '<div><span class="label">Salah</span><b>' + (state.order.length - state.score) + '</b></div>' +
+        '<div><span class="label">Akurasi</span><b>' + pct + '%</b></div>' +
+      '</div>' +
+      '<div class="result-actions"><button class="btn btn-primary" type="button" data-restart="1">Ulangi sesi <span aria-hidden="true">↻</span></button><a class="btn btn-outline" href="#dasbor">Kembali ke Dasbor</a></div>' +
+    '</div>';
+  }
+
+  const options = q.options.map((opt, i) => {
+    let cls = "option";
+    if (state.checked) {
+      if (i === q.answer) cls += " correct";
+      else if (i === state.selected) cls += " wrong";
+    } else if (i === state.selected) {
+      cls += " selected";
+    }
+    return '<button class="' + cls + '" type="button" data-option="' + i + '" ' + (state.checked ? "disabled" : "") + ' aria-pressed="' + (i === state.selected) + '">' +
+      '<span class="option-letter">' + "ABCD"[i] + '</span><span class="option-text">' + opt + '</span>' +
+    '</button>';
+  }).join("");
+
+  const feedback = state.checked ? '<div class="feedback" aria-live="polite">' +
+    '<div class="feedback-head">' +
+      '<span class="verdict ' + (state.selected === q.answer ? "ok" : "no") + '">' + (state.selected === q.answer ? "Tepat." : "Belum tepat.") + '</span>' +
+      '<span class="verdict-key">Kunci: <b>' + "ABCD"[q.answer] + ' · ' + q.options[q.answer] + '</b></span>' +
+    '</div>' +
+    '<p><b>Pembahasan.</b> ' + q.explanation + '</p>' +
+  '</div>' : "";
+
+  return head +
+  '<div class="session-bar">' +
+    '<div class="session-left"><span class="label">Sesi</span><span class="session-title">' + state.mode + ' · Bank Soal N5</span></div>' +
+    '<div class="session-right"><span>Soal <b>' + String(state.qIndex + 1).padStart(2, "0") + '</b> / ' + state.order.length + '</span><span>Skor <b>' + state.score + '</b></span></div>' +
+  '</div>' +
+  '<div class="track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + quizProgress() + '"><span style="width:' + quizProgress() + '%"></span></div>' +
+
+  '<div class="quiz-layout">' +
+    '<div class="quiz-main">' +
+      '<article class="q-card">' +
+        '<div class="q-head"><span class="q-kind">' + q.kind + ' · N5</span><span class="q-counter">Butir acak · tanpa ulangan</span></div>' +
+        '<h2 class="q-prompt" lang="ja">' + q.prompt + '</h2>' +
+        '<p class="q-sub">' + q.sub + '</p>' +
+        '<div class="options" role="group" aria-label="Pilihan jawaban">' + options + '</div>' +
+        feedback +
+        '<div class="q-actions">' +
+          '<span class="keys-inline">Pintasan: <kbd>1</kbd>–<kbd>4</kbd> pilih · <kbd>Enter</kbd> ' + (state.checked ? "lanjut" : "periksa") + '</span>' +
+          (state.checked
+            ? '<button class="btn btn-primary" type="button" data-next="1">' + (state.qIndex + 1 >= state.order.length ? "Lihat hasil" : "Soal berikutnya") + ' <span aria-hidden="true">→</span></button>'
+            : '<button class="btn btn-primary" type="button" data-check="1" ' + (state.selected === null ? "disabled" : "") + '>Periksa jawaban</button>') +
+        '</div>' +
+      '</article>' +
+    '</div>' +
+    '<aside class="quiz-aside" aria-label="Informasi sesi">' +
+      '<div class="side-panel">' +
+        '<span class="label">Sumber soal</span>' +
+        '<p><strong>Bank Soal N5</strong> — lapisan data di balik Latihan Soal dan Simulasi Ujian, bukan menu terpisah.</p>' +
+        '<ul class="side-list" style="margin-top:10px">' +
+          '<li><span>Butir terkurasi</span><span>23</span></li>' +
+          '<li><span>Generator materi</span><span>N5</span></li>' +
+          '<li><span>Pengulangan</span><span>tidak ada</span></li>' +
+          '<li><span>Pembahasan</span><span>setiap butir</span></li>' +
+        '</ul>' +
+      '</div>' +
+      '<div class="side-panel">' +
+        '<span class="label">Mode</span>' +
+        '<div class="mode-chips">' + modes.map((m) => '<button class="chip' + (state.mode === m ? " active" : "") + '" type="button" data-mode="' + m + '">' + m + '</button>').join("") + '</div>' +
+        '<span class="label" style="margin-top:16px">Jumlah soal</span>' +
+        '<div class="mode-chips"><button class="chip active" type="button" data-count="10">10</button><button class="chip" type="button" data-count="20">20</button><button class="chip" type="button" data-count="30">30</button></div>' +
+      '</div>' +
+      '<div class="side-panel">' +
+        '<span class="label">Pintasan</span>' +
+        '<div class="keys">' +
+          '<div class="key-row"><span>Pilih jawaban</span><span><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd></span></div>' +
+          '<div class="key-row"><span>Periksa / lanjut</span><kbd>Enter</kbd></div>' +
+          '<div class="key-row"><span>Ulangi sesi</span><span><kbd>R</kbd></span></div>' +
+        '</div>' +
+        '<p style="margin-top:10px;color:var(--subtle)">Fokus satu soal. Navigasi tidak dikunci di preview ini; di aplikasi final sesi berjalan penuh.</p>' +
+      '</div>' +
+    '</aside>' +
+  '</div>';
+}
+
+/* ==================================================================
+   10. HALAMAN: PLACEHOLDER MODUL
+   ================================================================== */
+const MODULE_INFO = {
+  "kana-menulis": { title: "Kana & Menulis", jp: "かな・書", parent: "Materi", desc: "Dua kegiatan untuk satu keterampilan: mengenali aksara lalu menggoresnya sendiri.", features: ["Tabel 208 huruf hiragana & katakana per baris", "Kuis dua arah: huruf → romaji dan romaji → huruf", "Pelafalan tiap huruf lewat Web Speech API", "Kanvas menulis dengan garis bantu genkō yōshi", "Toolbar undo, hapus, dan panduan samar"] },
+  "kana": { title: "Tabel Kana", jp: "かな表", parent: "Kana & Menulis", desc: "Hiragana dan katakana lengkap, dikelompokkan per baris.", features: ["Grid per baris: a, ka, sa, ta, na, ha, ma, ya, ra, wa, n", "Dakuten, handakuten, dan yōon", "Klik huruf untuk mendengar pelafalan", "Latihan langsung dari tabel"] },
+  "menulis": { title: "Latihan Menulis", jp: "書き取り", parent: "Kana & Menulis", desc: "Kanvas latihan menggores kana dan kanji dengan garis bantu.", features: ["Dukungan mouse, stylus, dan sentuhan", "Garis bantu seperti buku genkō yōshi", "Panduan huruf samar", "Undo dan bersihkan kanvas", "Pemilihan karakter dari tabel kana & kanji"] },
+  "kosakata": { title: "Kosakata", jp: "語彙", parent: "Materi", desc: "708 kata N5 dengan flashcard dan ulangan berjadwal.", features: ["Flashcard dengan empat penilaian: Lupa, Sulit, Bagus, Mudah", "Kartu “Lupa” diulang di akhir sesi", "Filter jenis kata dan pencarian", "Contoh kalimat + pelafalan", "Progres SRS tersimpan di browser"] },
+  "kanji": { title: "Kanji", jp: "漢字", parent: "Materi", desc: "111 kanji N5: bentuk, bacaan, radikal, goresan, dan jembatan ingatan.", features: ["On'yomi, kun'yomi, radikal, dan jumlah goresan", "Mnemonic untuk tiap kanji", "Contoh kata yang memakai kanji tersebut", "Kuis arti dan bacaan", "Grid semua kanji per level"] },
+  "bacaan": { title: "Perubahan Bacaan", jp: "読み方", parent: "Kanji & Bacaan", desc: "Mengapa bacaan kanji berubah: rendaku, on'yomi, kun'yomi gabung, dan jukujikun.", features: ["Aturan bacaan untuk kanji 何, 今, 日, 人", "Contoh kata + pengecualian yang jujur", "Bacaan saat kanji berdiri sendiri", "Latihan memilih bacaan dan membedakan pasangan"] },
+  "tata-bahasa": { title: "Tata Bahasa", jp: "文法", parent: "Materi", desc: "48 pola tata bahasa N5 dengan penjelasan dan contoh yang bisa diputar.", features: ["Pola, penjelasan bahasa Indonesia, dan catatan penting", "Contoh kalimat berpelafalan", "Latihan 文の組み立て (susun kalimat)", "Pencarian pola", "Semua pola terbuka tanpa urutan terkunci"] },
+  "mendengar": { title: "Mendengar", jp: "聴解", parent: "Materi", desc: "12 dialog sehari-hari dengan tiga kecepatan dan toggle kana/terjemahan.", features: ["Tiga kecepatan pelafalan", "Toggle kana dan terjemahan", "Putar semua dialog berurutan", "Pertanyaan pemahaman", "Teks dialog per pembicara"] },
+  "membaca": { title: "Membaca", jp: "読解", parent: "Materi", desc: "10 bacaan pendek berfurigana dengan pertanyaan pemahaman.", features: ["Furigana bisa disembunyikan", "Terjemahan per bacaan", "Pertanyaan pemahaman dengan pembahasan", "Penanda bacaan selesai", "Bacaan bertema kehidupan sehari-hari"] },
+  "konteks": { title: "Konteks & Etiket", jp: "敬語とマナー", parent: "Materi", desc: "Tingkat bicara, keigo tiga lapis, kebiasaan, dan hal unik Jepang.", features: ["Perbandingan empat tingkat lawan bicara", "Keigo: 丁寧, 尊敬, 謙譲", "Kartu kebiasaan dan hal unik", "Skenario situasi nyata", "Latihan memilih tingkat bicara"] },
+  "ulasan": { title: "Ulasan", jp: "復習", parent: "Latihan", desc: "Satu antrean lintas dek untuk semua yang jatuh tempo hari ini.", features: ["Kartu jatuh tempo lebih dulu, paling telat di depan", "Empat penilaian: Lupa, Sulit, Bagus, Mudah", "Batas kartu baru per sesi", "Jadwal SM-2 tersimpan di localStorage", "Deck kosakata, kanji, tata bahasa, dan konteks"] },
+  "ujian": { title: "Simulasi Ujian", jp: "模擬試験", parent: "Latihan", desc: "Dua paket simulasi: JLPT N5 dan JFT-Basic.", features: ["Seksi 文字・語彙, 文法, 読解, 聴解", "文の組み立て dan soal mendengar", "Penilaian dan ringkasan per seksi", "Pembahasan setelah sesi", "Durasi dan jumlah soal per paket"] },
+  "kamus": { title: "Kamus", jp: "辞書", parent: "Referensi", desc: "Pencarian lintas level untuk kosakata, kanji, tata bahasa, dan bacaan.", features: ["Pencarian kanji, kana, romaji, dan arti", "Hasil dari semua level", "Tautan langsung ke halaman materi", "Filter jenis materi", "Kosakata, kanji, tata bahasa, bacaan"] },
+  "pengaturan": { title: "Pengaturan", jp: "設定", parent: "Referensi", desc: "Tema, target harian, kecepatan suara, furigana, dan reset data.", features: ["Tema terang, gelap, atau mengikuti sistem", "Target aksi harian", "Kecepatan suara TTS", "Furigana default", "Reset progres belajar (preferensi tetap)"] },
+  "tentang": { title: "Tentang", jp: "案内", parent: "Referensi", desc: "Metodologi, kredit data terbuka, lisensi, dan peta level.", features: ["Scaffolding, active recall, dan SRS", "Kredit JMDict, KANJIDIC2, KanjiVG, Tatoeba", "Lisensi data", "Peta level N5–N1", "Catatan tentang TTS browser"] }
+};
+function viewPlaceholder(id) {
+  const info = MODULE_INFO[id] || { title: routeLabel(state.route), jp: "準備中", parent: "Modul", desc: "Halaman ini belum termasuk tiga contoh preview.", features: [] };
+  return '<div class="page-head">' +
+    '<div>' +
+      '<div class="eyebrow"><span class="level-tag">N5</span><span>' + info.parent + '</span><span>Contoh preview</span></div>' +
+      '<h1 class="page-title">' + info.title + '<span class="jp" lang="ja">' + info.jp + '</span></h1>' +
+      '<p class="lede">' + info.desc + '</p>' +
+    '</div>' +
+    '<div class="head-side"><span class="vertical-jp" lang="ja" aria-hidden="true">準備中</span></div>' +
+  '</div>' +
+  '<div class="placeholder">' +
+    '<p class="label">Di aplikasi final</p>' +
+    '<h2>Halaman ini tetap ada — desainnya menyusul.</h2>' +
+    '<p>Preview ini fokus pada tiga halaman kunci: Dasbor, Partikel, dan Latihan Soal. Menu ini tetap harus hidup karena materinya sudah ada di aplikasi sekarang.</p>' +
+    (info.features.length ? '<ul class="feature-list">' + info.features.map((f) => '<li>' + f + '</li>').join("") + '</ul>' : "") +
+    '<div class="preview-note">Coba tiga halaman yang sudah didesain: <a href="#dasbor">Dasbor</a>, <a href="#materi/partikel">Partikel</a>, atau <a href="#latihan">Latihan Soal</a>.</div>' +
+  '</div>' +
+  '<footer class="foot"><span>Manabi · N5 · ' + info.parent + '</span><a href="#dasbor">Kembali ke Dasbor →</a></footer>';
+}
+
+/* ==================================================================
+   11. BIND VIEW
+   ================================================================== */
+function bindView() {
+  $$("[data-speak]").forEach((btn) => btn.addEventListener("click", () => speak(btn.dataset.speak)));
+  $$("[data-tier]").forEach((btn) => btn.addEventListener("click", () => {
+    state.tier = btn.dataset.tier;
+    $("#view").innerHTML = viewPartikel();
+    bindView();
+  }));
+  $$("[data-option]").forEach((btn) => btn.addEventListener("click", () => {
+    if (state.checked) return;
+    state.selected = Number(btn.dataset.option);
+    $("#view").innerHTML = viewLatihan();
+    bindView();
+  }));
+  const check = $("[data-check]");
+  if (check) check.addEventListener("click", checkAnswer);
+  const next = $("[data-next]");
+  if (next) next.addEventListener("click", nextQuestion);
+  const restart = $("[data-restart]");
+  if (restart) restart.addEventListener("click", restartSession);
+  $$("[data-mode]").forEach((btn) => btn.addEventListener("click", () => {
+    state.mode = btn.dataset.mode;
+    restartSession();
+    toast("Mode " + state.mode + " — contoh sesi memakai 10 butir campuran.");
+  }));
+  $$("[data-count]").forEach((btn) => btn.addEventListener("click", () => {
+    const n = Number(btn.dataset.count);
+    if (n > 10) toast("Preview memuat 10 butir contoh; di aplikasi final sesi bisa " + n + " soal.");
+    else toast("Sesi 10 soal.");
+  }));
+  $$("[data-level]").forEach((btn) => btn.addEventListener("click", () => {
+    if (btn.classList.contains("soon")) toast("Materi " + btn.dataset.level + " sedang disusun. Mulai dari N5 dulu, ya.");
+  }));
+}
+function checkAnswer() {
+  if (state.selected === null || state.checked) return;
+  state.checked = true;
+  if (state.selected === state.order[state.qIndex].answer) state.score += 1;
+  $("#view").innerHTML = viewLatihan();
+  bindView();
+}
+function nextQuestion() {
+  if (!state.checked) return;
+  if (state.qIndex + 1 >= state.order.length) {
+    state.done = true;
+  } else {
+    state.qIndex += 1;
+    state.selected = null;
+    state.checked = false;
+  }
+  $("#view").innerHTML = viewLatihan();
+  bindView();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+function restartSession() {
+  state.order = shuffle(QUIZ);
+  state.qIndex = 0;
+  state.selected = null;
+  state.checked = false;
+  state.score = 0;
+  state.done = false;
+  $("#view").innerHTML = viewLatihan();
+  bindView();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* ==================================================================
+   12. DRAWER, CATATAN, KEYBOARD, START
+   ================================================================== */
+function openDrawer() {
+  const sidebar = $("#sidebar");
+  const overlay = $("#sidebarOverlay");
+  const btn = $("#menuBtn");
+  sidebar.classList.add("open");
+  overlay.hidden = false;
+  requestAnimationFrame(() => overlay.classList.add("show"));
+  btn.setAttribute("aria-expanded", "true");
+  document.body.style.overflow = "hidden";
+  const first = sidebar.querySelector("a, button");
+  if (first) first.focus({ preventScroll: true });
+}
+function closeDrawer() {
+  const sidebar = $("#sidebar");
+  const overlay = $("#sidebarOverlay");
+  const btn = $("#menuBtn");
+  if (!sidebar.classList.contains("open")) return;
+  sidebar.classList.remove("open");
+  overlay.classList.remove("show");
+  setTimeout(() => { overlay.hidden = true; }, 180);
+  btn.setAttribute("aria-expanded", "false");
+  document.body.style.overflow = "";
+}
+function initDrawer() {
+  $("#menuBtn").addEventListener("click", openDrawer);
+  $("#sidebarOverlay").addEventListener("click", closeDrawer);
+  $$("[data-open-drawer]").forEach((btn) => btn.addEventListener("click", openDrawer));
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeDrawer();
+  });
+  $("#view").addEventListener("click", (event) => {
+    const anchor = event.target.closest("a[href^='#']");
+    if (anchor && window.innerWidth < 1024) closeDrawer();
+  });
+}
+function initNote() {
+  const note = $("#designNote");
+  const hide = $("#hideNote");
+  const reopen = $("#reopenNote");
+  let stored = null;
+  try { stored = localStorage.getItem("manabi-arah1-note"); } catch (e) {}
+  const params = new URLSearchParams(location.search);
+  if (stored === "hidden" || params.get("note") === "0") {
+    note.hidden = true;
+    if (params.get("note") !== "0") reopen.classList.add("show");
+  }
+  hide.addEventListener("click", () => {
+    note.hidden = true;
+    reopen.classList.add("show");
+    try { localStorage.setItem("manabi-arah1-note", "hidden"); } catch (e) {}
+  });
+  reopen.addEventListener("click", () => {
+    note.hidden = false;
+    reopen.classList.remove("show");
+    try { localStorage.setItem("manabi-arah1-note", "shown"); } catch (e) {}
+    note.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+function initKeyboard() {
+  document.addEventListener("keydown", (event) => {
+    if (state.route !== "latihan" || state.done) return;
+    if (event.key >= "1" && event.key <= "4" && !state.checked) {
+      state.selected = Number(event.key) - 1;
+      $("#view").innerHTML = viewLatihan();
+      bindView();
+      return;
+    }
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if (state.checked) nextQuestion();
+      else if (state.selected !== null) checkAnswer();
+    }
+    if ((event.key === "r" || event.key === "R") && !event.metaKey && !event.ctrlKey) {
+      restartSession();
+    }
+  });
+}
+function init() {
+  initTheme();
+  initDrawer();
+  initNote();
+  initKeyboard();
+  window.addEventListener("hashchange", render);
+  if (!location.hash) location.hash = "#dasbor";
+  render();
+}
+init();
+</script>
+</body>
+</html>
