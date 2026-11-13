@@ -20,6 +20,8 @@ import { useActiveLevel } from "@/lib/level";
 import { useSessionActive } from "@/lib/session-guard";
 import { LevelList, LevelRail } from "./level-switcher";
 import { Mascot } from "./mascot";
+import { PageTransition } from "./page-transition";
+import { RouteProgress } from "./route-progress";
 import { ThemeToggle } from "./theme-toggle";
 
 /* ------------------------------------------------------------------ *
@@ -503,7 +505,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }, [pathname]);
 
   if (pathname === "/") {
-    return <div className={cn(levelClassName(level), "min-h-screen")}>{children}</div>;
+    return (
+      <div className={cn(levelClassName(level), "min-h-screen")}>
+        <RouteProgress />
+        <PageTransition>{children}</PageTransition>
+      </div>
+    );
   }
 
   const materi = NAV_SECTIONS.find((section) => section.id === "materi")?.items ?? [];
@@ -512,6 +519,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className={cn(levelClassName(level), "min-h-screen bg-paper text-fg")}>
+      <RouteProgress />
       <div
         className={cn(
           "mx-auto flex w-full",
@@ -536,7 +544,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               session.active ? "pb-10 md:py-8" : "pb-28 md:pb-16 md:pt-8",
             )}
           >
-            {children}
+            <PageTransition>{children}</PageTransition>
           </main>
         </div>
       </div>

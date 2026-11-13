@@ -449,7 +449,7 @@ export const QuizRunner = forwardRef<QuizRunnerHandle, QuizRunnerProps>(function
                   aria-label={`Pilihan ${optionIndex + 1}: ${option}`}
                   onClick={() => setSelected(optionIndex)}
                   className={cn(
-                    "flex min-h-12 w-full items-start gap-3 rounded-2xl border px-4 py-3.5 text-left text-body transition-colors duration-150",
+                    "flex min-h-12 w-full items-start gap-3 rounded-2xl border px-4 py-3.5 text-left text-body transition-[border-color,background-color,transform] duration-150 active:scale-[0.995]",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper",
                     "disabled:cursor-default",
                     !checked && "border-border bg-surface hover:border-border-strong hover:bg-surface-muted",
@@ -493,7 +493,11 @@ export const QuizRunner = forwardRef<QuizRunnerHandle, QuizRunnerProps>(function
 
           <div aria-live="polite" aria-atomic="true" className="mt-5">
             {checked ? (
-              <Callout tone={isCorrect ? "success" : "danger"} title={isCorrect ? "Benar." : "Belum tepat."}>
+              <Callout
+                tone={isCorrect ? "success" : "danger"}
+                title={isCorrect ? "Benar." : "Belum tepat."}
+                className="animate-fade-up"
+              >
                 <p className="whitespace-pre-line text-sm leading-relaxed text-fg">{current.explanation}</p>
                 {isCorrect ? null : (
                   <p className="mt-1.5 text-caption text-fg-muted">

@@ -30,12 +30,15 @@ export function ThemeToggle({ compact = false, className }: { compact?: boolean;
       onClick={toggle}
       aria-label={isDark ? "Ganti ke mode terang" : "Ganti ke mode gelap"}
       className={cn(
-        "inline-flex h-11 items-center justify-center gap-2 rounded-2xl border border-border bg-surface px-3 text-caption font-extrabold text-fg-muted shadow-soft transition-colors hover:border-border-strong hover:text-fg",
+        "group inline-flex h-11 items-center justify-center gap-2 rounded-2xl border border-border bg-surface px-3 text-caption font-extrabold text-fg-muted shadow-soft transition-colors hover:border-border-strong hover:text-fg",
         compact && "w-11 px-0",
         className,
       )}
     >
-      <span aria-hidden="true" className="text-base leading-none">
+      <span
+        aria-hidden="true"
+        className="text-base leading-none transition-transform duration-300 group-hover:rotate-12"
+      >
         {isDark ? "☀" : "☾"}
       </span>
       {compact ? null : <span>{isDark ? "Terang" : "Gelap"}</span>}
