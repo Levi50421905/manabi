@@ -6,6 +6,28 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/id-ID/1.1.0/) dan
 versi mengikuti [Semantic Versioning](https://semver.org/lang/id/). Catatan
 pembaruan lintas project tidak tinggal di sini — itu ada di situs pribadi.
 
+## [2.8.0] — 2026-11-13
+
+Rilis ini menerapkan **Arah 3 "Nakama"** — arah desain baru — ke hampir seluruh aplikasi, lalu
+menambahkan animasi transisi dan umpan balik interaksi di atasnya.
+
+### Diubah
+
+- **Beranda baru** dengan susunan dan warna mengikuti arah Nakama, termasuk maskot dan brand mark
+  baru (`components/mascot.tsx`, `components/brand-mark.tsx`) serta ikon situs.
+- **Menu berbasis data** — navigasi samping dan menu seluler dibangun dari data, bukan daftar
+  manual, sehingga menambah modul baru tidak perlu menyunting beberapa tempat.
+- **Dasbor, Latihan, Bank soal, Partikel, Kanji, Kana, Menulis, dan Bacaan Kanji** disesuaikan ke
+  sistem visual baru: token warna, tipografi, dan jarak yang konsisten.
+
+### Ditambahkan
+
+- **Transisi halaman halus** (`components/page-transition.tsx`) — perpindahan antar halaman tidak
+  lagi terasa berkedip.
+- **Bilah progres navigasi** (`components/route-progress.tsx`) — penanda halus saat halaman
+  berikutnya sedang dimuat.
+- **Umpan balik interaksi** pada kuis dan navigasi, termasuk sinkronisasi tema.
+
 ## [2.7.0] — 2026-11-08
 
 Rilis ini menambahkan **bank soal terkurasi (beta)** dan memperbarui ujian.
